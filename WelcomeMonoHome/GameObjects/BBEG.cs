@@ -11,13 +11,20 @@ namespace WelcomeMonoHome.GameObjects
 {
   public class BBEG : Entity
   {
-    Sprite _sprite;
-    Vector2 _pos;
-    Texture2D _texture;
+    // public Sprite sprite;
+    // public Vector2 pos;
+    // public Texture2D texture;
     float _rotation;
     float _speed = 200;
-    Vector2 _leftGunPos = new Vector2(8, 94);
-    Vector2 _rightGunPos = new Vector2(119, 94);
+
+    // absolute
+    Vector2 _leftGunPos;
+    Vector2 _rightGunPos;
+
+    // relative to texture origin
+    readonly Vector2 _relativeLeftGunPos = new Vector2(8, 94);
+    readonly Vector2 _relativeRightGunPos = new Vector2(119, 94);
+
     List<Entity> _levelEntities;
 
     Texture2D _booletTexture;
@@ -26,13 +33,17 @@ namespace WelcomeMonoHome.GameObjects
 
     public BBEG(GraphicsDeviceManager graphics, Texture2D BBEG_texture, Texture2D Boolet_texture, List<Entity> levelEntities)
     {
-      _texture = BBEG_texture;
+      texture = BBEG_texture;
       _booletTexture = Boolet_texture;
-      _sprite = new Sprite(_texture);
+      sprite = new Sprite(texture);
       _levelEntities = levelEntities;
 
+      // Get absolute gun positions 
+      _leftGunPos = new Vector2((pos.X - texture.Width / 2) + _relativeLeftGunPos.X, (pos.Y - texture.Height / 2) + _relativeLeftGunPos.Y);
+      _rightGunPos = new Vector2((pos.X - texture.Width / 2) + _relativeRightGunPos.X, (pos.Y - texture.Height / 2) + _relativeRightGunPos.Y);
+
       // Initialize position at the middle of the screen from the sprite's center
-      _pos = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
+      pos = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
 
     }
 
@@ -41,19 +52,19 @@ namespace WelcomeMonoHome.GameObjects
       // Update position from WASD
       if (Keyboard.GetState().IsKeyDown(Keys.W))
       {
-        _pos.Y -= _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        pos.Y -= _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
       }
       if (Keyboard.GetState().IsKeyDown(Keys.S))
       {
-        _pos.Y += _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        pos.Y += _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
       }
       if (Keyboard.GetState().IsKeyDown(Keys.A))
       {
-        _pos.X -= _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        pos.X -= _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
       }
       if (Keyboard.GetState().IsKeyDown(Keys.D))
       {
-        _pos.X += _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        pos.X += _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
       }
 
       // Fire
@@ -64,17 +75,19 @@ namespace WelcomeMonoHome.GameObjects
       if (_clickDown && Mouse.GetState().LeftButton == ButtonState.Released)
       {
         _clickDown = false;
-        Console.WriteLine("AYOOO");
-        _levelEntities.Add(new Boolet((_pos + _leftGunPos), _booletTexture));
+        _levelEntities.Add(new Boolet((pos + _leftGunPos), _booletTexture));
+        _levelEntities.Add(new Boolet((pos + _rightGunPos), _booletTexture));
       }
-
-      // debug print _entities.count
-      Console.WriteLine($" BBEG._entities.length: {_levelEntities.Count}");
     }
 
     public override void Draw(SpriteBatch spriteBatch)
     {
-      _sprite.Draw(spriteBatch, _pos);
+      sprite.Draw(spriteBatch, pos);
+    }
+
+    public override void OnBecameInvisible()
+    {
+
     }
   }
 }

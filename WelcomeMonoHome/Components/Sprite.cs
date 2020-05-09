@@ -5,9 +5,9 @@ using System;
 
 namespace WelcomeMonoHome.Components
 {
-  class Sprite
+  public class Sprite
   {
-    Texture2D _sprite;
+    public Texture2D _sprite;
     Color _color;
     Vector2 _origin;
     // ? Entity _parent;

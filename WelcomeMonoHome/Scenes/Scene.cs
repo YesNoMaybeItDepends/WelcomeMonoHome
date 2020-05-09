@@ -11,8 +11,10 @@ public class Scene
   ContentManager _content;
   SpriteBatch _spriteBatch;
   GraphicsDeviceManager _graphics;
+
   List<Entity> _entities;// = new List<Entity>();
   List<Entity> _entitiesToAdd;
+  List<Entity> _entitiesToRemove;
 
   // textures
   private Texture2D _BBEG_ok_mini;
@@ -25,6 +27,7 @@ public class Scene
     _spriteBatch = spritebatch;
     _graphics = graphics;
     _entitiesToAdd = new List<Entity>();
+    _entitiesToRemove = new List<Entity>();
   }
 
   public void Initialize()
@@ -64,6 +67,16 @@ public class Scene
 
     foreach (Entity entity in _entities)
     {
+      // Check if entity is outside rendered screen
+      if (entity.pos.X > _graphics.PreferredBackBufferWidth + entity.texture.Width ||
+          entity.pos.X < -1 * entity.texture.Width ||
+          entity.pos.Y > _graphics.PreferredBackBufferHeight + entity.texture.Height ||
+          entity.pos.Y < -1 * entity.texture.Height)
+      {
+        entity.OnBecameInvisible();
+      }
+
+
       entity.Draw(_spriteBatch);
     }
 
