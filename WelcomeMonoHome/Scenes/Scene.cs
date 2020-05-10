@@ -12,7 +12,8 @@ public class Scene
   SpriteBatch _spriteBatch;
   GraphicsDeviceManager _graphics;
 
-  List<Entity> _entities;// = new List<Entity>();
+  // TODO change with entitymanagerservice
+  List<Entity> _entities;
   List<Entity> _entitiesToAdd;
   List<Entity> _entitiesToRemove;
 
@@ -22,10 +23,12 @@ public class Scene
 
   public Scene(ContentManager content, SpriteBatch spritebatch, GraphicsDeviceManager graphics)
   {
-    _entities = new List<Entity>();
     _content = content;
     _spriteBatch = spritebatch;
     _graphics = graphics;
+
+    // TODO change with entitymanagerservice
+    _entities = new List<Entity>();
     _entitiesToAdd = new List<Entity>();
     _entitiesToRemove = new List<Entity>();
   }
@@ -53,6 +56,16 @@ public class Scene
       _entitiesToAdd.Clear();
     }
 
+    // remove entities from _entities
+    if (_entitiesToRemove.Count > 0)
+    {
+      foreach (Entity entity in _entitiesToRemove)
+      {
+        _entities.Remove(entity);
+      }
+      _entitiesToRemove.Clear();
+    }
+
     // update entities
     foreach (Entity entity in _entities)
     {
@@ -65,15 +78,28 @@ public class Scene
   {
     _spriteBatch.Begin();
 
+    // Loop to check entity visibility 
     foreach (Entity entity in _entities)
     {
-      // Check if entity is outside rendered screen
-      if (entity.pos.X > _graphics.PreferredBackBufferWidth + entity.texture.Width ||
+
+      // Is it visible?
+      if ((entity.isVisible != true) &&
+          (entity.pos.X < _graphics.PreferredBackBufferWidth + entity.texture.Width &&
+          entity.pos.X > -1 * entity.texture.Width) &&
+          (entity.pos.Y < _graphics.PreferredBackBufferHeight + entity.texture.Height &&
+          entity.pos.Y > -1 * entity.texture.Height))
+      {
+        entity.isVisible = true;
+      }
+
+      // Is it not visible?
+      if ((entity.isVisible != false) &&
+          (entity.pos.X > _graphics.PreferredBackBufferWidth + entity.texture.Width ||
           entity.pos.X < -1 * entity.texture.Width ||
           entity.pos.Y > _graphics.PreferredBackBufferHeight + entity.texture.Height ||
-          entity.pos.Y < -1 * entity.texture.Height)
+          entity.pos.Y < -1 * entity.texture.Height))
       {
-        entity.OnBecameInvisible();
+        entity.isVisible = false;
       }
 
 

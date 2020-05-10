@@ -11,9 +11,37 @@ public abstract class Entity
   public Vector2 pos;
   public Sprite sprite;
   public Texture2D texture;
+  private bool _isVisible;
 
+  /// TODO references to level's lists, so they can remove or destroy themselves
   private List<Entity> _entitiesToAdd;
-  private List<Entity> _entitiesToRemove;
+  protected List<Entity> _entitiesToRemove;
+
+  public bool isVisible
+  {
+    get
+    {
+      return _isVisible;
+    }
+    set
+    {
+      if (_isVisible == true && value == false)
+      {
+        _isVisible = false;
+        OnBecameInvisible();
+      }
+      else if (_isVisible == false && value == true)
+      {
+        _isVisible = true;
+        OnBecameVisible();
+      }
+    }
+  }
+
+  public virtual void OnBecameVisible()
+  {
+    Console.WriteLine("I just became visible yo!");
+  }
 
   public virtual void OnBecameInvisible()
   {

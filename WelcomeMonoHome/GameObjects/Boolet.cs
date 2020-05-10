@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using WelcomeMonoHome.Components;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 public class Boolet : Entity
 {
@@ -13,7 +14,7 @@ public class Boolet : Entity
   Vector2 _targetPos;
   Vector2 _direction;
 
-  public Boolet(Vector2 pos, Texture2D texture)
+  public Boolet(Vector2 pos, Texture2D texture, List<Entity> entitiesToRemove)
   {
     this.pos = pos;
     this.texture = texture;
@@ -21,6 +22,8 @@ public class Boolet : Entity
 
     _targetPos = Mouse.GetState().Position.ToVector2();
     _direction = Vector2.Normalize(_targetPos - this.pos);
+
+    _entitiesToRemove = entitiesToRemove;
   }
 
   public override void Update(GameTime gameTime)
@@ -33,4 +36,8 @@ public class Boolet : Entity
     sprite.Draw(spriteBatch, pos);
   }
 
+  public override void OnBecameInvisible()
+  {
+    _entitiesToRemove.Add(this);
+  }
 }
