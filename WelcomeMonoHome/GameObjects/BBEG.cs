@@ -17,6 +17,10 @@ namespace WelcomeMonoHome.GameObjects
     float _rotation;
     float _speed = 200;
 
+    Texture2D _booletTexture;
+
+    IEntityManagerService _entityManagerService;
+
     // absolute
     Vector2 _leftGunPos;
     Vector2 _rightGunPos;
@@ -25,18 +29,17 @@ namespace WelcomeMonoHome.GameObjects
     readonly Vector2 _relativeLeftGunPos = new Vector2(8, 94);
     readonly Vector2 _relativeRightGunPos = new Vector2(119, 94);
 
-    List<Entity> _levelEntities;
-
-    Texture2D _booletTexture;
-
     bool _clickDown = false;
+
 
     public BBEG(GraphicsDeviceManager graphics, Texture2D BBEG_texture, Texture2D Boolet_texture, List<Entity> levelEntities)
     {
       texture = BBEG_texture;
       _booletTexture = Boolet_texture;
       sprite = new Sprite(texture);
-      _levelEntities = levelEntities;
+
+      // Get services
+      _entityManagerService = ServiceLocator.GetService<IEntityManagerService>();
 
       // Get absolute gun positions 
       _leftGunPos = new Vector2((pos.X - texture.Width / 2) + _relativeLeftGunPos.X, (pos.Y - texture.Height / 2) + _relativeLeftGunPos.Y);
@@ -44,7 +47,6 @@ namespace WelcomeMonoHome.GameObjects
 
       // Initialize position at the middle of the screen from the sprite's center
       pos = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
-
     }
 
     public override void Update(GameTime gameTime)
@@ -75,19 +77,14 @@ namespace WelcomeMonoHome.GameObjects
       if (_clickDown && Mouse.GetState().LeftButton == ButtonState.Released)
       {
         _clickDown = false;
-        _levelEntities.Add(new Boolet((pos + _leftGunPos), _booletTexture));
-        _levelEntities.Add(new Boolet((pos + _rightGunPos), _booletTexture));
+        _entityManagerService.AddEntity(new Boolet((pos + _leftGunPos), _booletTexture));
+        _entityManagerService.AddEntity(new Boolet((pos + _rightGunPos), _booletTexture));
       }
     }
 
     public override void Draw(SpriteBatch spriteBatch)
     {
       sprite.Draw(spriteBatch, pos);
-    }
-
-    public override void OnBecameInvisible()
-    {
-
     }
   }
 }

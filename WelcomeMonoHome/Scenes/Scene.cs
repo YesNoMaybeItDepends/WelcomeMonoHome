@@ -12,6 +12,9 @@ public class Scene
   SpriteBatch _spriteBatch;
   GraphicsDeviceManager _graphics;
 
+  // Services
+  EntityManagerService _entityManagerService;
+
   // TODO change with entitymanagerservice
   List<Entity> _entities;
   List<Entity> _entitiesToAdd;
@@ -20,6 +23,8 @@ public class Scene
   // textures
   private Texture2D _BBEG_ok_mini;
   private Texture2D _boolet;
+
+  bool isInit = false;
 
   public Scene(ContentManager content, SpriteBatch spritebatch, GraphicsDeviceManager graphics)
   {
@@ -31,11 +36,21 @@ public class Scene
     _entities = new List<Entity>();
     _entitiesToAdd = new List<Entity>();
     _entitiesToRemove = new List<Entity>();
+
+    _entityManagerService = new EntityManagerService(_entities, _entitiesToAdd, _entitiesToRemove);
+
+    ServiceLocator.SetService<IEntityManagerService>(_entityManagerService);
+
+    if (ServiceLocator.GetService<IEntityManagerService>() != null)
+    {
+      Console.WriteLine("SUCCESS");
+    };
+
   }
 
   public void Initialize()
   {
-    _entities.Add(new BBEG(_graphics, _BBEG_ok_mini, _boolet, _entitiesToAdd));
+
   }
 
   public void LoadContent()
@@ -46,31 +61,12 @@ public class Scene
 
   public void Update(GameTime gametime)
   {
-    // debug print _entities.count
-    Console.WriteLine($"Gametime: {1 / (float)gametime.TotalGameTime.TotalSeconds} \n Scene._entities.length: {_entities.Count}");
-
-    // add new entities to _entities
-    if (_entitiesToAdd.Count > 0)
+    if (!isInit)
     {
-      _entities.AddRange(_entitiesToAdd);
-      _entitiesToAdd.Clear();
+      _entities.Add(new BBEG(_graphics, _BBEG_ok_mini, _boolet, _entitiesToAdd));
+      isInit = true;
     }
-
-    // remove entities from _entities
-    if (_entitiesToRemove.Count > 0)
-    {
-      foreach (Entity entity in _entitiesToRemove)
-      {
-        _entities.Remove(entity);
-      }
-      _entitiesToRemove.Clear();
-    }
-
-    // update entities
-    foreach (Entity entity in _entities)
-    {
-      entity.Update(gametime);
-    }
+    _entityManagerService.UpdateEntities(gametime);
   }
 
   // ? pass spritebatch or use _spritebatch?

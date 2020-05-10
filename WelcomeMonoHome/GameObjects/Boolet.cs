@@ -14,7 +14,7 @@ public class Boolet : Entity
   Vector2 _targetPos;
   Vector2 _direction;
 
-  public Boolet(Vector2 pos, Texture2D texture, List<Entity> entitiesToRemove)
+  public Boolet(Vector2 pos, Texture2D texture)
   {
     this.pos = pos;
     this.texture = texture;
@@ -22,8 +22,6 @@ public class Boolet : Entity
 
     _targetPos = Mouse.GetState().Position.ToVector2();
     _direction = Vector2.Normalize(_targetPos - this.pos);
-
-    _entitiesToRemove = entitiesToRemove;
   }
 
   public override void Update(GameTime gameTime)
@@ -38,6 +36,6 @@ public class Boolet : Entity
 
   public override void OnBecameInvisible()
   {
-    _entitiesToRemove.Add(this);
+    ServiceLocator.GetService<IEntityManagerService>().EntitiesToRemove.Add(this);
   }
 }

@@ -6,44 +6,54 @@ using Microsoft.Xna.Framework;
 
 public class EntityManagerService : IEntityManagerService
 {
-  List<Entity> _entities;
-  List<Entity> _entitiesToAdd;
-  List<Entity> _entitiesToRemove;
+  public List<Entity> Entities { get; set; }
+  public List<Entity> EntitiesToAdd { get; set; }
+  public List<Entity> EntitiesToRemove { get; set; }
 
   public EntityManagerService(List<Entity> entities, List<Entity> entitiesToAdd, List<Entity> entitiesToRemove)
   {
-    _entities = new List<Entity>();
-    _entitiesToAdd = new List<Entity>();
-    _entitiesToRemove = new List<Entity>();
+    Entities = entities;
+    EntitiesToAdd = entitiesToAdd;
+    EntitiesToRemove = entitiesToRemove;
   }
 
   public void UpdateEntities(GameTime gametime)
   {
     // debug print _entities.count
-    Console.WriteLine($"Gametime: {1 / (float)gametime.TotalGameTime.TotalSeconds} \n Scene._entities.length: {_entities.Count}");
+    Console.WriteLine($"Gametime: {1 / (float)gametime.TotalGameTime.TotalSeconds} \n Scene._entities.length: {Entities.Count}");
 
     // remove entities from _entities
-    if (_entitiesToRemove.Count > 0)
+    if (EntitiesToRemove.Count > 0)
     {
-      foreach (Entity entity in _entitiesToRemove)
+      foreach (Entity entity in EntitiesToRemove)
       {
-        _entities.Remove(entity);
+        Entities.Remove(entity);
       }
-      _entitiesToRemove.Clear();
+      EntitiesToRemove.Clear();
     }
 
     // add new entities to _entities
-    if (_entitiesToAdd.Count > 0)
+    if (EntitiesToAdd.Count > 0)
     {
-      _entities.AddRange(_entitiesToAdd);
-      _entitiesToAdd.Clear();
+      Entities.AddRange(EntitiesToAdd);
+      EntitiesToAdd.Clear();
     }
 
     // update entities
-    foreach (Entity entity in _entities)
+    foreach (Entity entity in Entities)
     {
       entity.Update(gametime);
     }
+  }
+
+  public void AddEntity(Entity entity)
+  {
+    EntitiesToAdd.Add(entity);
+  }
+
+  public void RemoveEntity(Entity entity)
+  {
+    EntitiesToRemove.Add(entity);
   }
 
 }

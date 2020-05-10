@@ -13,10 +13,6 @@ public abstract class Entity
   public Texture2D texture;
   private bool _isVisible;
 
-  /// TODO references to level's lists, so they can remove or destroy themselves
-  private List<Entity> _entitiesToAdd;
-  protected List<Entity> _entitiesToRemove;
-
   public bool isVisible
   {
     get

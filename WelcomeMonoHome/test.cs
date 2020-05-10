@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 namespace Client
 {
+  // interface A
   public interface IServiceA
   {
     void Execute();
   }
 
+  // service A
   public class ServiceA : IServiceA
   {
     public void Execute()
@@ -16,11 +18,13 @@ namespace Client
     }
   }
 
+  // Interface B
   public interface IServiceB
   {
     void Execute();
   }
 
+  // Service B
   public class ServiceB : IServiceB
   {
     public void Execute()
@@ -29,19 +33,26 @@ namespace Client
     }
   }
 
+  // ?
   public interface IService
   {
     T GetService<T>();
   }
+
+  // Service Locator
   public class ServiceLocator : IService
   {
     public Dictionary<object, object> servicecontainer = null;
+
+    // Constructor
     public ServiceLocator()
     {
       servicecontainer = new Dictionary<object, object>();
       servicecontainer.Add(typeof(IServiceA), new ServiceA());
       servicecontainer.Add(typeof(IServiceB), new ServiceB());
     }
+
+    // Get service
     public T GetService<T>()
     {
       try
@@ -54,9 +65,11 @@ namespace Client
       }
     }
   }
-  class Program
+
+  // Program
+  class mememe
   {
-    static void Main(string[] args)
+    static void meme(string[] args)
     {
       ServiceLocator loc = new ServiceLocator();
       IServiceA Aservice = loc.GetService<IServiceA>();
@@ -69,3 +82,4 @@ namespace Client
     }
   }
 }
+

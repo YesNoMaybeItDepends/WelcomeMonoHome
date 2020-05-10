@@ -14,8 +14,6 @@ namespace WelcomeMonoHome.Components
 
     public Sprite(Texture2D texture)
     {
-      Console.WriteLine("Sprite constructor");
-
       _sprite = texture;
       _color = Color.White;
       _origin = new Vector2(texture.Width / 2, texture.Height / 2);
