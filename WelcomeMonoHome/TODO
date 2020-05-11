@@ -4,3 +4,12 @@ Game:
   State Manager: 
     - Manages game state?
     - Why can't it be the same as scene manager?
+  BBEG:
+    + can shoot
+    + can move
+    + boolets fly off guns
+  Boolet: 
+    + moves towards target
+    + disappears outside render screen
+  Hillarious: 
+    - exists

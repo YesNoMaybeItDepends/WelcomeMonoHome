@@ -23,8 +23,11 @@ public class Scene
   // textures
   private Texture2D _BBEG_ok_mini;
   private Texture2D _boolet;
+  private Texture2D _Hillarious_mini;
 
   bool isInit = false;
+
+  Random random;
 
   public Scene(ContentManager content, SpriteBatch spritebatch, GraphicsDeviceManager graphics)
   {
@@ -46,6 +49,7 @@ public class Scene
       Console.WriteLine("SUCCESS");
     };
 
+    random = new Random();
   }
 
   public void Initialize()
@@ -57,13 +61,22 @@ public class Scene
   {
     _BBEG_ok_mini = _content.Load<Texture2D>("BBEG_ok_mini");
     _boolet = _content.Load<Texture2D>("boolet");
+    _Hillarious_mini = _content.Load<Texture2D>("Hillarious_mini");
   }
 
   public void Update(GameTime gametime)
   {
     if (!isInit)
     {
-      _entities.Add(new BBEG(_graphics, _BBEG_ok_mini, _boolet, _entitiesToAdd));
+      BBEG memer = new BBEG(_BBEG_ok_mini, _boolet);
+      memer.Initialize(_graphics);
+      _entities.Add(memer);
+
+      Hillarious memress = new Hillarious(_Hillarious_mini);
+
+      memress.Initialize(_graphics, random);
+      _entities.Add(memress);
+
       isInit = true;
     }
     _entityManagerService.UpdateEntities(gametime);

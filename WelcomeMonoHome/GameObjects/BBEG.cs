@@ -32,7 +32,7 @@ namespace WelcomeMonoHome.GameObjects
     bool _clickDown = false;
 
 
-    public BBEG(GraphicsDeviceManager graphics, Texture2D BBEG_texture, Texture2D Boolet_texture, List<Entity> levelEntities)
+    public BBEG(Texture2D BBEG_texture, Texture2D Boolet_texture)
     {
       texture = BBEG_texture;
       _booletTexture = Boolet_texture;
@@ -44,7 +44,10 @@ namespace WelcomeMonoHome.GameObjects
       // Get absolute gun positions 
       _leftGunPos = new Vector2((pos.X - texture.Width / 2) + _relativeLeftGunPos.X, (pos.Y - texture.Height / 2) + _relativeLeftGunPos.Y);
       _rightGunPos = new Vector2((pos.X - texture.Width / 2) + _relativeRightGunPos.X, (pos.Y - texture.Height / 2) + _relativeRightGunPos.Y);
+    }
 
+    public void Initialize(GraphicsDeviceManager graphics)
+    {
       // Initialize position at the middle of the screen from the sprite's center
       pos = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
     }

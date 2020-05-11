@@ -56,4 +56,9 @@ public class EntityManagerService : IEntityManagerService
     EntitiesToRemove.Add(entity);
   }
 
+  public Entity Instantiate(Entity entity, Vector2 pos)
+  {
+    AddEntity(entity);
+    return entity;
+  }
 }
