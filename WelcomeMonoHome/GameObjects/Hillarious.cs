@@ -94,7 +94,7 @@ public class Hillarious : Entity
       return min;
     }
   }
-
+  // test
   public override void OnBecameInvisible()
   {
     ServiceLocator.GetService<IEntityManagerService>().RemoveEntity(this);
