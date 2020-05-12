@@ -12,4 +12,9 @@ Game:
     + moves towards target
     + disappears outside render screen
   Hillarious: 
-    - exists
+    + exists
+    + spawn every second
+    - make it smaller tbqh
+    - 
+  DEBUG: 
+    - print text 

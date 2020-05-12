@@ -15,7 +15,7 @@ namespace WelcomeMonoHome.GameObjects
     // public Vector2 pos;
     // public Texture2D texture;
     float _rotation;
-    float _speed = 200;
+    float _speed = 300;
 
     Texture2D _booletTexture;
 
@@ -71,6 +71,8 @@ namespace WelcomeMonoHome.GameObjects
       {
         pos.X += _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
       }
+
+      pos = Vector2.Normalize(pos);
 
       // Fire
       if (Mouse.GetState().LeftButton == ButtonState.Pressed)

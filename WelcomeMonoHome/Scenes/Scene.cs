@@ -29,6 +29,9 @@ public class Scene
 
   Random random;
 
+  float _hillariousSpawnRate = 1f;
+  float _nextTimeToSpawnHillarious = 1;
+
   public Scene(ContentManager content, SpriteBatch spritebatch, GraphicsDeviceManager graphics)
   {
     _content = content;
@@ -66,19 +69,27 @@ public class Scene
 
   public void Update(GameTime gametime)
   {
+    Console.WriteLine($"Gametime: {gametime.TotalGameTime.Seconds}");
     if (!isInit)
     {
       BBEG memer = new BBEG(_BBEG_ok_mini, _boolet);
       memer.Initialize(_graphics);
       _entities.Add(memer);
 
-      Hillarious memress = new Hillarious(_Hillarious_mini);
-
-      memress.Initialize(_graphics, random);
-      _entities.Add(memress);
 
       isInit = true;
     }
+
+    // hillarious spawn timer
+    if (_nextTimeToSpawnHillarious <= gametime.TotalGameTime.TotalSeconds)
+    {
+      Hillarious memress = new Hillarious(_Hillarious_mini);
+      memress.Initialize(_graphics, random);
+      _entities.Add(memress);
+
+      _nextTimeToSpawnHillarious = (float)gametime.TotalGameTime.TotalSeconds + _hillariousSpawnRate;
+    }
+
     _entityManagerService.UpdateEntities(gametime);
   }
 
