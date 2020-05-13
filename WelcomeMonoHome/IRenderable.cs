@@ -1,5 +1,10 @@
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
 public interface IRenderable
 {
-  bool isVisible { get; set; }
-  void Draw();
+  Vector2 position { get; set; }
+
+  //bool isVisible { get; set; }
+  void Draw(SpriteBatch spriteBatch);
 }

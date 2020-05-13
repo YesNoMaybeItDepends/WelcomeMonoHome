@@ -3,9 +3,7 @@ using Microsoft.Xna.Framework;
 
 public abstract class Renderable : IRenderable
 {
-  Texture2D texture;
-  Vector2 position;
-
+  public virtual Vector2 position { get; set; }
   public bool isVisible
   {
     get
@@ -27,12 +25,9 @@ public abstract class Renderable : IRenderable
     }
   }
 
-  public void Draw(SpriteBatch spriteBatch)
-  {
-    spriteBatch.Draw()
-  }
+  public abstract void Draw(SpriteBatch spriteBatch);
 
-  public abstract void OnBecameInvisible();
+  public virtual void OnBecameInvisible() { }
 
-  public abstract void OnBecameVisible();
+  public virtual void OnBecameVisible() { }
 }
