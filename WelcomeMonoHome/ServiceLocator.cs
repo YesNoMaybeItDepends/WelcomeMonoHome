@@ -37,7 +37,7 @@ public static class ServiceLocator
 
   public static T GetService<T>()
   {
-    if (_services != null && (T)_services[typeof(T)] != null)
+    if (_services != null && _services.ContainsKey(typeof(T)))
     {
       Console.WriteLine("Get Service");
       return (T)_services[typeof(T)];

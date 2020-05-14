@@ -20,7 +20,7 @@ public class Hillarious : Entity
   public Hillarious(Texture2D Texture)
   {
     texture = Texture;
-    sprite = new Sprite(texture);
+    sprite = new Sprite(texture, Vector2.Zero);
   }
 
   public void Initialize(GraphicsDeviceManager graphics, /*Side Side, */Random random)
@@ -76,11 +76,6 @@ public class Hillarious : Entity
   public override void Update(GameTime gameTime)
   {
     pos += Direction * _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-  }
-
-  public override void Draw(SpriteBatch spriteBatch)
-  {
-    sprite.Draw(spriteBatch, pos);
   }
 
   int FindNearestNumber(int number, int min, int max)

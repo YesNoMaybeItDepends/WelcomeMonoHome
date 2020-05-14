@@ -19,9 +19,6 @@ public class EntityManagerService : IEntityManagerService
 
   public void UpdateEntities(GameTime gametime)
   {
-    // debug print _entities.count
-    ///Console.WriteLine($"Gametime: {1 / (float)gametime.TotalGameTime.TotalSeconds} \n Scene._entities.length: {Entities.Count}");
-
     // remove entities from _entities
     if (EntitiesToRemove.Count > 0)
     {
@@ -42,6 +39,7 @@ public class EntityManagerService : IEntityManagerService
     // update entities
     foreach (Entity entity in Entities)
     {
+      Console.WriteLine("Updating Entity: " + entity);
       entity.Update(gametime);
     }
   }

@@ -14,6 +14,7 @@ public class Scene
 
   // Services
   EntityManagerService _entityManagerService;
+  RendererService _rendererService;
 
   // TODO change with entitymanagerservice
   List<Entity> _entities;
@@ -25,12 +26,18 @@ public class Scene
   private Texture2D _boolet;
   private Texture2D _Hillarious_mini;
 
+  // font
+  // TODO move somewhere else
+  private SpriteFont _font;
+
   bool isInit = false;
 
   Random random;
 
   float _hillariousSpawnRate = 1f;
   float _nextTimeToSpawnHillarious = 1;
+
+  ScreenText txt;
 
   public Scene(ContentManager content, SpriteBatch spritebatch, GraphicsDeviceManager graphics)
   {
@@ -43,14 +50,13 @@ public class Scene
     _entitiesToAdd = new List<Entity>();
     _entitiesToRemove = new List<Entity>();
 
+    // Initialize Services
     _entityManagerService = new EntityManagerService(_entities, _entitiesToAdd, _entitiesToRemove);
+    _rendererService = new RendererService(_spriteBatch);
 
+    // Map Services
     ServiceLocator.SetService<IEntityManagerService>(_entityManagerService);
-
-    if (ServiceLocator.GetService<IEntityManagerService>() != null)
-    {
-      Console.WriteLine("SUCCESS");
-    };
+    ServiceLocator.SetService<IrendererService>(_rendererService);
 
     random = new Random();
   }
@@ -65,23 +71,27 @@ public class Scene
     _BBEG_ok_mini = _content.Load<Texture2D>("BBEG_ok_mini");
     _boolet = _content.Load<Texture2D>("boolet");
     _Hillarious_mini = _content.Load<Texture2D>("Hillarious_mini");
+    _font = _content.Load<SpriteFont>("MyFont");
   }
 
   public void Update(GameTime gametime)
   {
     Console.WriteLine($"Gametime: {gametime.TotalGameTime.Seconds}");
+
+    // initialize loop 
+    // TODO this is fucked up, fix
     if (!isInit)
     {
       BBEG memer = new BBEG(_BBEG_ok_mini, _boolet);
       memer.Initialize(_graphics);
-      _entities.Add(memer);
 
+      txt = new ScreenText("memes", new Vector2(50, 50), _font);
 
       isInit = true;
     }
 
     // hillarious spawn timer
-    if (_nextTimeToSpawnHillarious <= gametime.TotalGameTime.TotalSeconds)
+    if (1 == 0 && _nextTimeToSpawnHillarious <= gametime.TotalGameTime.TotalSeconds)
     {
       Hillarious memress = new Hillarious(_Hillarious_mini);
       memress.Initialize(_graphics, random);
@@ -90,15 +100,18 @@ public class Scene
       _nextTimeToSpawnHillarious = (float)gametime.TotalGameTime.TotalSeconds + _hillariousSpawnRate;
     }
 
+    // Update Entities
     _entityManagerService.UpdateEntities(gametime);
+    txt.text = $"Entities: {_entityManagerService.Entities.Count.ToString()}";
   }
 
   // ? pass spritebatch or use _spritebatch?
   public void Draw()
   {
-    _spriteBatch.Begin();
+    _rendererService.Run();
+    // _spriteBatch.Begin();
 
-    // Loop to check entity visibility 
+    // // Loop to check entity visibility 
     foreach (Entity entity in _entities)
     {
 
@@ -121,12 +134,12 @@ public class Scene
       {
         entity.isVisible = false;
       }
-
-
-      entity.Draw(_spriteBatch);
     }
 
-    _spriteBatch.End();
+    //   entity.Draw(_spriteBatch);
+    // }
+
+    // _spriteBatch.End();
   }
 
   public void UnloadContent()

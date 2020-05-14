@@ -18,7 +18,7 @@ public class Boolet : Entity
   {
     this.pos = pos;
     this.texture = texture;
-    sprite = new Sprite(texture);
+    sprite = new Sprite(texture, Vector2.Zero);
 
     _targetPos = Mouse.GetState().Position.ToVector2();
     _direction = Vector2.Normalize(_targetPos - this.pos);
@@ -27,11 +27,6 @@ public class Boolet : Entity
   public override void Update(GameTime gameTime)
   {
     pos += (_direction * _speed) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-  }
-
-  public override void Draw(SpriteBatch spriteBatch)
-  {
-    sprite.Draw(spriteBatch, pos);
   }
 
   public override void OnBecameInvisible()

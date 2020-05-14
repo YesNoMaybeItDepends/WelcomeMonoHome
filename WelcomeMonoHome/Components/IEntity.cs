@@ -10,5 +10,4 @@ public interface IEntity
   Texture2D texture { get; set; }
 
   void Update(GameTime gameTime);
-  void Draw(SpriteBatch spriteBatch);
 }

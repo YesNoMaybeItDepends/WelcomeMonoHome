@@ -2,27 +2,28 @@ using System;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
-public class ScreenText : Renderable
+public class ScreenText : IRenderable
 {
-  string text;
-  SpriteFont font;
-  Vector2 position;
+  public string text { get; set; }
+  SpriteFont font { get; set; }
+  public Vector2 position { get; set; }
 
-  public ScreenText(string Text, Vector2 Position, SpriteFont font)
-  {
-
-  }
-
-  public ScreenText Instantiate(string Text, Vector2 Position)
+  public ScreenText(string Text, Vector2 Position, SpriteFont Font)
   {
     IrendererService renderer = ServiceLocator.GetService<IrendererService>();
     // TODO font = resouces.getfont() or whatever
-    ScreenText txt = new ScreenText(Text, Position, font);
-    renderer.AddRenderable(txt);
-    return txt;
+    text = Text;
+    position = Position;
+    font = Font;
+    renderer.AddRenderable(this);
   }
 
-  public override void Draw(SpriteBatch spriteBatch)
+  // public ScreenText Instantiate(string Text, Vector2 Position)
+  // {
+  //
+  // }
+
+  public void Draw(SpriteBatch spriteBatch)
   {
     spriteBatch.DrawString(font, text, position, Color.White);
   }

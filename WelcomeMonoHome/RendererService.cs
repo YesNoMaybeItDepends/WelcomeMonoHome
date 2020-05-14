@@ -5,11 +5,11 @@ public class RendererService : IrendererService
 {
   public SpriteBatch _spriteBatch { get; set; }
 
-  private List<IRenderable> _renderableAddQueue { get; set; }
-  private List<IRenderable> _renderableRenderQueue { get; set; }
-  private List<IRenderable> _renderableRemoveQueue { get; set; }
+  public List<IRenderable> _renderableAddQueue { get; set; }
+  public List<IRenderable> _renderableRenderQueue { get; set; }
+  public List<IRenderable> _renderableRemoveQueue { get; set; }
 
-  RendererService(SpriteBatch SpriteBatch)
+  public RendererService(SpriteBatch SpriteBatch)
   {
     _spriteBatch = SpriteBatch;
 
@@ -41,10 +41,14 @@ public class RendererService : IrendererService
     }
 
     // draw
+    _spriteBatch.Begin();
+
     foreach (IRenderable renderable in _renderableRenderQueue)
     {
       renderable.Draw(_spriteBatch);
     }
+
+    _spriteBatch.End();
   }
 
   public void AddRenderable(IRenderable renderable)

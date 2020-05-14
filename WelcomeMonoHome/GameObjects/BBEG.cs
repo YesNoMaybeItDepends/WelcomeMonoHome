@@ -36,10 +36,11 @@ namespace WelcomeMonoHome.GameObjects
     {
       texture = BBEG_texture;
       _booletTexture = Boolet_texture;
-      sprite = new Sprite(texture);
+      sprite = new Sprite(texture, Vector2.Zero);
 
       // Get services
       _entityManagerService = ServiceLocator.GetService<IEntityManagerService>();
+      _entityManagerService.AddEntity(this);
 
       // Get absolute gun positions 
       _leftGunPos = new Vector2((pos.X - texture.Width / 2) + _relativeLeftGunPos.X, (pos.Y - texture.Height / 2) + _relativeLeftGunPos.Y);
@@ -54,25 +55,31 @@ namespace WelcomeMonoHome.GameObjects
 
     public override void Update(GameTime gameTime)
     {
+
       // Update position from WASD
+
+      Vector2 _pos = pos;
+
       if (Keyboard.GetState().IsKeyDown(Keys.W))
       {
-        pos.Y -= _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        _pos.Y -= _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
       }
       if (Keyboard.GetState().IsKeyDown(Keys.S))
       {
-        pos.Y += _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        _pos.Y += _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
       }
       if (Keyboard.GetState().IsKeyDown(Keys.A))
       {
-        pos.X -= _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        _pos.X -= _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
       }
       if (Keyboard.GetState().IsKeyDown(Keys.D))
       {
-        pos.X += _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        _pos.X += _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
       }
 
-      pos = Vector2.Normalize(pos);
+      //pos = Vector2.Normalize(_pos * (float)gameTime.ElapsedGameTime.TotalSeconds);
+      //_pos = Vector2.Normalize(_pos);
+      pos = Vector2.Normalize(_pos);
 
       // Fire
       if (Mouse.GetState().LeftButton == ButtonState.Pressed)
@@ -85,11 +92,6 @@ namespace WelcomeMonoHome.GameObjects
         _entityManagerService.AddEntity(new Boolet((pos + _leftGunPos), _booletTexture));
         _entityManagerService.AddEntity(new Boolet((pos + _rightGunPos), _booletTexture));
       }
-    }
-
-    public override void Draw(SpriteBatch spriteBatch)
-    {
-      sprite.Draw(spriteBatch, pos);
     }
   }
 }

@@ -7,11 +7,31 @@ using System.Collections.Generic;
 public abstract class Entity
 {
   public abstract void Update(GameTime gameTime);
-  public abstract void Draw(SpriteBatch spriteBatch);
-  public Vector2 pos;
   public Sprite sprite;
   public Texture2D texture;
   private bool _isVisible;
+  private Vector2 _pos;
+
+  public Vector2 pos
+  {
+    get
+    {
+      return _pos;
+    }
+    set
+    {
+      _pos = value;
+      if (sprite != null)
+      {
+        sprite.position = _pos;
+        Console.WriteLine(sprite.position + " = " + _pos);
+      }
+      else
+      {
+        Console.WriteLine("NO SPRITE FOUND");
+      }
+    }
+  }
 
   public bool isVisible
   {

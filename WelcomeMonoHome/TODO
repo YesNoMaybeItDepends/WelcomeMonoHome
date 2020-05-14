@@ -1,4 +1,8 @@
 Game: 
+
+  TODO: 
+    - make it so all entities get added to rendererservice and entitiesservice
+
   Scene Manager: 
     - Manages @Scenes 
   State Manager: 
@@ -17,4 +21,4 @@ Game:
     - make it smaller tbqh
     - 
   DEBUG: 
-    - print text 
+    + print text on screen
