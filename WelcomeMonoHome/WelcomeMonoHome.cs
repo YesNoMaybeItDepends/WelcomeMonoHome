@@ -41,7 +41,6 @@ namespace WelcomeMonoHome
       }
 
       scene.Update(gameTime);
-      // ! TODO Scene.Update(gameTime)
 
       base.Update(gameTime);
     }

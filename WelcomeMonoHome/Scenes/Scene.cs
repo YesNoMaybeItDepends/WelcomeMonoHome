@@ -15,6 +15,7 @@ public class Scene
   // Services
   EntityManagerService _entityManagerService;
   RendererService _rendererService;
+  DebugService _debugService;
 
   // TODO change with entitymanagerservice
   List<Entity> _entities;
@@ -37,7 +38,7 @@ public class Scene
   float _hillariousSpawnRate = 1f;
   float _nextTimeToSpawnHillarious = 1;
 
-  ScreenText txt;
+  ScreenText entitiesText;
 
   public Scene(ContentManager content, SpriteBatch spritebatch, GraphicsDeviceManager graphics)
   {
@@ -53,10 +54,12 @@ public class Scene
     // Initialize Services
     _entityManagerService = new EntityManagerService(_entities, _entitiesToAdd, _entitiesToRemove);
     _rendererService = new RendererService(_spriteBatch);
+    _debugService = new DebugService(_content);
 
     // Map Services
     ServiceLocator.SetService<IEntityManagerService>(_entityManagerService);
     ServiceLocator.SetService<IrendererService>(_rendererService);
+    ServiceLocator.SetService<IDebugService>(_debugService);
 
     random = new Random();
   }
@@ -72,11 +75,12 @@ public class Scene
     _boolet = _content.Load<Texture2D>("boolet");
     _Hillarious_mini = _content.Load<Texture2D>("Hillarious_mini");
     _font = _content.Load<SpriteFont>("MyFont");
+    _debugService.UpdateFont(_font);
   }
 
   public void Update(GameTime gametime)
   {
-    Console.WriteLine($"Gametime: {gametime.TotalGameTime.Seconds}");
+    Console.WriteLine($"Gametime: {gametime.TotalGameTime.TotalSeconds}");
 
     // initialize loop 
     // TODO this is fucked up, fix
@@ -85,13 +89,13 @@ public class Scene
       BBEG memer = new BBEG(_BBEG_ok_mini, _boolet);
       memer.Initialize(_graphics);
 
-      txt = new ScreenText("memes", new Vector2(50, 50), _font);
+      entitiesText = new ScreenText("Entities: ", new Vector2(50, 50), _font);
 
       isInit = true;
     }
 
     // hillarious spawn timer
-    if (1 == 0 && _nextTimeToSpawnHillarious <= gametime.TotalGameTime.TotalSeconds)
+    if (_nextTimeToSpawnHillarious <= gametime.TotalGameTime.TotalSeconds)
     {
       Hillarious memress = new Hillarious(_Hillarious_mini);
       memress.Initialize(_graphics, random);
@@ -102,7 +106,7 @@ public class Scene
 
     // Update Entities
     _entityManagerService.UpdateEntities(gametime);
-    txt.text = $"Entities: {_entityManagerService.Entities.Count.ToString()}";
+    entitiesText.text = $"Entities: {_entityManagerService.Entities.Count.ToString()}";
   }
 
   // ? pass spritebatch or use _spritebatch?

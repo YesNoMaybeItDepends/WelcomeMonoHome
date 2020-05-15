@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using WelcomeMonoHome.Components;
+using Microsoft.Xna.Framework;
 
 public interface IEntityManagerService : IService
 {
@@ -7,6 +8,7 @@ public interface IEntityManagerService : IService
   List<Entity> EntitiesToAdd { get; set; }
   List<Entity> EntitiesToRemove { get; set; }
 
-  public void AddEntity(Entity entity);
-  public void RemoveEntity(Entity entity);
+  void AddEntity(Entity entity);
+  void RemoveEntity(Entity entity);
+  void UpdateEntities(GameTime gameTime);
 }

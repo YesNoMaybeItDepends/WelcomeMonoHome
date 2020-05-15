@@ -11,15 +11,13 @@ namespace WelcomeMonoHome.GameObjects
 {
   public class BBEG : Entity
   {
-    // public Sprite sprite;
-    // public Vector2 pos;
-    // public Texture2D texture;
     float _rotation;
-    float _speed = 300;
+    float _speed = 300f;
 
     Texture2D _booletTexture;
 
     IEntityManagerService _entityManagerService;
+    IDebugService _debugService;
 
     // absolute
     Vector2 _leftGunPos;
@@ -40,6 +38,8 @@ namespace WelcomeMonoHome.GameObjects
 
       // Get services
       _entityManagerService = ServiceLocator.GetService<IEntityManagerService>();
+      _debugService = ServiceLocator.GetService<IDebugService>();
+
       _entityManagerService.AddEntity(this);
 
       // Get absolute gun positions 
@@ -55,31 +55,31 @@ namespace WelcomeMonoHome.GameObjects
 
     public override void Update(GameTime gameTime)
     {
-
       // Update position from WASD
-
-      Vector2 _pos = pos;
+      Vector2 direction = Vector2.Zero;
 
       if (Keyboard.GetState().IsKeyDown(Keys.W))
       {
-        _pos.Y -= _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        direction.Y -= 1;
       }
       if (Keyboard.GetState().IsKeyDown(Keys.S))
       {
-        _pos.Y += _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        direction.Y += 1;
       }
       if (Keyboard.GetState().IsKeyDown(Keys.A))
       {
-        _pos.X -= _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        direction.X -= 1;
       }
       if (Keyboard.GetState().IsKeyDown(Keys.D))
       {
-        _pos.X += _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        direction.X += 1;
       }
 
-      //pos = Vector2.Normalize(_pos * (float)gameTime.ElapsedGameTime.TotalSeconds);
-      //_pos = Vector2.Normalize(_pos);
-      pos = Vector2.Normalize(_pos);
+      if (direction != Vector2.Zero)
+      {
+        direction = Vector2.Normalize(direction);
+        pos += direction * _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+      }
 
       // Fire
       if (Mouse.GetState().LeftButton == ButtonState.Pressed)
@@ -92,6 +92,8 @@ namespace WelcomeMonoHome.GameObjects
         _entityManagerService.AddEntity(new Boolet((pos + _leftGunPos), _booletTexture));
         _entityManagerService.AddEntity(new Boolet((pos + _rightGunPos), _booletTexture));
       }
+
+
     }
   }
 }

@@ -24,11 +24,10 @@ public abstract class Entity
       if (sprite != null)
       {
         sprite.position = _pos;
-        Console.WriteLine(sprite.position + " = " + _pos);
       }
       else
       {
-        Console.WriteLine("NO SPRITE FOUND");
+        Console.WriteLine("@Entity -> WARNING: NO SPRITE FOUND");
       }
     }
   }
@@ -56,11 +55,11 @@ public abstract class Entity
 
   public virtual void OnBecameVisible()
   {
-    Console.WriteLine("I just became visible yo!");
+
   }
 
   public virtual void OnBecameInvisible()
   {
-    Console.WriteLine("I just became invisble yo!");
+
   }
 }

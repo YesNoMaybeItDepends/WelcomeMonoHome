@@ -1,22 +1,34 @@
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 public class DebugService : IDebugService
 {
-  SpriteFont font;
+  SpriteFont _font;
   ContentManager _content;
 
-  List<string> text;
+  List<ScreenText> _screenTexts;
 
   public DebugService(ContentManager content)
   {
     _content = content;
-    text = new List<string>();
+    _screenTexts = new List<ScreenText>();
   }
 
-  public void DrawText()
+  public void UpdateFont(SpriteFont font)
   {
-
+    _font = font;
   }
+
+  public ScreenText DrawText(string text, Vector2 pos)
+  {
+    //_screenTexts.Add(new ScreenText(text, pos, _font));
+    return new ScreenText(text, pos, _font);
+  }
+
+  // public void UpdateText(ScreenText screenText, string text)
+  // {
+  //   _screenTexts.Find(screenText).UpdateText(text);
+  // }
 }

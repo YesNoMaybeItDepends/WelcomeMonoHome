@@ -25,6 +25,15 @@ public class ScreenText : IRenderable
 
   public void Draw(SpriteBatch spriteBatch)
   {
-    spriteBatch.DrawString(font, text, position, Color.White);
+    if (font != null)
+    {
+      spriteBatch.DrawString(font, text, position, Color.White);
+
+    }
+  }
+
+  public void UpdateText(string Text)
+  {
+    this.text = Text;
   }
 }
