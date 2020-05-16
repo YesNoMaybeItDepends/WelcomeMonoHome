@@ -16,6 +16,7 @@ public class Scene
   EntityManagerService _entityManagerService;
   RendererService _rendererService;
   DebugService _debugService;
+  ResourceManagerService _resourceManagerService;
 
   // TODO change with entitymanagerservice
   List<Entity> _entities;
@@ -23,9 +24,10 @@ public class Scene
   List<Entity> _entitiesToRemove;
 
   // textures
-  private Texture2D _BBEG_ok_mini;
-  private Texture2D _boolet;
-  private Texture2D _Hillarious_mini;
+  // private Texture2D _BBEG_ok_mini;
+  // private Texture2D _boolet;
+  // private Texture2D _Hillarious_mini;
+  // private Texture2D _pixel;
 
   // font
   // TODO move somewhere else
@@ -39,6 +41,7 @@ public class Scene
   float _nextTimeToSpawnHillarious = 1;
 
   ScreenText entitiesText;
+
 
   public Scene(ContentManager content, SpriteBatch spritebatch, GraphicsDeviceManager graphics)
   {
@@ -55,11 +58,13 @@ public class Scene
     _entityManagerService = new EntityManagerService(_entities, _entitiesToAdd, _entitiesToRemove);
     _rendererService = new RendererService(_spriteBatch);
     _debugService = new DebugService(_content);
+    _resourceManagerService = new ResourceManagerService(_content);
 
     // Map Services
     ServiceLocator.SetService<IEntityManagerService>(_entityManagerService);
     ServiceLocator.SetService<IrendererService>(_rendererService);
     ServiceLocator.SetService<IDebugService>(_debugService);
+    ServiceLocator.SetService<IResourceManagerService>(_resourceManagerService);
 
     random = new Random();
   }
@@ -71,10 +76,13 @@ public class Scene
 
   public void LoadContent()
   {
-    _BBEG_ok_mini = _content.Load<Texture2D>("BBEG_ok_mini");
-    _boolet = _content.Load<Texture2D>("boolet");
-    _Hillarious_mini = _content.Load<Texture2D>("Hillarious_mini");
-    _font = _content.Load<SpriteFont>("MyFont");
+    // _BBEG_ok_mini = _content.Load<Texture2D>("BBEG_ok_mini");
+    // _boolet = _content.Load<Texture2D>("boolet");
+    // _Hillarious_mini = _content.Load<Texture2D>("Hillarious_mini");
+    // _font = _content.Load<SpriteFont>("MyFont");
+    // _pixel = _content.Load<Texture2D>("pixel");
+
+    _resourceManagerService.Initialize();
     _debugService.UpdateFont(_font);
   }
 
@@ -86,7 +94,7 @@ public class Scene
     // TODO this is fucked up, fix
     if (!isInit)
     {
-      BBEG memer = new BBEG(_BBEG_ok_mini, _boolet);
+      BBEG memer = new BBEG();
       memer.Initialize(_graphics);
 
       entitiesText = new ScreenText("Entities: ", new Vector2(50, 50), _font);
@@ -97,7 +105,7 @@ public class Scene
     // hillarious spawn timer
     if (_nextTimeToSpawnHillarious <= gametime.TotalGameTime.TotalSeconds)
     {
-      Hillarious memress = new Hillarious(_Hillarious_mini);
+      Hillarious memress = new Hillarious();
       memress.Initialize(_graphics, random);
       _entities.Add(memress);
 

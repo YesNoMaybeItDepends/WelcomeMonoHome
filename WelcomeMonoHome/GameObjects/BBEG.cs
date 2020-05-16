@@ -14,7 +14,10 @@ namespace WelcomeMonoHome.GameObjects
     float _rotation;
     float _speed = 300f;
 
+    //Texture2D _booletTexture;
     Texture2D _booletTexture;
+    string _booletTextureName = "boolet";
+    string _bbegTextureName = "BBEG_ok_mini";
 
     IEntityManagerService _entityManagerService;
     IDebugService _debugService;
@@ -27,13 +30,14 @@ namespace WelcomeMonoHome.GameObjects
     readonly Vector2 _relativeLeftGunPos = new Vector2(8, 94);
     readonly Vector2 _relativeRightGunPos = new Vector2(119, 94);
 
-    bool _clickDown = false;
+    float rateOfFire = 0.5f;
+    float nextShot = 0;
 
 
-    public BBEG(Texture2D BBEG_texture, Texture2D Boolet_texture)
+    public BBEG()
     {
-      texture = BBEG_texture;
-      _booletTexture = Boolet_texture;
+      texture = ServiceLocator.GetService<IResourceManagerService>().GetTexture(_bbegTextureName);
+      _booletTexture = ServiceLocator.GetService<IResourceManagerService>().GetTexture(_booletTextureName);
       sprite = new Sprite(texture, Vector2.Zero);
 
       // Get services
@@ -82,18 +86,12 @@ namespace WelcomeMonoHome.GameObjects
       }
 
       // Fire
-      if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+      if (Mouse.GetState().LeftButton == ButtonState.Pressed && nextShot < (float)gameTime.TotalGameTime.TotalSeconds)
       {
-        _clickDown = true;
-      }
-      if (_clickDown && Mouse.GetState().LeftButton == ButtonState.Released)
-      {
-        _clickDown = false;
+        nextShot = (float)gameTime.TotalGameTime.TotalSeconds + rateOfFire;
         _entityManagerService.AddEntity(new Boolet((pos + _leftGunPos), _booletTexture));
         _entityManagerService.AddEntity(new Boolet((pos + _rightGunPos), _booletTexture));
       }
-
-
     }
   }
 }

@@ -11,6 +11,8 @@ namespace WelcomeMonoHome
 
     Scene scene;
 
+    public static Texture2D whitePixelTexture;
+
     public WelcomeMonoHome()
     {
       graphics = new GraphicsDeviceManager(this);
@@ -25,6 +27,7 @@ namespace WelcomeMonoHome
 
     protected override void LoadContent()
     {
+      whitePixelTexture = new Texture2D(GraphicsDevice, 1, 1);
       spriteBatch = new SpriteBatch(GraphicsDevice);
     }
 

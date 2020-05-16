@@ -12,6 +12,9 @@ public abstract class Entity
   private bool _isVisible;
   private Vector2 _pos;
 
+  public bool hasCollision = false;
+  public Rectangle colRectangle;
+
   public Vector2 pos
   {
     get
@@ -59,6 +62,11 @@ public abstract class Entity
   }
 
   public virtual void OnBecameInvisible()
+  {
+
+  }
+
+  public virtual void OnCollision()
   {
 
   }

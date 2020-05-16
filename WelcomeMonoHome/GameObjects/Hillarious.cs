@@ -15,12 +15,17 @@ public class Hillarious : Entity
 {
   Vector2 TargetPos;
   Vector2 Direction;
-  float _speed = 50f;
+  float _speed = 250f;
 
-  public Hillarious(Texture2D Texture)
+  string hillariousTextureName = "Hillarious_mini";
+
+  public Hillarious()
   {
-    texture = Texture;
+    texture = ServiceLocator.GetService<IResourceManagerService>().GetTexture(hillariousTextureName);
     sprite = new Sprite(texture, Vector2.Zero);
+
+    hasCollision = true;
+    colRectangle = new Rectangle((int)(sprite.position.X - sprite._texture.Width), (int)(sprite.position.Y - sprite._texture.Height), sprite._texture.Width, sprite._texture.Height);
   }
 
   public void Initialize(GraphicsDeviceManager graphics, /*Side Side, */Random random)
@@ -76,6 +81,8 @@ public class Hillarious : Entity
   public override void Update(GameTime gameTime)
   {
     pos += Direction * _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+    colRectangle = new Rectangle((int)(sprite.position.X - sprite._texture.Width / 2), (int)(sprite.position.Y - sprite._texture.Height / 2), sprite._texture.Width, sprite._texture.Height);
   }
 
   int FindNearestNumber(int number, int min, int max)
@@ -89,8 +96,13 @@ public class Hillarious : Entity
       return min;
     }
   }
-  // test
+
   public override void OnBecameInvisible()
+  {
+    ServiceLocator.GetService<IEntityManagerService>().RemoveEntity(this);
+  }
+
+  public override void OnCollision()
   {
     ServiceLocator.GetService<IEntityManagerService>().RemoveEntity(this);
   }

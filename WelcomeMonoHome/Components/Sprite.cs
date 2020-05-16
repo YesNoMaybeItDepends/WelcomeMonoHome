@@ -8,18 +8,22 @@ namespace WelcomeMonoHome.Components
   public class Sprite : IRenderable
   {
     public Vector2 position { get; set; }
-    public Texture2D _sprite;
+    public Texture2D _texture;
+    public Texture2D _pixel;
     Color _color;
-    Vector2 _origin;
+    public Vector2 origin;
     // ? Entity _parent;
 
     public Sprite(Texture2D texture, Vector2 pos)
     {
       position = pos;
-      _sprite = texture;
-      _color = Color.White;
-      _origin = new Vector2(texture.Width / 2, texture.Height / 2);
+      _texture = texture;
+      origin = new Vector2(texture.Width / 2, texture.Height / 2);
       ServiceLocator.GetService<IrendererService>().AddRenderable(this);
+
+      // test rectangle
+      _pixel = ServiceLocator.GetService<IResourceManagerService>().GetTexture("pixel");
+      _color = Color.White;
     }
 
     public void LoadContent()
@@ -34,14 +38,10 @@ namespace WelcomeMonoHome.Components
 
     public void Draw(SpriteBatch _spriteBatch)
     {
+      _spriteBatch.Draw(_texture, position - origin, _color);
 
-      _spriteBatch.Draw(_sprite, position - _origin, _color);
+      // test rectangle
+      _spriteBatch.Draw(_pixel, new Rectangle((int)(position.X - _texture.Width / 2), (int)(position.Y - _texture.Height / 2), _texture.Width, _texture.Height), Color.White);
     }
-
-    // public void Draw(SpriteBatch _spriteBatch, Vector2 pos)
-    // {
-
-    //   _spriteBatch.Draw(_sprite, pos - _origin, _color);
-    // }
   }
 }

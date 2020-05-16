@@ -50,6 +50,7 @@ public class EntityManagerService : IEntityManagerService
 
   public void RemoveEntity(Entity entity)
   {
+    ServiceLocator.GetService<IrendererService>().RemoveRenderable(entity.sprite);
     EntitiesToRemove.Add(entity);
   }
 
