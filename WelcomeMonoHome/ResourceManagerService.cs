@@ -44,6 +44,17 @@ public class ResourceManagerService : IResourceManagerService
     textures[name] = _content.Load<Texture2D>(name);
   }
 
+  public SpriteFont GetFont(string name)
+  {
+    return fonts[name];
+    // TODO add error handling
+  }
+
+  public void LoadFont(string name)
+  {
+    fonts[name] = _content.Load<SpriteFont>(name);
+  }
+
   public void UnloadContent(string name)
   {
     _content.Unload();

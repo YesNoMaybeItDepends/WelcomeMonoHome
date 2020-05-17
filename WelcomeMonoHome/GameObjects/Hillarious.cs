@@ -82,6 +82,7 @@ public class Hillarious : Entity
   {
     pos += Direction * _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+    // update collision box
     colRectangle = new Rectangle((int)(sprite.position.X - sprite._texture.Width / 2), (int)(sprite.position.Y - sprite._texture.Height / 2), sprite._texture.Width, sprite._texture.Height);
   }
 
@@ -102,7 +103,7 @@ public class Hillarious : Entity
     ServiceLocator.GetService<IEntityManagerService>().RemoveEntity(this);
   }
 
-  public override void OnCollision()
+  public override void OnCollision(Entity collider)
   {
     ServiceLocator.GetService<IEntityManagerService>().RemoveEntity(this);
   }

@@ -8,13 +8,13 @@ public class ScreenText : IRenderable
   SpriteFont font { get; set; }
   public Vector2 position { get; set; }
 
-  public ScreenText(string Text, Vector2 Position, SpriteFont Font)
+  public ScreenText(string Text, Vector2 Position)
   {
     IrendererService renderer = ServiceLocator.GetService<IrendererService>();
     // TODO font = resouces.getfont() or whatever
     text = Text;
     position = Position;
-    font = Font;
+    font = ServiceLocator.GetService<IResourceManagerService>().GetFont("MyFont");
     renderer.AddRenderable(this);
   }
 

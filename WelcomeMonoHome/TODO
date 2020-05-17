@@ -8,17 +8,32 @@ Game:
   State Manager: 
     - Manages game state?
     - Why can't it be the same as scene manager?
+  CollisionManagerService:
+    - make this
   BBEG:
     + can shoot
     + can move
     + boolets fly off guns
+    + hold down left click to shoot
+    + hp
+    + substract hp on boolet hit 
+  GUI: 
+    - healthbar
   Boolet: 
     + moves towards target
     + disappears outside render screen
+    + collision detection
+    - make faster
+    + player boolets and hillarious boolets @today 
+      + make player boolets kill hilariouses
+      + make hillarious boolets kill player
   Hillarious: 
     + exists
     + spawn every second
     - make it smaller tbqh
-    - 
+    + collision detection
+    - shoot bullets at player
   DEBUG: 
     + print text on screen
+  Sprite: 
+    - change origin from middle to topleft (real origin)

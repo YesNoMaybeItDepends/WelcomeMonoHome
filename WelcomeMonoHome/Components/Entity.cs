@@ -30,7 +30,7 @@ public abstract class Entity
       }
       else
       {
-        Console.WriteLine("@Entity -> WARNING: NO SPRITE FOUND");
+        Console.WriteLine("@Entity -> WARNING: SPRITE IS NULL");
       }
     }
   }
@@ -66,7 +66,7 @@ public abstract class Entity
 
   }
 
-  public virtual void OnCollision()
+  public virtual void OnCollision(Entity collider)
   {
 
   }

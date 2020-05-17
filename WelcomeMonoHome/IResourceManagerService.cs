@@ -12,8 +12,13 @@ public interface IResourceManagerService
 
 
   void Initialize();
-  Texture2D GetTexture(string name);
-  void LoadTexture(string name);
   void UnloadContent(string name);
   void Run();
+
+  Texture2D GetTexture(string name);
+  SpriteFont GetFont(string name);
+
+  void LoadTexture(string name);
+  void LoadFont(string name);
+
 }

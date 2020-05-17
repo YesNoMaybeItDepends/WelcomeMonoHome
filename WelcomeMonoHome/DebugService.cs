@@ -24,7 +24,7 @@ public class DebugService : IDebugService
   public ScreenText DrawText(string text, Vector2 pos)
   {
     //_screenTexts.Add(new ScreenText(text, pos, _font));
-    return new ScreenText(text, pos, _font);
+    return new ScreenText(text, pos);
   }
 
   // public void UpdateText(ScreenText screenText, string text)

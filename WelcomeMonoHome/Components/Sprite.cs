@@ -40,8 +40,8 @@ namespace WelcomeMonoHome.Components
     {
       _spriteBatch.Draw(_texture, position - origin, _color);
 
-      // test rectangle
-      _spriteBatch.Draw(_pixel, new Rectangle((int)(position.X - _texture.Width / 2), (int)(position.Y - _texture.Height / 2), _texture.Width, _texture.Height), Color.White);
+      // draw test rectangle
+      // _spriteBatch.Draw(_pixel, new Rectangle((int)(position.X - _texture.Width / 2), (int)(position.Y - _texture.Height / 2), _texture.Width, _texture.Height), Color.White);
     }
   }
 }

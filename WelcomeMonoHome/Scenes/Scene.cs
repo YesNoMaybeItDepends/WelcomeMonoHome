@@ -17,6 +17,7 @@ public class Scene
   RendererService _rendererService;
   DebugService _debugService;
   ResourceManagerService _resourceManagerService;
+  SceneManagerService _sceneManagerService;
 
   // TODO change with entitymanagerservice
   List<Entity> _entities;
@@ -42,6 +43,10 @@ public class Scene
 
   ScreenText entitiesText;
 
+  public BBEG player;
+
+  // debug
+  ScreenText _debugTimer;
 
   public Scene(ContentManager content, SpriteBatch spritebatch, GraphicsDeviceManager graphics)
   {
@@ -59,12 +64,14 @@ public class Scene
     _rendererService = new RendererService(_spriteBatch);
     _debugService = new DebugService(_content);
     _resourceManagerService = new ResourceManagerService(_content);
+    _sceneManagerService = new SceneManagerService(this);
 
     // Map Services
     ServiceLocator.SetService<IEntityManagerService>(_entityManagerService);
     ServiceLocator.SetService<IrendererService>(_rendererService);
     ServiceLocator.SetService<IDebugService>(_debugService);
     ServiceLocator.SetService<IResourceManagerService>(_resourceManagerService);
+    ServiceLocator.SetService<ISceneManagerService>(_sceneManagerService);
 
     random = new Random();
   }
@@ -88,19 +95,21 @@ public class Scene
 
   public void Update(GameTime gametime)
   {
-    Console.WriteLine($"Gametime: {gametime.TotalGameTime.TotalSeconds}");
 
     // initialize loop 
     // TODO this is fucked up, fix
     if (!isInit)
     {
-      BBEG memer = new BBEG();
-      memer.Initialize(_graphics);
+      _debugTimer = new ScreenText($"Gametime: {gametime.TotalGameTime.Seconds}", new Vector2(0, 0));
+      player = new BBEG();
+      player.Initialize(_graphics);
 
-      entitiesText = new ScreenText("Entities: ", new Vector2(50, 50), _font);
+      entitiesText = new ScreenText("Entities: ", new Vector2(50, 50));
 
       isInit = true;
     }
+
+    _debugTimer.UpdateText($"Gametime: {gametime.TotalGameTime.Seconds}");
 
     // hillarious spawn timer
     if (_nextTimeToSpawnHillarious <= gametime.TotalGameTime.TotalSeconds)

@@ -33,6 +33,25 @@ namespace WelcomeMonoHome.GameObjects
     float rateOfFire = 0.5f;
     float nextShot = 0;
 
+    int maximumHP = 10;
+    int _currentHP;
+    int currentHP
+    {
+      get
+      {
+        return _currentHP;
+      }
+      set
+      {
+        if (_currentHP > 0 && _currentHP < 10)
+        {
+          _currentHP = value;
+          Console.WriteLine(_currentHP);
+        }
+      }
+    }
+
+    // collision memes
 
     public BBEG()
     {
@@ -49,6 +68,13 @@ namespace WelcomeMonoHome.GameObjects
       // Get absolute gun positions 
       _leftGunPos = new Vector2((pos.X - texture.Width / 2) + _relativeLeftGunPos.X, (pos.Y - texture.Height / 2) + _relativeLeftGunPos.Y);
       _rightGunPos = new Vector2((pos.X - texture.Width / 2) + _relativeRightGunPos.X, (pos.Y - texture.Height / 2) + _relativeRightGunPos.Y);
+
+      // set collision
+      hasCollision = true;
+      colRectangle = new Rectangle((int)(sprite.position.X - sprite._texture.Width), (int)(sprite.position.Y - sprite._texture.Height), sprite._texture.Width, sprite._texture.Height);
+
+      // hp
+      currentHP = maximumHP;
     }
 
     public void Initialize(GraphicsDeviceManager graphics)
@@ -89,8 +115,26 @@ namespace WelcomeMonoHome.GameObjects
       if (Mouse.GetState().LeftButton == ButtonState.Pressed && nextShot < (float)gameTime.TotalGameTime.TotalSeconds)
       {
         nextShot = (float)gameTime.TotalGameTime.TotalSeconds + rateOfFire;
-        _entityManagerService.AddEntity(new Boolet((pos + _leftGunPos), _booletTexture));
-        _entityManagerService.AddEntity(new Boolet((pos + _rightGunPos), _booletTexture));
+        _entityManagerService.AddEntity(new Boolet((pos + _leftGunPos), _booletTexture, true));
+        _entityManagerService.AddEntity(new Boolet((pos + _rightGunPos), _booletTexture, true));
+      }
+
+      // debug fire
+      if (Mouse.GetState().RightButton == ButtonState.Pressed)
+      {
+        _entityManagerService.AddEntity(new Boolet(Mouse.GetState().Position.ToVector2(), _booletTexture, false));
+      }
+
+      // update collision box
+      colRectangle = new Rectangle((int)(sprite.position.X - sprite._texture.Width / 2), (int)(sprite.position.Y - sprite._texture.Height / 2), sprite._texture.Width, sprite._texture.Height);
+    }
+
+    public override void OnCollision(Entity collider)
+    {
+      if (collider is Boolet)
+      {
+        currentHP--;
+        ScreenText text = new ScreenText("YOU LOST THE GAME DAWG", new Vector2(20, 20));
       }
     }
   }

@@ -26,23 +26,19 @@ public static class ServiceLocator
     // Initialize
     if (_services == null)
     {
-      Console.WriteLine("Initialized ServiceLocator");
       _services = new Dictionary<object, object>();
     }
 
     // Set Service
     _services.Add(typeof(T), Service);
-    Console.WriteLine($"Set Service {typeof(T)} and {Service}");
   }
 
   public static T GetService<T>()
   {
     if (_services != null && _services.ContainsKey(typeof(T)))
     {
-      Console.WriteLine("Get Service");
       return (T)_services[typeof(T)];
     }
-    Console.WriteLine("No services");
     return default(T);
   }
 }
