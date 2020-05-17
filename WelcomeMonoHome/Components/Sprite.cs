@@ -10,7 +10,7 @@ namespace WelcomeMonoHome.Components
     public Vector2 position { get; set; }
     public Texture2D _texture;
     public Texture2D _pixel;
-    Color _color;
+    public Color color;
     public Vector2 origin;
     // ? Entity _parent;
 
@@ -23,7 +23,7 @@ namespace WelcomeMonoHome.Components
 
       // test rectangle
       _pixel = ServiceLocator.GetService<IResourceManagerService>().GetTexture("pixel");
-      _color = Color.White;
+      color = Color.White;
     }
 
     public void LoadContent()
@@ -38,7 +38,7 @@ namespace WelcomeMonoHome.Components
 
     public void Draw(SpriteBatch _spriteBatch)
     {
-      _spriteBatch.Draw(_texture, position - origin, _color);
+      _spriteBatch.Draw(_texture, position - origin, color);
 
       // draw test rectangle
       // _spriteBatch.Draw(_pixel, new Rectangle((int)(position.X - _texture.Width / 2), (int)(position.Y - _texture.Height / 2), _texture.Width, _texture.Height), Color.White);

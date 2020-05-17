@@ -50,7 +50,9 @@ public class EntityManagerService : IEntityManagerService
 
   public void RemoveEntity(Entity entity)
   {
+    // ! TODO MOVE THESE TO ENTITY.DESTROY()
     ServiceLocator.GetService<IrendererService>().RemoveRenderable(entity.sprite);
+    ServiceLocator.GetService<ICollisionManagerService>().RemoveCollidable(entity);
     EntitiesToRemove.Add(entity);
   }
 

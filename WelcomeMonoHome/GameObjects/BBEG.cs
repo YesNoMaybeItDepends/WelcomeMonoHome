@@ -55,6 +55,7 @@ namespace WelcomeMonoHome.GameObjects
 
     public BBEG()
     {
+      // setup textures and sprite
       texture = ServiceLocator.GetService<IResourceManagerService>().GetTexture(_bbegTextureName);
       _booletTexture = ServiceLocator.GetService<IResourceManagerService>().GetTexture(_booletTextureName);
       sprite = new Sprite(texture, Vector2.Zero);
@@ -63,6 +64,8 @@ namespace WelcomeMonoHome.GameObjects
       _entityManagerService = ServiceLocator.GetService<IEntityManagerService>();
       _debugService = ServiceLocator.GetService<IDebugService>();
 
+      // add itself to entitymanager
+      // TODO Entity should add itself on instantiation
       _entityManagerService.AddEntity(this);
 
       // Get absolute gun positions 
@@ -71,7 +74,6 @@ namespace WelcomeMonoHome.GameObjects
 
       // set collision
       hasCollision = true;
-      colRectangle = new Rectangle((int)(sprite.position.X - sprite._texture.Width), (int)(sprite.position.Y - sprite._texture.Height), sprite._texture.Width, sprite._texture.Height);
 
       // hp
       currentHP = maximumHP;
@@ -115,18 +117,15 @@ namespace WelcomeMonoHome.GameObjects
       if (Mouse.GetState().LeftButton == ButtonState.Pressed && nextShot < (float)gameTime.TotalGameTime.TotalSeconds)
       {
         nextShot = (float)gameTime.TotalGameTime.TotalSeconds + rateOfFire;
-        _entityManagerService.AddEntity(new Boolet((pos + _leftGunPos), _booletTexture, true));
-        _entityManagerService.AddEntity(new Boolet((pos + _rightGunPos), _booletTexture, true));
+        _entityManagerService.AddEntity(new Boolet((pos + _leftGunPos), true, Mouse.GetState().Position.ToVector2()));
+        _entityManagerService.AddEntity(new Boolet((pos + _rightGunPos), true, Mouse.GetState().Position.ToVector2()));
       }
 
       // debug fire
       if (Mouse.GetState().RightButton == ButtonState.Pressed)
       {
-        _entityManagerService.AddEntity(new Boolet(Mouse.GetState().Position.ToVector2(), _booletTexture, false));
+        _entityManagerService.AddEntity(new Boolet(Mouse.GetState().Position.ToVector2(), false, pos));
       }
-
-      // update collision box
-      colRectangle = new Rectangle((int)(sprite.position.X - sprite._texture.Width / 2), (int)(sprite.position.Y - sprite._texture.Height / 2), sprite._texture.Width, sprite._texture.Height);
     }
 
     public override void OnCollision(Entity collider)
@@ -134,7 +133,6 @@ namespace WelcomeMonoHome.GameObjects
       if (collider is Boolet)
       {
         currentHP--;
-        ScreenText text = new ScreenText("YOU LOST THE GAME DAWG", new Vector2(20, 20));
       }
     }
   }

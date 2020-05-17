@@ -12,54 +12,88 @@ public class Boolet : Entity
   float _speed = 200f;
   Vector2 _targetPos;
   Vector2 _direction;
-  bool _isPlayerBoolet;
+  public bool isPlayerBoolet;
 
-  public Boolet(Vector2 Pos, Texture2D Texture, bool isPlayerBoolet)
+  // public Boolet(Vector2 Pos, Texture2D Texture, bool IsPlayerBoolet)
+  // {
+  //   texture = Texture;
+  //   sprite = new Sprite(texture, Vector2.Zero);
+
+  //   pos = Pos;
+  //   isPlayerBoolet = IsPlayerBoolet;
+
+
+  //   // set targetPos
+  //   if (this.isPlayerBoolet)
+  //   {
+  //     _targetPos = Mouse.GetState().Position.ToVector2();
+  //   }
+  //   else
+  //   {
+  //     Scene scene = ServiceLocator.GetService<ISceneManagerService>().GetScene();
+  //     _targetPos = scene.player.pos;
+  //   }
+
+  //   // set direction 
+  //   _direction = Vector2.Normalize(_targetPos - this.pos);
+
+  //   // enable collision
+  //   hasCollision = true;
+  // }
+
+  public Boolet(Vector2 Pos, bool IsPlayerBoolet, Vector2 TargetPos)
   {
-    pos = Pos;
-    texture = Texture;
-    _isPlayerBoolet = isPlayerBoolet;
-
+    texture = ServiceLocator.GetService<IResourceManagerService>().GetTexture("boolet");
     sprite = new Sprite(texture, Vector2.Zero);
 
-    // set targetPos
-    if (_isPlayerBoolet)
+    pos = Pos;
+    _targetPos = TargetPos;
+
+    isPlayerBoolet = IsPlayerBoolet;
+    if (isPlayerBoolet)
     {
-      _targetPos = Mouse.GetState().Position.ToVector2();
-    }
-    else
-    {
-      Scene scene = ServiceLocator.GetService<ISceneManagerService>().GetScene();
-      _targetPos = scene.player.pos;
+      sprite.color = Color.Lime;
     }
 
     // set direction 
     _direction = Vector2.Normalize(_targetPos - this.pos);
 
-    // set collision box
+    // enable collision
     hasCollision = true;
-    colRectangle = new Rectangle((int)(sprite.position.X - sprite._texture.Width / 2), (int)(sprite.position.Y - sprite._texture.Height / 2), sprite._texture.Width, sprite._texture.Height);
   }
+
+  // // TODO finish this and add player reference to hillarious so i dont need to locate the whole fucking scene
+  // public Boolet(Vector2 Pos, Texture2D Texture, BBEG player)
+  // {
+  //   texture = Texture;
+  //   sprite = new Sprite(texture, Vector2.Zero);
+
+  //   pos = Pos;
+
+  //   isPlayerBoolet = false;
+
+
+  //   // set targetPos
+  //   if (isPlayerBoolet)
+  //   {
+  //     _targetPos = Mouse.GetState().Position.ToVector2();
+  //   }
+  //   else
+  //   {
+  //     Scene scene = ServiceLocator.GetService<ISceneManagerService>().GetScene();
+  //     _targetPos = scene.player.pos;
+  //   }
+
+  // set direction 
+  // _direction = Vector2.Normalize(_targetPos - this.pos);
+
+  //   // enable collision
+  //   hasCollision = true;
+  // }
 
   public override void Update(GameTime gameTime)
   {
     pos += (_direction * _speed) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-    // update collision box
-    colRectangle = new Rectangle((int)(sprite.position.X - sprite._texture.Width), (int)(sprite.position.Y - sprite._texture.Height), sprite._texture.Width, sprite._texture.Height);
-
-    // check collision
-    foreach (Entity entity in ServiceLocator.GetService<IEntityManagerService>().Entities)
-    {
-      if (entity != this && entity.hasCollision)
-      {
-        // resolve collision
-        if (colRectangle.Intersects(entity.colRectangle))
-        {
-          OnCollision(entity);
-        }
-      }
-    }
   }
 
   public override void OnBecameInvisible()
@@ -69,14 +103,12 @@ public class Boolet : Entity
 
   public override void OnCollision(Entity collider)
   {
-    if (collider is Hillarious && _isPlayerBoolet)
+    if (collider is Hillarious && isPlayerBoolet)
     {
-      collider.OnCollision(this);
       ServiceLocator.GetService<IEntityManagerService>().RemoveEntity(this);
     }
-    else if (collider is BBEG && !_isPlayerBoolet)
+    else if (collider is BBEG && !isPlayerBoolet)
     {
-      collider.OnCollision(this);
       ServiceLocator.GetService<IEntityManagerService>().RemoveEntity(this);
     }
   }

@@ -9,7 +9,8 @@ Game:
     - Manages game state?
     - Why can't it be the same as scene manager?
   CollisionManagerService:
-    - make this
+    + make this
+    + noice
   BBEG:
     + can shoot
     + can move
@@ -32,7 +33,7 @@ Game:
     + spawn every second
     - make it smaller tbqh
     + collision detection
-    - shoot bullets at player
+    - shoot bullets at player @today 
   DEBUG: 
     + print text on screen
   Sprite: 

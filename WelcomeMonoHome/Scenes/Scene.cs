@@ -18,6 +18,7 @@ public class Scene
   DebugService _debugService;
   ResourceManagerService _resourceManagerService;
   SceneManagerService _sceneManagerService;
+  CollisionManagerService _collisionManagerService;
 
   // TODO change with entitymanagerservice
   List<Entity> _entities;
@@ -41,12 +42,13 @@ public class Scene
   float _hillariousSpawnRate = 1f;
   float _nextTimeToSpawnHillarious = 1;
 
-  ScreenText entitiesText;
+  ScreenText _entitiesText;
 
-  public BBEG player;
+  public BBEG _player;
 
   // debug
   ScreenText _debugTimer;
+  ScreenText _framerateText;
 
   public Scene(ContentManager content, SpriteBatch spritebatch, GraphicsDeviceManager graphics)
   {
@@ -65,6 +67,7 @@ public class Scene
     _debugService = new DebugService(_content);
     _resourceManagerService = new ResourceManagerService(_content);
     _sceneManagerService = new SceneManagerService(this);
+    _collisionManagerService = new CollisionManagerService();
 
     // Map Services
     ServiceLocator.SetService<IEntityManagerService>(_entityManagerService);
@@ -72,6 +75,7 @@ public class Scene
     ServiceLocator.SetService<IDebugService>(_debugService);
     ServiceLocator.SetService<IResourceManagerService>(_resourceManagerService);
     ServiceLocator.SetService<ISceneManagerService>(_sceneManagerService);
+    ServiceLocator.SetService<ICollisionManagerService>(_collisionManagerService);
 
     random = new Random();
   }
@@ -100,21 +104,21 @@ public class Scene
     // TODO this is fucked up, fix
     if (!isInit)
     {
-      _debugTimer = new ScreenText($"Gametime: {gametime.TotalGameTime.Seconds}", new Vector2(0, 0));
-      player = new BBEG();
-      player.Initialize(_graphics);
+      _player = new BBEG();
+      _player.Initialize(_graphics);
 
-      entitiesText = new ScreenText("Entities: ", new Vector2(50, 50));
+      _debugTimer = new ScreenText($"Gametime: {gametime.TotalGameTime.Seconds}", new Vector2(0, 0));
+      _entitiesText = new ScreenText("Entities: ", new Vector2(0, 20));
+      _framerateText = new ScreenText("np", new Vector2(0, 40));
 
       isInit = true;
     }
 
-    _debugTimer.UpdateText($"Gametime: {gametime.TotalGameTime.Seconds}");
 
     // hillarious spawn timer
     if (_nextTimeToSpawnHillarious <= gametime.TotalGameTime.TotalSeconds)
     {
-      Hillarious memress = new Hillarious();
+      Hillarious memress = new Hillarious(_player);
       memress.Initialize(_graphics, random);
       _entities.Add(memress);
 
@@ -123,7 +127,14 @@ public class Scene
 
     // Update Entities
     _entityManagerService.UpdateEntities(gametime);
-    entitiesText.text = $"Entities: {_entityManagerService.Entities.Count.ToString()}";
+
+    // Update collision queue
+    _collisionManagerService.Update();
+
+    // debug
+    _entitiesText.UpdateText($"Entities: {_entityManagerService.Entities.Count.ToString()}");
+    _debugTimer.UpdateText($"Gametime: {gametime.TotalGameTime.Seconds}");
+    _framerateText.UpdateText($"FPS: {(int)(1 / gametime.ElapsedGameTime.TotalSeconds)}");
   }
 
   // ? pass spritebatch or use _spritebatch?

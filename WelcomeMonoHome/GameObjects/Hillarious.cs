@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using WelcomeMonoHome.Components;
+using WelcomeMonoHome.GameObjects;
 
 public enum Side
 {
@@ -19,13 +20,20 @@ public class Hillarious : Entity
 
   string hillariousTextureName = "Hillarious_mini";
 
-  public Hillarious()
+  float rateOfFire = 0.5f;
+  float nextShot = 0;
+
+  BBEG _player;
+
+  public Hillarious(BBEG player)
   {
     texture = ServiceLocator.GetService<IResourceManagerService>().GetTexture(hillariousTextureName);
     sprite = new Sprite(texture, Vector2.Zero);
 
+    _player = player;
+
+    // enable collision
     hasCollision = true;
-    colRectangle = new Rectangle((int)(sprite.position.X - sprite._texture.Width), (int)(sprite.position.Y - sprite._texture.Height), sprite._texture.Width, sprite._texture.Height);
   }
 
   public void Initialize(GraphicsDeviceManager graphics, /*Side Side, */Random random)
@@ -37,7 +45,7 @@ public class Hillarious : Entity
     float xspawn;
     Side side;
 
-    // Initialize hillarious' position
+    // Determine spawn position
     bool SpawnOnHorizontalSide = random.Next(1, 3) % 2 == 0 ? true : false;
 
     if (SpawnOnHorizontalSide)
@@ -53,9 +61,10 @@ public class Hillarious : Entity
       side = (yspawn == 0) ? Side.TOP : Side.BOTTOM;
     }
 
+    // set spawn position
     pos = new Vector2(xspawn, yspawn);
 
-    // Pick a random point along the opposite edges as TargetPos
+    // Determine TargetPos as random point on edge opposite from spawn edge 
     switch (side)
     {
       case Side.LEFT:
@@ -82,8 +91,11 @@ public class Hillarious : Entity
   {
     pos += Direction * _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-    // update collision box
-    colRectangle = new Rectangle((int)(sprite.position.X - sprite._texture.Width / 2), (int)(sprite.position.Y - sprite._texture.Height / 2), sprite._texture.Width, sprite._texture.Height);
+    if (nextShot < (float)gameTime.TotalGameTime.TotalSeconds)
+    {
+      nextShot = (float)gameTime.TotalGameTime.TotalSeconds + rateOfFire;
+      ServiceLocator.GetService<IEntityManagerService>().AddEntity(new Boolet(pos, false, _player.pos));
+    }
   }
 
   int FindNearestNumber(int number, int min, int max)
@@ -105,6 +117,9 @@ public class Hillarious : Entity
 
   public override void OnCollision(Entity collider)
   {
-    ServiceLocator.GetService<IEntityManagerService>().RemoveEntity(this);
+    if (collider is Boolet boolet && boolet.isPlayerBoolet)
+    {
+      ServiceLocator.GetService<IEntityManagerService>().RemoveEntity(this);
+    }
   }
 }

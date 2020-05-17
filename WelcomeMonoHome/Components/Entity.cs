@@ -12,8 +12,40 @@ public abstract class Entity
   private bool _isVisible;
   private Vector2 _pos;
 
-  public bool hasCollision = false;
-  public Rectangle colRectangle;
+  private bool _hasCollision = false;
+  public bool hasCollision
+  {
+    get
+    {
+      return _hasCollision;
+    }
+    set
+    {
+      if (value == true)
+      {
+        _hasCollision = value;
+        ServiceLocator.GetService<ICollisionManagerService>().AddCollidable(this);
+      }
+      else if (value == false)
+      {
+        _hasCollision = false;
+        ServiceLocator.GetService<ICollisionManagerService>().RemoveCollidable(this);
+      }
+    }
+  }
+
+  Rectangle _colRectangle;
+  public Rectangle colRectangle
+  {
+    get
+    {
+      return _colRectangle;
+    }
+    set
+    {
+      _colRectangle = value;
+    }
+  }
 
   public Vector2 pos
   {
@@ -24,6 +56,8 @@ public abstract class Entity
     set
     {
       _pos = value;
+
+      // update sprite position
       if (sprite != null)
       {
         sprite.position = _pos;
@@ -31,6 +65,15 @@ public abstract class Entity
       else
       {
         Console.WriteLine("@Entity -> WARNING: SPRITE IS NULL");
+      }
+
+      if (hasCollision)
+      {
+        // update collision box
+        colRectangle = new Rectangle((int)(sprite.position.X - sprite._texture.Width / 2), (int)(sprite.position.Y - sprite._texture.Height / 2), sprite._texture.Width, sprite._texture.Height);
+
+        // check for collisions
+        ServiceLocator.GetService<ICollisionManagerService>().CheckCollision(this);
       }
     }
   }
@@ -67,6 +110,17 @@ public abstract class Entity
   }
 
   public virtual void OnCollision(Entity collider)
+  {
+
+  }
+
+  public virtual void Destroy()
+  {
+
+  }
+
+  // TODO adds the whole thing to entitymanager and what have you not
+  public void Instantiate()
   {
 
   }
