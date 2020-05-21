@@ -9,37 +9,14 @@ using WelcomeMonoHome.GameObjects;
 public class Boolet : Entity
 {
   float _rotation;
-  float _speed = 200f;
+  float _speed;
+  // TODO move these to bbeg/hillarious
+  const float PLAYER_BOOLET_SPEED = 300f;
+  const float HILLARIOUS_BOOLET_SPEED = 200f;
   Vector2 _targetPos;
   Vector2 _direction;
   public bool isPlayerBoolet;
-
-  // public Boolet(Vector2 Pos, Texture2D Texture, bool IsPlayerBoolet)
-  // {
-  //   texture = Texture;
-  //   sprite = new Sprite(texture, Vector2.Zero);
-
-  //   pos = Pos;
-  //   isPlayerBoolet = IsPlayerBoolet;
-
-
-  //   // set targetPos
-  //   if (this.isPlayerBoolet)
-  //   {
-  //     _targetPos = Mouse.GetState().Position.ToVector2();
-  //   }
-  //   else
-  //   {
-  //     Scene scene = ServiceLocator.GetService<ISceneManagerService>().GetScene();
-  //     _targetPos = scene.player.pos;
-  //   }
-
-  //   // set direction 
-  //   _direction = Vector2.Normalize(_targetPos - this.pos);
-
-  //   // enable collision
-  //   hasCollision = true;
-  // }
+  float _scale = 2f;
 
   public Boolet(Vector2 Pos, bool IsPlayerBoolet, Vector2 TargetPos)
   {
@@ -52,7 +29,12 @@ public class Boolet : Entity
     isPlayerBoolet = IsPlayerBoolet;
     if (isPlayerBoolet)
     {
+      _speed = PLAYER_BOOLET_SPEED;
       sprite.color = Color.Lime;
+    }
+    else
+    {
+      _speed = HILLARIOUS_BOOLET_SPEED;
     }
 
     // set direction 
@@ -60,36 +42,10 @@ public class Boolet : Entity
 
     // enable collision
     hasCollision = true;
+
+    // double sprite scale
+    sprite.scale = new Vector2(2, 2);
   }
-
-  // // TODO finish this and add player reference to hillarious so i dont need to locate the whole fucking scene
-  // public Boolet(Vector2 Pos, Texture2D Texture, BBEG player)
-  // {
-  //   texture = Texture;
-  //   sprite = new Sprite(texture, Vector2.Zero);
-
-  //   pos = Pos;
-
-  //   isPlayerBoolet = false;
-
-
-  //   // set targetPos
-  //   if (isPlayerBoolet)
-  //   {
-  //     _targetPos = Mouse.GetState().Position.ToVector2();
-  //   }
-  //   else
-  //   {
-  //     Scene scene = ServiceLocator.GetService<ISceneManagerService>().GetScene();
-  //     _targetPos = scene.player.pos;
-  //   }
-
-  // set direction 
-  // _direction = Vector2.Normalize(_targetPos - this.pos);
-
-  //   // enable collision
-  //   hasCollision = true;
-  // }
 
   public override void Update(GameTime gameTime)
   {

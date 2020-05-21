@@ -99,6 +99,8 @@ public abstract class Entity
     }
   }
 
+  public List<Entity> alreadyCollidedWith = new List<Entity>();
+
   public virtual void OnBecameVisible()
   {
 

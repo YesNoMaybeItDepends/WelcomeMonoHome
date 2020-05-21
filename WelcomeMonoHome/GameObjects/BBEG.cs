@@ -33,9 +33,10 @@ namespace WelcomeMonoHome.GameObjects
     float rateOfFire = 0.5f;
     float nextShot = 0;
 
+    // hp
     int maximumHP = 10;
     int _currentHP;
-    int currentHP
+    public int currentHP
     {
       get
       {
@@ -43,15 +44,16 @@ namespace WelcomeMonoHome.GameObjects
       }
       set
       {
-        if (_currentHP > 0 && _currentHP < 10)
+        if (value >= 0 && value <= 10)
         {
           _currentHP = value;
-          Console.WriteLine(_currentHP);
+          healthBar._fullnessPercent = _currentHP * 10;
         }
       }
     }
 
-    // collision memes
+    // healthbar
+    HealthBar healthBar;
 
     public BBEG()
     {
@@ -76,13 +78,16 @@ namespace WelcomeMonoHome.GameObjects
       hasCollision = true;
 
       // hp
-      currentHP = maximumHP;
+      _currentHP = maximumHP;
     }
 
     public void Initialize(GraphicsDeviceManager graphics)
     {
       // Initialize position at the middle of the screen from the sprite's center
       pos = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
+
+      // healthBar
+      healthBar = new HealthBar(new Vector2(pos.X, pos.Y + 200), 600, 25);
     }
 
     public override void Update(GameTime gameTime)
@@ -130,9 +135,9 @@ namespace WelcomeMonoHome.GameObjects
 
     public override void OnCollision(Entity collider)
     {
-      if (collider is Boolet)
+      if (collider is Boolet boolet && !boolet.isPlayerBoolet)
       {
-        currentHP--;
+        currentHP -= 1;
       }
     }
   }

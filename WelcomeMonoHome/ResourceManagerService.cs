@@ -23,11 +23,21 @@ public class ResourceManagerService : IResourceManagerService
     textures["ERROR"] = _content.Load<Texture2D>("ERROR");
     fonts["MyFont"] = _content.Load<SpriteFont>("MyFont");
 
-    // level specific
+
+#if SECRET
+    // level SECRET
+    textures["BBEG_secret"] = _content.Load<Texture2D>("BBEG_ok_mini");
+    textures["boolet"] = _content.Load<Texture2D>("boolet");
+    textures["Hillarious_secret"] = _content.Load<Texture2D>("Hillarious_mini");
+    textures["pixel"] = _content.Load<Texture2D>("pixel");
+#else
+    // level normal
     textures["BBEG_ok_mini"] = _content.Load<Texture2D>("BBEG_ok_mini");
     textures["boolet"] = _content.Load<Texture2D>("boolet");
     textures["Hillarious_mini"] = _content.Load<Texture2D>("Hillarious_mini");
     textures["pixel"] = _content.Load<Texture2D>("pixel");
+#endif
+
   }
 
   public Texture2D GetTexture(string name)

@@ -49,6 +49,7 @@ public class Scene
   // debug
   ScreenText _debugTimer;
   ScreenText _framerateText;
+  ScreenText _playerHPText;
 
   public Scene(ContentManager content, SpriteBatch spritebatch, GraphicsDeviceManager graphics)
   {
@@ -94,7 +95,6 @@ public class Scene
     // _pixel = _content.Load<Texture2D>("pixel");
 
     _resourceManagerService.Initialize();
-    _debugService.UpdateFont(_font);
   }
 
   public void Update(GameTime gametime)
@@ -107,9 +107,14 @@ public class Scene
       _player = new BBEG();
       _player.Initialize(_graphics);
 
-      _debugTimer = new ScreenText($"Gametime: {gametime.TotalGameTime.Seconds}", new Vector2(0, 0));
-      _entitiesText = new ScreenText("Entities: ", new Vector2(0, 20));
-      _framerateText = new ScreenText("np", new Vector2(0, 40));
+      _debugTimer = new ScreenText($"Gametime: {gametime.TotalGameTime.Seconds}", Vector2.Zero);
+      _entitiesText = new ScreenText("Entities: ", Vector2.Zero);
+      _framerateText = new ScreenText("FPS: ", Vector2.Zero);
+      _playerHPText = new ScreenText("HP: ", Vector2.Zero);
+      _debugService.AddToTextList(_debugTimer);
+      _debugService.AddToTextList(_entitiesText);
+      _debugService.AddToTextList(_framerateText);
+      _debugService.AddToTextList(_playerHPText);
 
       isInit = true;
     }
@@ -135,6 +140,7 @@ public class Scene
     _entitiesText.UpdateText($"Entities: {_entityManagerService.Entities.Count.ToString()}");
     _debugTimer.UpdateText($"Gametime: {gametime.TotalGameTime.Seconds}");
     _framerateText.UpdateText($"FPS: {(int)(1 / gametime.ElapsedGameTime.TotalSeconds)}");
+    _playerHPText.UpdateText($"HP: {_player.currentHP}");
   }
 
   // ? pass spritebatch or use _spritebatch?

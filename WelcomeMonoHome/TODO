@@ -18,14 +18,20 @@ Game:
     + hold down left click to shoot
     + hp
     + substract hp on boolet hit 
-  GUI: 
-    - healthbar
+  GUI:
+    - give it graphics class to position stuff on the screen
+    GUIObject: 
+      - container for all gui stuff
+    HealthBar:
+      + barebones
+    ListBox:
+
   Boolet: 
     + moves towards target
     + disappears outside render screen
     + collision detection
     - make faster
-    + player boolets and hillarious boolets @today 
+    + player boolets and hillarious boolets
       + make player boolets kill hilariouses
       + make hillarious boolets kill player
   Hillarious: 
@@ -33,8 +39,10 @@ Game:
     + spawn every second
     - make it smaller tbqh
     + collision detection
-    - shoot bullets at player @today 
+    + shoot bullets at player
   DEBUG: 
     + print text on screen
+    + print text on screen for real
+    - DEBUG is turning into a GUI panel which just displays a list of text vertically
   Sprite: 
     - change origin from middle to topleft (real origin)

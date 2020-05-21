@@ -23,6 +23,9 @@ namespace WelcomeMonoHome
     protected override void Initialize()
     {
       base.Initialize();
+      graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+      graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+      graphics.ApplyChanges();
     }
 
     protected override void LoadContent()

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 public interface IDebugService
 {
-  ScreenText DrawText(string text, Vector2 pos);
-  void UpdateFont(SpriteFont font);
+  void AddToTextList(ScreenText screenText);
+  void RemoveFromTextList(ScreenText screenText);
+  void UpdateTextListPositions();
 }

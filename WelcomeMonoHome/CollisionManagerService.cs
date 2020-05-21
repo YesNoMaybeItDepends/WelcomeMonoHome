@@ -28,8 +28,12 @@ public class CollisionManagerService : ICollisionManagerService
   {
     foreach (Entity e in collidableEntities)
     {
-      if (entity != e && entity.colRectangle.Intersects(e.colRectangle))
+      if (entity != e && entity.colRectangle.Intersects(e.colRectangle) && !entity.alreadyCollidedWith.Contains(e))
       {
+        // set both entities as already having collided with eachother this frame
+        entity.alreadyCollidedWith.Add(e);
+        e.alreadyCollidedWith.Add(entity);
+
         entity.OnCollision(e);
         e.OnCollision(entity);
       }
@@ -53,6 +57,15 @@ public class CollisionManagerService : ICollisionManagerService
     {
       collidableEntities.AddRange(entitiesToAdd);
       entitiesToAdd.Clear();
+    }
+
+    // reset alreadyCollidedWith 
+    if (collidableEntities.Count > 0)
+    {
+      foreach (Entity entity in collidableEntities)
+      {
+        entity.alreadyCollidedWith.Clear();
+      }
     }
   }
 
