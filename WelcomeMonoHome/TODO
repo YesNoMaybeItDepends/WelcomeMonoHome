@@ -1,48 +1,63 @@
 Game: 
-
   TODO: 
-    - make it so all entities get added to rendererservice and entitiesservice
-
+    - Render GUI on camera frame, not world frame @project(Game.GUI) 
+    - add gameover
+    + add randomly spawning health pickups
+    + make healthpills despawn 
+    + give healthpills some visual indicator that they're going to despawn
+    - also that they're going to spawn?
+    - When you pick up a pill make it go slightly bigger then quickly small until it disappears @project(Game.HealthPill)
+    - Draw rectangles with float values @low 
+      SpriteBatch.Draw() normally takes a Vector2 parameter
+      Vector2 takes float parameters
+      SpriteBatch.Draw() can take a Rectangle parameter
+      Rectangle takes Int parameters
+      Therefore, there is a discrepancy between drawing textures and drawing rectangles
   Scene Manager: 
     - Manages @Scenes 
   State Manager: 
     - Manages game state?
     - Why can't it be the same as scene manager?
-  CollisionManagerService:
-    + make this
-    + noice
-  BBEG:
-    + can shoot
-    + can move
-    + boolets fly off guns
-    + hold down left click to shoot
-    + hp
-    + substract hp on boolet hit 
   GUI:
-    - give it graphics class to position stuff on the screen
     GUIObject: 
+      - needed?
       - container for all gui stuff
-    HealthBar:
-      + barebones
-    ListBox:
 
   Boolet: 
-    + moves towards target
-    + disappears outside render screen
-    + collision detection
     - make faster
-    + player boolets and hillarious boolets
-      + make player boolets kill hilariouses
-      + make hillarious boolets kill player
   Hillarious: 
-    + exists
-    + spawn every second
     - make it smaller tbqh
-    + collision detection
-    + shoot bullets at player
   DEBUG: 
-    + print text on screen
-    + print text on screen for real
     - DEBUG is turning into a GUI panel which just displays a list of text vertically
   Sprite: 
     - change origin from middle to topleft (real origin)
+
+Archive:
+  x Nez IMGUI stuff @project(Game.TODO)
+    Too complicated for now
+  + make it so all entities get added to rendererservice and entitiesservice: @project(Game.TODO)
+  + they can instantiate and destroy for now @project(Game.TODO)
+  + make better hitboxes that can resize to the actual sprite scale @project(Game.TODO)
+  + zoom in and out @today @high  @project(Game.TODO)
+  + make this @project(Game.CollisionManagerService)
+  + noice @project(Game.CollisionManagerService)
+  + can shoot @project(Game.BBEG)
+  + can move @project(Game.BBEG)
+  + boolets fly off guns @project(Game.BBEG)
+  + hold down left click to shoot @project(Game.BBEG)
+  + hp @project(Game.BBEG)
+  + substract hp on boolet hit  @project(Game.BBEG)
+  + give it graphics class to position stuff on the screen @project(Game.GUI)
+  + barebones @project(Game.GUI.HealthBar)
+  + moves towards target @project(Game.Boolet)
+  + disappears outside render screen @project(Game.Boolet)
+  + collision detection @project(Game.Boolet)
+  + player boolets and hillarious boolets @project(Game.Boolet)
+  + make player boolets kill hilariouses @project(Game.Boolet)
+  + make hillarious boolets kill player @project(Game.Boolet)
+  + exists @project(Game.Hillarious)
+  + spawn every second @project(Game.Hillarious)
+  + collision detection @project(Game.Hillarious)
+  + shoot bullets at player @project(Game.Hillarious)
+  + print text on screen @project(Game.DEBUG)
+  + print text on screen for real @project(Game.DEBUG)

@@ -6,31 +6,43 @@ namespace WelcomeMonoHome
 {
   public class WelcomeMonoHome : Game
   {
-    GraphicsDeviceManager graphics;
+    public GraphicsDeviceManager graphics;
+    GraphicsService graphicsService;
+
     SpriteBatch spriteBatch;
 
     Scene scene;
 
-    public static Texture2D whitePixelTexture;
+    bool PAUSED = false;
+    bool HELD = false;
 
     public WelcomeMonoHome()
     {
+      // initialize graphics
       graphics = new GraphicsDeviceManager(this);
+      graphicsService = new GraphicsService(graphics);
+
+      // map services
+      ServiceLocator.SetService<IGraphicsService>(graphicsService);
+
       Content.RootDirectory = "Content";
       IsMouseVisible = true;
+
+
     }
 
     protected override void Initialize()
     {
-      base.Initialize();
       graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
       graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+      //graphics.IsFullScreen = true;
+      graphics.HardwareModeSwitch = false;
       graphics.ApplyChanges();
+      base.Initialize();
     }
 
     protected override void LoadContent()
     {
-      whitePixelTexture = new Texture2D(GraphicsDevice, 1, 1);
       spriteBatch = new SpriteBatch(GraphicsDevice);
     }
 
@@ -39,23 +51,47 @@ namespace WelcomeMonoHome
       if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
         Exit();
 
-      if (scene == null)
+      if (Keyboard.GetState().IsKeyDown(Keys.Space))
       {
-        scene = new Scene(Content, spriteBatch, graphics);
-        scene.LoadContent();
-        scene.Initialize();
+        if (!HELD)
+        {
+          HELD = true;
+        }
       }
 
-      scene.Update(gameTime);
+      if (Keyboard.GetState().IsKeyUp(Keys.Space) && HELD)
+      {
+        HELD = false;
+        if (PAUSED == false)
+        {
+          PAUSED = true;
+        }
+        else
+        {
+          PAUSED = false;
+        }
+      }
 
-      base.Update(gameTime);
+      if (!PAUSED)
+      {
+        if (scene == null)
+        {
+          scene = new Scene(Content, spriteBatch, graphics);
+          scene.LoadContent();
+          scene.Initialize();
+        }
+
+        scene.Update(gameTime);
+
+        base.Update(gameTime);
+      }
     }
 
     protected override void Draw(GameTime gameTime)
     {
       GraphicsDevice.Clear(Color.CornflowerBlue);
 
-      scene.Draw();
+      scene.Draw(gameTime);
 
       base.Draw(gameTime);
     }

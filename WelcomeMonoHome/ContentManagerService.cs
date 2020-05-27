@@ -3,14 +3,14 @@ using System;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 
-public class ResourceManagerService : IResourceManagerService
+public class ContentManagerService : IContentManagerService
 {
   public ContentManager _content { get; set; }
 
   public Dictionary<string, Texture2D> textures { get; set; }
   public Dictionary<string, SpriteFont> fonts { get; set; }
 
-  public ResourceManagerService(ContentManager content)
+  public ContentManagerService(ContentManager content)
   {
     _content = content;
     textures = new Dictionary<string, Texture2D>();
@@ -23,26 +23,17 @@ public class ResourceManagerService : IResourceManagerService
     textures["ERROR"] = _content.Load<Texture2D>("ERROR");
     fonts["MyFont"] = _content.Load<SpriteFont>("MyFont");
 
-
-#if SECRET
-    // level SECRET
-    textures["BBEG_secret"] = _content.Load<Texture2D>("BBEG_ok_mini");
-    textures["boolet"] = _content.Load<Texture2D>("boolet");
-    textures["Hillarious_secret"] = _content.Load<Texture2D>("Hillarious_mini");
-    textures["pixel"] = _content.Load<Texture2D>("pixel");
-#else
     // level normal
     textures["BBEG_ok_mini"] = _content.Load<Texture2D>("BBEG_ok_mini");
     textures["boolet"] = _content.Load<Texture2D>("boolet");
     textures["Hillarious_mini"] = _content.Load<Texture2D>("Hillarious_mini");
     textures["pixel"] = _content.Load<Texture2D>("pixel");
-#endif
-
+    textures["HealthPill"] = _content.Load<Texture2D>("HealthPill");
   }
 
   public Texture2D GetTexture(string name)
   {
-    if (textures[name] != null)
+    if (textures.ContainsKey(name) && textures[name] != null)
     {
       return textures[name];
     }

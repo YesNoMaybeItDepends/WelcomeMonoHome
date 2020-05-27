@@ -9,7 +9,7 @@ public abstract class Entity
   public abstract void Update(GameTime gameTime);
   public Sprite sprite;
   public Texture2D texture;
-  private bool _isVisible;
+  private bool? _isVisible;
   private Vector2 _pos;
 
   private bool _hasCollision = false;
@@ -47,7 +47,7 @@ public abstract class Entity
     }
   }
 
-  public Vector2 pos
+  public virtual Vector2 pos
   {
     get
     {
@@ -70,7 +70,7 @@ public abstract class Entity
       if (hasCollision)
       {
         // update collision box
-        colRectangle = new Rectangle((int)(sprite.position.X - sprite._texture.Width / 2), (int)(sprite.position.Y - sprite._texture.Height / 2), sprite._texture.Width, sprite._texture.Height);
+        colRectangle = new Rectangle((int)(sprite.position.X - (sprite._texture.Width) / 2), (int)(sprite.position.Y - (sprite._texture.Height) / 2), (int)(sprite._texture.Width * sprite.scale.X), (int)((sprite._texture.Height * sprite.scale.Y)));
 
         // check for collisions
         ServiceLocator.GetService<ICollisionManagerService>().CheckCollision(this);
@@ -78,7 +78,7 @@ public abstract class Entity
     }
   }
 
-  public bool isVisible
+  public bool? isVisible
   {
     get
     {
@@ -86,12 +86,12 @@ public abstract class Entity
     }
     set
     {
-      if (_isVisible == true && value == false)
+      if (_isVisible != false && value == false)
       {
         _isVisible = false;
         OnBecameInvisible();
       }
-      else if (_isVisible == false && value == true)
+      else if (_isVisible != true && value == true)
       {
         _isVisible = true;
         OnBecameVisible();
@@ -118,12 +118,17 @@ public abstract class Entity
 
   public virtual void Destroy()
   {
+    IEntityManagerService _entityManagerService = ServiceLocator.GetService<IEntityManagerService>();
 
+    _entityManagerService.RemoveEntity(this);
+    sprite.Destroy();
   }
 
-  // TODO adds the whole thing to entitymanager and what have you not
   public void Instantiate()
   {
+    IEntityManagerService _entityManagerService = ServiceLocator.GetService<IEntityManagerService>();
 
+    _entityManagerService.AddEntity(this);
+    sprite.Instantiate();
   }
 }

@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
@@ -5,13 +6,19 @@ public class RendererService : IrendererService
 {
   public SpriteBatch _spriteBatch { get; set; }
 
+  public Camera _camera;
+  GraphicsDeviceManager _graphicsDevice;
+
   public List<IRenderable> _renderableAddQueue { get; set; }
   public List<IRenderable> _renderableRenderQueue { get; set; }
   public List<IRenderable> _renderableRemoveQueue { get; set; }
 
-  public RendererService(SpriteBatch SpriteBatch)
+  public RendererService(SpriteBatch SpriteBatch, Camera camera)
   {
     _spriteBatch = SpriteBatch;
+    _camera = camera;
+    _graphicsDevice = ServiceLocator.GetService<IGraphicsService>().graphics;
+    _camera._pos = new Vector2(_graphicsDevice.PreferredBackBufferWidth / 2, _graphicsDevice.PreferredBackBufferHeight / 2);
 
     _renderableAddQueue = new List<IRenderable>();
     _renderableRenderQueue = new List<IRenderable>();
@@ -41,7 +48,7 @@ public class RendererService : IrendererService
     }
 
     // draw
-    _spriteBatch.Begin();
+    _spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, _camera.get_transformation(_graphicsDevice.GraphicsDevice));
 
     foreach (IRenderable renderable in _renderableRenderQueue)
     {

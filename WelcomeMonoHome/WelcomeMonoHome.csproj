@@ -3,8 +3,9 @@
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <!-- Set to "netcoreapp" plus the first 2 digits of your .NET Core SDK version. -->
+        <!-- <TargetFramework>netcoreapp3.1</TargetFramework> -->
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+		<TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
     </PropertyGroup>
 
     <ItemGroup>
@@ -13,11 +14,11 @@
 
     <ItemGroup>
         <PackageReference Include="MonoGame.Content.Builder" Version="3.7.0.4" />
-        <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.7.0.7" />
+        <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.8.0.13" />
     </ItemGroup>
 
     <!-- Actually cleans your project when you run "dotnet clean" -->
-    <Target Name="SpicNSpan"  AfterTargets="Clean">
+    <Target Name="SpicNSpan" AfterTargets="Clean">
         <!-- Remove obj folder -->
         <RemoveDir Directories="$(BaseIntermediateOutputPath)" />
         <!-- Remove bin folder -->

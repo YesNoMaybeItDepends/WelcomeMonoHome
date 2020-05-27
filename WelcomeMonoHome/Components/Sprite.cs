@@ -18,16 +18,14 @@ namespace WelcomeMonoHome.Components
 
     public Sprite(Texture2D texture, Vector2 pos)
     {
-      position = pos;
       _texture = texture;
+      position = pos;
       origin = new Vector2(texture.Width / 2, texture.Height / 2);
       scale = new Vector2(1, 1);
       color = Color.White;
 
       // test rectangle
-      //_pixel = ServiceLocator.GetService<IResourceManagerService>().GetTexture("pixel");
-
-      ServiceLocator.GetService<IrendererService>().AddRenderable(this);
+      //_pixel = ServiceLocator.GetService<IContentManagerService>().GetTexture("pixel");
     }
 
     public void LoadContent()
@@ -46,7 +44,23 @@ namespace WelcomeMonoHome.Components
       _spriteBatch.Draw(_texture, position - origin, null, color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
 
       // draw test rectangle
-      // _spriteBatch.Draw(_pixel, new Rectangle((int)(position.X - _texture.Width / 2), (int)(position.Y - _texture.Height / 2), _texture.Width, _texture.Height), Color.White);
+      //DrawRectangle(_spriteBatch);
+    }
+
+    public void Instantiate()
+    {
+      ServiceLocator.GetService<IrendererService>().AddRenderable(this);
+    }
+
+    public void Destroy()
+    {
+      ServiceLocator.GetService<IrendererService>().RemoveRenderable(this);
+    }
+
+    public void DrawRectangle(SpriteBatch _spriteBatch)
+    {
+      Rectangle rectangle = new Rectangle((int)(position.X - _texture.Width / 2), (int)(position.Y - _texture.Height / 2), (int)(_texture.Width * scale.X), (int)((_texture.Height * scale.Y)));
+      _spriteBatch.Draw(_pixel, rectangle, Color.White * 0.5f);
     }
   }
 }

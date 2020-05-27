@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace WelcomeMonoHome
 {
@@ -7,7 +8,7 @@ namespace WelcomeMonoHome
     [STAThread]
     static void Main()
     {
-      using (var game = new WelcomeMonoHome())
+      using (Game game = new WelcomeMonoHome())
         game.Run();
     }
   }

@@ -27,7 +27,7 @@ public class Hillarious : Entity
 
   public Hillarious(BBEG player)
   {
-    texture = ServiceLocator.GetService<IResourceManagerService>().GetTexture(hillariousTextureName);
+    texture = ServiceLocator.GetService<IContentManagerService>().GetTexture(hillariousTextureName);
     sprite = new Sprite(texture, Vector2.Zero);
 
     _player = player;
@@ -91,10 +91,14 @@ public class Hillarious : Entity
   {
     pos += Direction * _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+    // fire boolet
     if (nextShot < (float)gameTime.TotalGameTime.TotalSeconds)
     {
       nextShot = (float)gameTime.TotalGameTime.TotalSeconds + rateOfFire;
-      ServiceLocator.GetService<IEntityManagerService>().AddEntity(new Boolet(pos, false, _player.pos));
+
+      Boolet boolet = new Boolet(pos, false, _player.pos);
+
+      boolet.Instantiate();
     }
   }
 
@@ -112,14 +116,14 @@ public class Hillarious : Entity
 
   public override void OnBecameInvisible()
   {
-    ServiceLocator.GetService<IEntityManagerService>().RemoveEntity(this);
+    Destroy();
   }
 
   public override void OnCollision(Entity collider)
   {
     if (collider is Boolet boolet && boolet.isPlayerBoolet)
     {
-      ServiceLocator.GetService<IEntityManagerService>().RemoveEntity(this);
+      Destroy();
     }
   }
 }

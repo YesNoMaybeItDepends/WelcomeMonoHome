@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using WelcomeMonoHome.GameObjects;
 using Microsoft.Xna.Framework;
 using System;
+using WelcomeMonoHome.GUI;
+using Microsoft.Xna.Framework.Input;
 
 public class Scene
 {
@@ -12,28 +14,22 @@ public class Scene
   SpriteBatch _spriteBatch;
   GraphicsDeviceManager _graphics;
 
+  public Camera _camera;
+
   // Services
   EntityManagerService _entityManagerService;
   RendererService _rendererService;
   DebugService _debugService;
-  ResourceManagerService _resourceManagerService;
+  ContentManagerService _ContentManagerService;
   SceneManagerService _sceneManagerService;
   CollisionManagerService _collisionManagerService;
+  InputService _inputService;
+  GuiService _guiService;
 
   // TODO change with entitymanagerservice
   List<Entity> _entities;
   List<Entity> _entitiesToAdd;
   List<Entity> _entitiesToRemove;
-
-  // textures
-  // private Texture2D _BBEG_ok_mini;
-  // private Texture2D _boolet;
-  // private Texture2D _Hillarious_mini;
-  // private Texture2D _pixel;
-
-  // font
-  // TODO move somewhere else
-  private SpriteFont _font;
 
   bool isInit = false;
 
@@ -42,41 +38,63 @@ public class Scene
   float _hillariousSpawnRate = 1f;
   float _nextTimeToSpawnHillarious = 1;
 
-  ScreenText _entitiesText;
+  // ? Why did I make a list of healthpills?
+  // * I think because healthpills wont get updated
+  // TODO for now lul
+  List<HealthPill> _healthPills;
+  float _healthPillSpawnRate = 2f;
+  float _nextTimeToSpawnHealthPill = 5;
+
+  TextBox _entitiesText;
 
   public BBEG _player;
 
   // debug
-  ScreenText _debugTimer;
-  ScreenText _framerateText;
-  ScreenText _playerHPText;
+  public GuiConsole console;
+  public GuiConsole FPSconsole;
+
+  RectanglePrimitive camerabounds;
+
+
+  int SCREENWIDTH;
+  int SCREENHEIGHT;
 
   public Scene(ContentManager content, SpriteBatch spritebatch, GraphicsDeviceManager graphics)
   {
     _content = content;
     _spriteBatch = spritebatch;
     _graphics = graphics;
+    _camera = new Camera(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+
+    SCREENWIDTH = _graphics.PreferredBackBufferWidth;
+    SCREENHEIGHT = _graphics.PreferredBackBufferHeight;
 
     // TODO change with entitymanagerservice
     _entities = new List<Entity>();
     _entitiesToAdd = new List<Entity>();
     _entitiesToRemove = new List<Entity>();
 
+    _healthPills = new List<HealthPill>();
+
     // Initialize Services
     _entityManagerService = new EntityManagerService(_entities, _entitiesToAdd, _entitiesToRemove);
-    _rendererService = new RendererService(_spriteBatch);
+    _rendererService = new RendererService(_spriteBatch, _camera);
     _debugService = new DebugService(_content);
-    _resourceManagerService = new ResourceManagerService(_content);
+    _ContentManagerService = new ContentManagerService(_content);
     _sceneManagerService = new SceneManagerService(this);
     _collisionManagerService = new CollisionManagerService();
+    _inputService = new InputService(_camera);
+    _guiService = new GuiService();
 
     // Map Services
     ServiceLocator.SetService<IEntityManagerService>(_entityManagerService);
     ServiceLocator.SetService<IrendererService>(_rendererService);
     ServiceLocator.SetService<IDebugService>(_debugService);
-    ServiceLocator.SetService<IResourceManagerService>(_resourceManagerService);
+    ServiceLocator.SetService<IContentManagerService>(_ContentManagerService);
     ServiceLocator.SetService<ISceneManagerService>(_sceneManagerService);
     ServiceLocator.SetService<ICollisionManagerService>(_collisionManagerService);
+    ServiceLocator.SetService<IInputService>(_inputService);
+    ServiceLocator.SetService<IGuiService>(_guiService);
 
     random = new Random();
   }
@@ -94,90 +112,125 @@ public class Scene
     // _font = _content.Load<SpriteFont>("MyFont");
     // _pixel = _content.Load<Texture2D>("pixel");
 
-    _resourceManagerService.Initialize();
+    _ContentManagerService.Initialize();
   }
 
-  public void Update(GameTime gametime)
+  public void Update(GameTime gameTime)
   {
-
     // initialize loop 
     // TODO this is fucked up, fix
     if (!isInit)
     {
+      // spawn player
       _player = new BBEG();
-      _player.Initialize(_graphics);
+      _player.Initialize();
+      _player.Instantiate();
 
-      _debugTimer = new ScreenText($"Gametime: {gametime.TotalGameTime.Seconds}", Vector2.Zero);
-      _entitiesText = new ScreenText("Entities: ", Vector2.Zero);
-      _framerateText = new ScreenText("FPS: ", Vector2.Zero);
-      _playerHPText = new ScreenText("HP: ", Vector2.Zero);
-      _debugService.AddToTextList(_debugTimer);
-      _debugService.AddToTextList(_entitiesText);
-      _debugService.AddToTextList(_framerateText);
-      _debugService.AddToTextList(_playerHPText);
+      // make text box
+      console = new GuiConsole(Vector2.Zero, null, null);
+      FPSconsole = new GuiConsole(new Vector2(0, SCREENHEIGHT / 2), null, null);
+
+      camerabounds = new RectanglePrimitive(_camera.GetCameraFrame(), Color.Red, 0.5f);
+      _debugService.DrawRectangle(camerabounds);
 
       isInit = true;
     }
 
+    // Clear the console at the start of the update frame
+    console.Clear();
 
-    // hillarious spawn timer
-    if (_nextTimeToSpawnHillarious <= gametime.TotalGameTime.TotalSeconds)
+    // camera controls
+    Vector2 camerapos = Vector2.Zero;
+    if (Keyboard.GetState().IsKeyDown(Keys.Down))
     {
-      Hillarious memress = new Hillarious(_player);
-      memress.Initialize(_graphics, random);
-      _entities.Add(memress);
+      _camera.Zoom -= (float)(1 * gameTime.ElapsedGameTime.TotalSeconds);
+    }
+    if (Keyboard.GetState().IsKeyDown(Keys.Up))
+    {
+      _camera.Zoom += (float)(1 * gameTime.ElapsedGameTime.TotalSeconds);
+    }
+    if (Keyboard.GetState().IsKeyDown(Keys.NumPad8))
+    {
+      camerapos.Y--;
+    }
+    if (Keyboard.GetState().IsKeyDown(Keys.NumPad2))
+    {
+      camerapos.Y++;
+    }
+    if (Keyboard.GetState().IsKeyDown(Keys.NumPad6))
+    {
+      camerapos.X++;
+    }
+    if (Keyboard.GetState().IsKeyDown(Keys.NumPad4))
+    {
+      camerapos.X--;
+    }
+    if (camerapos != Vector2.Zero)
+    {
+      camerapos = Vector2.Normalize(camerapos);
+    }
+    _camera._pos += camerapos * 200 * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-      _nextTimeToSpawnHillarious = (float)gametime.TotalGameTime.TotalSeconds + _hillariousSpawnRate;
+    // can spawn hillarious?
+    if (_nextTimeToSpawnHillarious <= gameTime.TotalGameTime.TotalSeconds)
+    {
+      // spawn hillarious
+      Hillarious hillarious = new Hillarious(_player);
+      hillarious.Initialize(_graphics, random);
+      hillarious.Instantiate();
+
+      _nextTimeToSpawnHillarious = (float)gameTime.TotalGameTime.TotalSeconds + _hillariousSpawnRate;
+    }
+
+    // can spawn healthPill?
+    if (_nextTimeToSpawnHealthPill <= gameTime.TotalGameTime.TotalSeconds)
+    {
+      // spawn healthPill
+      float pillx = random.Next(0, SCREENWIDTH + 1);
+      float pilly = random.Next(0, SCREENHEIGHT + 1);
+      HealthPill pill = new HealthPill(gameTime);
+      pill.pos = new Vector2(pillx, pilly);
+      _healthPills.Add(pill);
+      pill.Instantiate();
+
+      _nextTimeToSpawnHealthPill = (float)gameTime.TotalGameTime.TotalSeconds + _healthPillSpawnRate;
     }
 
     // Update Entities
-    _entityManagerService.UpdateEntities(gametime);
+    _entityManagerService.UpdateEntities(gameTime);
 
     // Update collision queue
     _collisionManagerService.Update();
 
     // debug
-    _entitiesText.UpdateText($"Entities: {_entityManagerService.Entities.Count.ToString()}");
-    _debugTimer.UpdateText($"Gametime: {gametime.TotalGameTime.Seconds}");
-    _framerateText.UpdateText($"FPS: {(int)(1 / gametime.ElapsedGameTime.TotalSeconds)}");
-    _playerHPText.UpdateText($"HP: {_player.currentHP}");
+    console.WriteLine($"Entities: {_entityManagerService.Entities.Count.ToString()}");
+    console.WriteLine($"Rendered: {_rendererService._renderableRenderQueue.Count.ToString()}");
+    console.WriteLine($"Gametime: {gameTime.TotalGameTime.Seconds}");
+    console.WriteLine($"HP: {_player.currentHP}");
   }
 
-  // ? pass spritebatch or use _spritebatch?
-  public void Draw()
+  public void Draw(GameTime gametime)
   {
+    FPSconsole.WriteLine(("FPS: " + (int)(1 / gametime.ElapsedGameTime.TotalSeconds)).ToString());
+
+    // Run Renderer
     _rendererService.Run();
-    // _spriteBatch.Begin();
 
-    // // Loop to check entity visibility 
-    foreach (Entity entity in _entities)
+    //  Loop to check entity visibility 
+    foreach (Entity entity in ServiceLocator.GetService<IEntityManagerService>().Entities)
     {
-
       // Is it visible?
-      if ((entity.isVisible != true) &&
-          (entity.pos.X < _graphics.PreferredBackBufferWidth + entity.texture.Width &&
-          entity.pos.X > -1 * entity.texture.Width) &&
-          (entity.pos.Y < _graphics.PreferredBackBufferHeight + entity.texture.Height &&
-          entity.pos.Y > -1 * entity.texture.Height))
+      if (entity.isVisible != true && _camera.GetRenderedWorld().Contains(entity.pos.X, entity.pos.Y))
       {
         entity.isVisible = true;
       }
 
       // Is it not visible?
-      if ((entity.isVisible != false) &&
-          (entity.pos.X > _graphics.PreferredBackBufferWidth + entity.texture.Width ||
-          entity.pos.X < -1 * entity.texture.Width ||
-          entity.pos.Y > _graphics.PreferredBackBufferHeight + entity.texture.Height ||
-          entity.pos.Y < -1 * entity.texture.Height))
+      else if (entity.isVisible != false && !_camera.GetRenderedWorld().Contains(entity.pos.X, entity.pos.Y))
       {
         entity.isVisible = false;
       }
     }
-
-    //   entity.Draw(_spriteBatch);
-    // }
-
-    // _spriteBatch.End();
   }
 
   public void UnloadContent()

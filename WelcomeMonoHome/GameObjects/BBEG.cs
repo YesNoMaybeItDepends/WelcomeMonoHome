@@ -1,18 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using WelcomeMonoHome.Components;
-using Microsoft.Xna.Framework.Content;
-using System.Collections.Generic;
-
+using WelcomeMonoHome.GUI;
 
 namespace WelcomeMonoHome.GameObjects
 {
   public class BBEG : Entity
   {
     float _rotation;
-    float _speed = 300f;
+    float _speed = 350f;
 
     //Texture2D _booletTexture;
     Texture2D _booletTexture;
@@ -30,7 +27,7 @@ namespace WelcomeMonoHome.GameObjects
     readonly Vector2 _relativeLeftGunPos = new Vector2(8, 94);
     readonly Vector2 _relativeRightGunPos = new Vector2(119, 94);
 
-    float rateOfFire = 0.5f;
+    float rateOfFire = 0.33f;
     float nextShot = 0;
 
     // hp
@@ -58,17 +55,13 @@ namespace WelcomeMonoHome.GameObjects
     public BBEG()
     {
       // setup textures and sprite
-      texture = ServiceLocator.GetService<IResourceManagerService>().GetTexture(_bbegTextureName);
-      _booletTexture = ServiceLocator.GetService<IResourceManagerService>().GetTexture(_booletTextureName);
+      texture = ServiceLocator.GetService<IContentManagerService>().GetTexture(_bbegTextureName);
+      _booletTexture = ServiceLocator.GetService<IContentManagerService>().GetTexture(_booletTextureName);
       sprite = new Sprite(texture, Vector2.Zero);
 
       // Get services
       _entityManagerService = ServiceLocator.GetService<IEntityManagerService>();
       _debugService = ServiceLocator.GetService<IDebugService>();
-
-      // add itself to entitymanager
-      // TODO Entity should add itself on instantiation
-      _entityManagerService.AddEntity(this);
 
       // Get absolute gun positions 
       _leftGunPos = new Vector2((pos.X - texture.Width / 2) + _relativeLeftGunPos.X, (pos.Y - texture.Height / 2) + _relativeLeftGunPos.Y);
@@ -81,13 +74,17 @@ namespace WelcomeMonoHome.GameObjects
       _currentHP = maximumHP;
     }
 
-    public void Initialize(GraphicsDeviceManager graphics)
+    public void Initialize()
     {
+      IGraphicsService _graphicsService = ServiceLocator.GetService<IGraphicsService>();
+      int screenWidth = _graphicsService.GetScreenWidth();
+      int screenHeight = _graphicsService.GetScreenHeight();
+
       // Initialize position at the middle of the screen from the sprite's center
-      pos = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
+      pos = new Vector2(screenWidth / 2, screenHeight / 2);
 
       // healthBar
-      healthBar = new HealthBar(new Vector2(pos.X, pos.Y + 200), 600, 25);
+      healthBar = new HealthBar(new Vector2(screenWidth / 2, screenHeight * 0.95f), 600, 25);
     }
 
     public override void Update(GameTime gameTime)
@@ -122,14 +119,12 @@ namespace WelcomeMonoHome.GameObjects
       if (Mouse.GetState().LeftButton == ButtonState.Pressed && nextShot < (float)gameTime.TotalGameTime.TotalSeconds)
       {
         nextShot = (float)gameTime.TotalGameTime.TotalSeconds + rateOfFire;
-        _entityManagerService.AddEntity(new Boolet((pos + _leftGunPos), true, Mouse.GetState().Position.ToVector2()));
-        _entityManagerService.AddEntity(new Boolet((pos + _rightGunPos), true, Mouse.GetState().Position.ToVector2()));
-      }
 
-      // debug fire
-      if (Mouse.GetState().RightButton == ButtonState.Pressed)
-      {
-        _entityManagerService.AddEntity(new Boolet(Mouse.GetState().Position.ToVector2(), false, pos));
+        Boolet leftBoolet = new Boolet((pos + _leftGunPos), true, Mouse.GetState().Position.ToVector2());
+        Boolet rightBoolet = new Boolet((pos + _rightGunPos), true, Mouse.GetState().Position.ToVector2());
+
+        leftBoolet.Instantiate();
+        rightBoolet.Instantiate();
       }
     }
 
@@ -137,7 +132,11 @@ namespace WelcomeMonoHome.GameObjects
     {
       if (collider is Boolet boolet && !boolet.isPlayerBoolet)
       {
-        currentHP -= 1;
+        currentHP--;
+      }
+      else if (collider is HealthPill)
+      {
+        currentHP++;
       }
     }
   }

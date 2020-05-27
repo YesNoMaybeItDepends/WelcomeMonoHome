@@ -11,7 +11,7 @@ public class Boolet : Entity
   float _rotation;
   float _speed;
   // TODO move these to bbeg/hillarious
-  const float PLAYER_BOOLET_SPEED = 300f;
+  const float PLAYER_BOOLET_SPEED = 400f;
   const float HILLARIOUS_BOOLET_SPEED = 200f;
   Vector2 _targetPos;
   Vector2 _direction;
@@ -20,7 +20,7 @@ public class Boolet : Entity
 
   public Boolet(Vector2 Pos, bool IsPlayerBoolet, Vector2 TargetPos)
   {
-    texture = ServiceLocator.GetService<IResourceManagerService>().GetTexture("boolet");
+    texture = ServiceLocator.GetService<IContentManagerService>().GetTexture("boolet");
     sprite = new Sprite(texture, Vector2.Zero);
 
     pos = Pos;
@@ -54,18 +54,18 @@ public class Boolet : Entity
 
   public override void OnBecameInvisible()
   {
-    ServiceLocator.GetService<IEntityManagerService>().RemoveEntity(this);
+    Destroy();
   }
 
   public override void OnCollision(Entity collider)
   {
     if (collider is Hillarious && isPlayerBoolet)
     {
-      ServiceLocator.GetService<IEntityManagerService>().RemoveEntity(this);
+      Destroy();
     }
     else if (collider is BBEG && !isPlayerBoolet)
     {
-      ServiceLocator.GetService<IEntityManagerService>().RemoveEntity(this);
+      Destroy();
     }
   }
 }
