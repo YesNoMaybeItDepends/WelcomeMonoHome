@@ -1,19 +1,52 @@
+using System.Collections.Generic;
+
 public class SceneManagerService : ISceneManagerService
 {
-  public Scene scene { get; set; }
+  public Scene currentScene { get; set; }
 
-  public SceneManagerService(Scene Scene)
+  public SceneManagerService()
   {
-    scene = Scene;
+
   }
 
-  public void SetScene(Scene Scene)
+  public void StartScene()
   {
-    scene = Scene;
+
+  }
+
+  public void EndScene()
+  {
+
+  }
+
+  public void SetOrChangeScene(Scene NewScene)
+  {
+    if (currentScene == null)
+    {
+      currentScene = NewScene;
+      //NewScene.Start();
+    }
+    else
+    {
+      //currentScene.End();
+      currentScene = NewScene;
+      //currentScene.Start();
+    }
+  }
+
+  public void SetCurrentScene(Scene Scene)
+  {
+  }
+
+
+
+  public void RemoveScene(Scene Scene)
+  {
+
   }
 
   public Scene GetScene()
   {
-    return scene;
+    return currentScene;
   }
 }

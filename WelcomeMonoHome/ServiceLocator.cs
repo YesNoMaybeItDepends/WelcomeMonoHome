@@ -20,7 +20,6 @@ using System.Collections.Generic;
 
 public static class ServiceLocator
 {
-
   // <IService, Service>
   private static Dictionary<object, object> _services;
   private static Dictionary<Type, Object> ass;

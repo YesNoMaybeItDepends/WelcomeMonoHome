@@ -4,9 +4,9 @@ using Microsoft.Xna.Framework;
 
 public interface IEntityManagerService : IService
 {
-  List<Entity> Entities { get; set; }
-  List<Entity> EntitiesToAdd { get; set; }
-  List<Entity> EntitiesToRemove { get; set; }
+  List<Entity> entities { get; set; }
+  List<Entity> entitiesToAdd { get; set; }
+  List<Entity> entitiesToRemove { get; set; }
 
   void AddEntity(Entity entity);
   void RemoveEntity(Entity entity);

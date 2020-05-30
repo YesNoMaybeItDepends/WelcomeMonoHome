@@ -2,11 +2,13 @@ Game:
   TODO: 
     - Render GUI on camera frame, not world frame @project(Game.GUI) 
     - add gameover
+    - add start menu
     + add randomly spawning health pickups
     + make healthpills despawn 
     + give healthpills some visual indicator that they're going to despawn
-    - also that they're going to spawn?
+    + also that they're going to spawn?
     - When you pick up a pill make it go slightly bigger then quickly small until it disappears @project(Game.HealthPill)
+    - when you kill a hillarious make her 
     - Draw rectangles with float values @low 
       SpriteBatch.Draw() normally takes a Vector2 parameter
       Vector2 takes float parameters

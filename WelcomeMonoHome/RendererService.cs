@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-public class RendererService : IrendererService
+public class RendererService : IRendererService
 {
   public SpriteBatch _spriteBatch { get; set; }
 

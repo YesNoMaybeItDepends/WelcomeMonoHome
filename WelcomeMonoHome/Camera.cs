@@ -11,8 +11,8 @@ public class Camera
   public float _rotation;
   GraphicsDevice _graphicsDevice;
 
-  int screenWidth;
-  int screenHeight;
+  public int screenWidth;
+  public int screenHeight;
 
   public Camera(int ScreenWidth, int ScreenHeight)
   {

@@ -11,7 +11,7 @@ namespace WelcomeMonoHome.GUI
 
     public TextBox(string Text, Vector2 Position)
     {
-      IrendererService renderer = ServiceLocator.GetService<IrendererService>();
+      IRendererService renderer = ServiceLocator.GetService<IRendererService>();
       // TODO font = resouces.getfont() or whatever
       text = Text;
       position = Position;
@@ -40,7 +40,7 @@ namespace WelcomeMonoHome.GUI
 
     public void Destroy()
     {
-      IrendererService renderer = ServiceLocator.GetService<IrendererService>();
+      IRendererService renderer = ServiceLocator.GetService<IRendererService>();
       renderer.RemoveRenderable(this);
     }
   }

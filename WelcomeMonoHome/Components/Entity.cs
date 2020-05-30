@@ -122,6 +122,14 @@ public abstract class Entity
 
     _entityManagerService.RemoveEntity(this);
     sprite.Destroy();
+
+    // TODO replace this logic with a collidable class
+    // such that I can do collidable.destroy();
+    if (hasCollision)
+    {
+      ICollisionManagerService _collisionManager = ServiceLocator.GetService<ICollisionManagerService>();
+      _collisionManager.RemoveCollidable(this);
+    }
   }
 
   public void Instantiate()

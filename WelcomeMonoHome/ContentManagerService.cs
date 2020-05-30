@@ -56,7 +56,7 @@ public class ContentManagerService : IContentManagerService
     fonts[name] = _content.Load<SpriteFont>(name);
   }
 
-  public void UnloadContent(string name)
+  public void UnloadContent()
   {
     _content.Unload();
   }

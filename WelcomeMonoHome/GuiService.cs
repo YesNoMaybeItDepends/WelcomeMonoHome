@@ -28,4 +28,12 @@ public class GuiService : IGuiService
       console.WriteLine(text);
     }
   }
+
+  public void ClearConsole(string Console)
+  {
+    if (consoles[Console] is GuiConsole console)
+    {
+      console.Clear();
+    }
+  }
 }

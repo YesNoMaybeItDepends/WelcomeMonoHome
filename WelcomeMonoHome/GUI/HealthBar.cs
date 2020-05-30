@@ -25,7 +25,7 @@ namespace WelcomeMonoHome.GUI
       _topLeftPosition.X = centerPosition.X - _width / 2;
       _topLeftPosition.Y = centerPosition.Y - _height / 2;
 
-      IrendererService renderer = ServiceLocator.GetService<IrendererService>();
+      IRendererService renderer = ServiceLocator.GetService<IRendererService>();
       renderer.AddRenderable(this);
 
     }

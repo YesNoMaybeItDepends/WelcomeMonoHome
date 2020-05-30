@@ -36,8 +36,10 @@ public class Hillarious : Entity
     hasCollision = true;
   }
 
-  public void Initialize(GraphicsDeviceManager graphics, /*Side Side, */Random random)
+  public void Initialize(Random random)
   {
+    GraphicsDeviceManager graphics = ServiceLocator.GetService<IGraphicsService>().graphics;
+
     float SCREEN_WIDTH = graphics.PreferredBackBufferWidth;
     float SCREEN_HEIGHT = graphics.PreferredBackBufferHeight;
 

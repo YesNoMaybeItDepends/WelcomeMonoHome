@@ -1,7 +1,6 @@
 public interface ISceneManagerService
 {
-  Scene scene { get; set; }
+  Scene currentScene { get; set; }
 
-  void SetScene(Scene scene);
-  Scene GetScene();
+  void SetOrChangeScene(Scene NewScene) { }
 }

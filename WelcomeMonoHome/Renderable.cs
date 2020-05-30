@@ -27,12 +27,12 @@ public abstract class Renderable : IRenderable
 
   public void Instantiate()
   {
-    ServiceLocator.GetService<IrendererService>().AddRenderable(this);
+    ServiceLocator.GetService<IRendererService>().AddRenderable(this);
   }
 
   public void Destroy()
   {
-    ServiceLocator.GetService<IrendererService>().RemoveRenderable(this);
+    ServiceLocator.GetService<IRendererService>().RemoveRenderable(this);
   }
 
   public abstract void Draw(SpriteBatch spriteBatch);

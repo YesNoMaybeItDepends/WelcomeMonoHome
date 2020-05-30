@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -7,82 +8,109 @@ namespace WelcomeMonoHome
   public class WelcomeMonoHome : Game
   {
     public GraphicsDeviceManager graphics;
-    GraphicsService graphicsService;
+    GraphicsService _graphicsService;
 
-    SpriteBatch spriteBatch;
-
-    Scene scene;
+    SpriteBatch _spriteBatch;
 
     bool PAUSED = false;
     bool HELD = false;
 
+    // Services
+    EntityManagerService _entityManagerService;
+    RendererService _rendererService;
+    DebugService _debugService;
+    ContentManagerService _contentManagerService;
+    SceneManagerService _sceneManagerService;
+    CollisionManagerService _collisionManagerService;
+    InputService _inputService;
+    GuiService _guiService;
+
+    // random stuff that needs sorting
+    Camera _camera;
+    GameScene scene;
+
     public WelcomeMonoHome()
     {
-      // initialize graphics
       graphics = new GraphicsDeviceManager(this);
-      graphicsService = new GraphicsService(graphics);
-
-      // map services
-      ServiceLocator.SetService<IGraphicsService>(graphicsService);
-
-      Content.RootDirectory = "Content";
-      IsMouseVisible = true;
-
-
     }
 
     protected override void Initialize()
     {
       graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
       graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-      //graphics.IsFullScreen = true;
       graphics.HardwareModeSwitch = false;
       graphics.ApplyChanges();
+
+      // what was in constructor now here
+
+      // initialize graphics
+      _graphicsService = new GraphicsService(graphics);
+      ServiceLocator.SetService<IGraphicsService>(_graphicsService);
+
+      Content.RootDirectory = "Content";
+      IsMouseVisible = true;
+
+      _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+      // random stuff
+      _camera = new Camera(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+
+      // Initialize services
+      _collisionManagerService = new CollisionManagerService();
+      _contentManagerService = new ContentManagerService(Content);
+      _debugService = new DebugService(Content);
+      _entityManagerService = new EntityManagerService();
+      _guiService = new GuiService();
+      _inputService = new InputService(_camera);
+      _rendererService = new RendererService(_spriteBatch, _camera);
+      _sceneManagerService = new SceneManagerService();
+
+      // Set services
+      ServiceLocator.SetService<ICollisionManagerService>(_collisionManagerService);
+      ServiceLocator.SetService<IContentManagerService>(_contentManagerService);
+      ServiceLocator.SetService<IDebugService>(_debugService);
+      ServiceLocator.SetService<IEntityManagerService>(_entityManagerService);
+      ServiceLocator.SetService<IGuiService>(_guiService);
+      ServiceLocator.SetService<IInputService>(_inputService);
+      ServiceLocator.SetService<IRendererService>(_rendererService);
+      ServiceLocator.SetService<ISceneManagerService>(_sceneManagerService);
+
+      _guiService.NewConsole("help", new Vector2(0, 0), null, null);
+
       base.Initialize();
     }
 
     protected override void LoadContent()
     {
-      spriteBatch = new SpriteBatch(GraphicsDevice);
+      Console.WriteLine("I wuz loaded n shit");
+      _contentManagerService.Initialize();
     }
 
     protected override void Update(GameTime gameTime)
     {
+      _guiService.ClearConsole("help");
       if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
         Exit();
-
-      if (Keyboard.GetState().IsKeyDown(Keys.Space))
-      {
-        if (!HELD)
-        {
-          HELD = true;
-        }
-      }
-
-      if (Keyboard.GetState().IsKeyUp(Keys.Space) && HELD)
-      {
-        HELD = false;
-        if (PAUSED == false)
-        {
-          PAUSED = true;
-        }
-        else
-        {
-          PAUSED = false;
-        }
-      }
 
       if (!PAUSED)
       {
         if (scene == null)
         {
-          scene = new Scene(Content, spriteBatch, graphics);
+          scene = new GameScene();
+          _sceneManagerService.SetOrChangeScene(scene);
           scene.LoadContent();
           scene.Initialize();
+          return;
         }
 
         scene.Update(gameTime);
+        _entityManagerService.UpdateEntities(gameTime);
+        _collisionManagerService.Update();
 
+        // debug console
+        _guiService.ConsoleWriteLine("help", "GameTime: " + gameTime.TotalGameTime.Seconds);
+        _guiService.ConsoleWriteLine("help", "Entities: " + _entityManagerService.entities.Count.ToString());
+        _guiService.ConsoleWriteLine("help", "Rendered: " + _rendererService._renderableRenderQueue.Count.ToString());
         base.Update(gameTime);
       }
     }
@@ -91,9 +119,32 @@ namespace WelcomeMonoHome
     {
       GraphicsDevice.Clear(Color.CornflowerBlue);
 
-      scene.Draw(gameTime);
+      _rendererService.Run();
+
+      // ! TODO THIS CANT GO HERE
+      //  Loop to check entity visibility 
+      foreach (Entity entity in ServiceLocator.GetService<IEntityManagerService>().entities)
+      {
+        // Is it visible?
+        if (entity.isVisible != true && _camera.GetRenderedWorld().Contains(entity.pos.X, entity.pos.Y))
+        {
+          entity.isVisible = true;
+        }
+
+        // Is it not visible?
+        else if (entity.isVisible != false && !_camera.GetRenderedWorld().Contains(entity.pos.X, entity.pos.Y))
+        {
+          entity.isVisible = false;
+        }
+      }
 
       base.Draw(gameTime);
+    }
+
+    void UpdateServices(GameTime gameTime)
+    {
+      _entityManagerService.UpdateEntities(gameTime);
+      _collisionManagerService.Update();
     }
   }
 }

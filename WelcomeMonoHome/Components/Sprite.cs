@@ -25,7 +25,7 @@ namespace WelcomeMonoHome.Components
       color = Color.White;
 
       // test rectangle
-      //_pixel = ServiceLocator.GetService<IContentManagerService>().GetTexture("pixel");
+      _pixel = ServiceLocator.GetService<IContentManagerService>().GetTexture("pixel");
     }
 
     public void LoadContent()
@@ -44,17 +44,17 @@ namespace WelcomeMonoHome.Components
       _spriteBatch.Draw(_texture, position - origin, null, color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
 
       // draw test rectangle
-      //DrawRectangle(_spriteBatch);
+      DrawRectangle(_spriteBatch);
     }
 
     public void Instantiate()
     {
-      ServiceLocator.GetService<IrendererService>().AddRenderable(this);
+      ServiceLocator.GetService<IRendererService>().AddRenderable(this);
     }
 
     public void Destroy()
     {
-      ServiceLocator.GetService<IrendererService>().RemoveRenderable(this);
+      ServiceLocator.GetService<IRendererService>().RemoveRenderable(this);
     }
 
     public void DrawRectangle(SpriteBatch _spriteBatch)

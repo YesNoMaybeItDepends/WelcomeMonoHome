@@ -12,7 +12,7 @@ public interface IContentManagerService
 
 
   void Initialize();
-  void UnloadContent(string name);
+  void UnloadContent();
   void Run();
 
   Texture2D GetTexture(string name);

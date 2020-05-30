@@ -6,38 +6,38 @@ using Microsoft.Xna.Framework;
 
 public class EntityManagerService : IEntityManagerService
 {
-  public List<Entity> Entities { get; set; }
-  public List<Entity> EntitiesToAdd { get; set; }
-  public List<Entity> EntitiesToRemove { get; set; }
+  public List<Entity> entities { get; set; }
+  public List<Entity> entitiesToAdd { get; set; }
+  public List<Entity> entitiesToRemove { get; set; }
 
-  public EntityManagerService(List<Entity> entities, List<Entity> entitiesToAdd, List<Entity> entitiesToRemove)
+  public EntityManagerService()
   {
-    Entities = entities;
-    EntitiesToAdd = entitiesToAdd;
-    EntitiesToRemove = entitiesToRemove;
+    entities = new List<Entity>();
+    entitiesToAdd = new List<Entity>();
+    entitiesToRemove = new List<Entity>();
   }
 
   public void UpdateEntities(GameTime gameTime)
   {
     // remove entities from _entities
-    if (EntitiesToRemove.Count > 0)
+    if (entitiesToRemove.Count > 0)
     {
-      foreach (Entity entity in EntitiesToRemove)
+      foreach (Entity entity in entitiesToRemove)
       {
-        Entities.Remove(entity);
+        entities.Remove(entity);
       }
-      EntitiesToRemove.Clear();
+      entitiesToRemove.Clear();
     }
 
     // add new entities to _entities
-    if (EntitiesToAdd.Count > 0)
+    if (entitiesToAdd.Count > 0)
     {
-      Entities.AddRange(EntitiesToAdd);
-      EntitiesToAdd.Clear();
+      entities.AddRange(entitiesToAdd);
+      entitiesToAdd.Clear();
     }
 
     // update entities
-    foreach (Entity entity in Entities)
+    foreach (Entity entity in entities)
     {
       entity.Update(gameTime);
     }
@@ -45,17 +45,17 @@ public class EntityManagerService : IEntityManagerService
 
   public void AddEntity(Entity entity)
   {
-    EntitiesToAdd.Add(entity);
+    entitiesToAdd.Add(entity);
   }
 
   public void RemoveEntity(Entity entity)
   {
-    // ! TODO MOVE THESE TO ENTITY.DESTROY()
-    ServiceLocator.GetService<IrendererService>().RemoveRenderable(entity.sprite);
-    ServiceLocator.GetService<ICollisionManagerService>().RemoveCollidable(entity);
-    EntitiesToRemove.Add(entity);
+    // ServiceLocator.GetService<IrendererService>().RemoveRenderable(entity.sprite);
+    // ServiceLocator.GetService<ICollisionManagerService>().RemoveCollidable(entity);
+    entitiesToRemove.Add(entity);
   }
 
+  // ! TODO move this to entity.instantiate() as well
   public Entity Instantiate(Entity entity, Vector2 pos)
   {
     AddEntity(entity);
