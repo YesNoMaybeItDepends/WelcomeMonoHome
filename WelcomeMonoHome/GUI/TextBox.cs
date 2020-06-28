@@ -11,12 +11,12 @@ namespace WelcomeMonoHome.GUI
 
     public TextBox(string Text, Vector2 Position)
     {
-      IRendererService renderer = ServiceLocator.GetService<IRendererService>();
       // TODO font = resouces.getfont() or whatever
       text = Text;
       position = Position;
       font = ServiceLocator.GetService<IContentManagerService>().GetFont("MyFont");
-      renderer.AddRenderable(this);
+
+      ServiceLocator.GetService<IRendererService>().AddRenderable(this);
     }
 
     // public ScreenText Instantiate(string Text, Vector2 Position)
@@ -40,8 +40,12 @@ namespace WelcomeMonoHome.GUI
 
     public void Destroy()
     {
-      IRendererService renderer = ServiceLocator.GetService<IRendererService>();
-      renderer.RemoveRenderable(this);
+      ServiceLocator.GetService<IRendererService>().RemoveRenderable(this);
+    }
+
+    public void OnClick()
+    {
+
     }
   }
 }

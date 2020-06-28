@@ -2,13 +2,11 @@ Game:
   TODO: 
     - Render GUI on camera frame, not world frame @project(Game.GUI) 
     - add gameover
-    - add start menu
-    + add randomly spawning health pickups
-    + make healthpills despawn 
-    + give healthpills some visual indicator that they're going to despawn
-    + also that they're going to spawn?
-    - When you pick up a pill make it go slightly bigger then quickly small until it disappears @project(Game.HealthPill)
-    - when you kill a hillarious make her 
+    - add start menu @today
+    - add button GUI
+    - start menu draw biden
+    - GUI should work on its own render engine
+    - when you kill a hillarious make her explode and kill nearby boolets 
     - Draw rectangles with float values @low 
       SpriteBatch.Draw() normally takes a Vector2 parameter
       Vector2 takes float parameters
@@ -35,6 +33,11 @@ Game:
     - change origin from middle to topleft (real origin)
 
 Archive:
+  + add randomly spawning health pickups @project(Game.TODO)
+  + make healthpills despawn  @project(Game.TODO)
+  + give healthpills some visual indicator that they're going to despawn @project(Game.TODO)
+  + also that they're going to spawn? @project(Game.TODO)
+  + When you pick up a pill make it go slightly bigger then quickly small until it disappears @project(Game.HealthPill) @project(Game.TODO)
   x Nez IMGUI stuff @project(Game.TODO)
     Too complicated for now
   + make it so all entities get added to rendererservice and entitiesservice: @project(Game.TODO)

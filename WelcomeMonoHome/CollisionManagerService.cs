@@ -26,7 +26,6 @@ public class CollisionManagerService : ICollisionManagerService
 
   public void CheckCollision(Entity entity)
   {
-    Console.WriteLine(entity + "yooo");
     foreach (Entity e in collidableEntities)
     {
       if (entity != e && entity.colRectangle.Intersects(e.colRectangle) && !entity.alreadyCollidedWith.Contains(e))

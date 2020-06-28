@@ -25,6 +25,7 @@ namespace WelcomeMonoHome.GUI
       _topLeftPosition.X = centerPosition.X - _width / 2;
       _topLeftPosition.Y = centerPosition.Y - _height / 2;
 
+      // TODO Should this be here? I don't think so, it should do instantiate()
       IRendererService renderer = ServiceLocator.GetService<IRendererService>();
       renderer.AddRenderable(this);
 

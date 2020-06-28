@@ -34,16 +34,36 @@ namespace WelcomeMonoHome.GUI
       lines.Add(line);
       if (lines.Count > maxLines)
       {
+        Console.WriteLine("====");
+        Console.WriteLine(lines.Count);
+        Console.WriteLine(lines[0].text);
         lines[0].Destroy();
         lines.RemoveAt(0);
+        Console.WriteLine(lines.Count);
+        Console.WriteLine(lines[0].text);
+        Console.WriteLine("====");
         foreach (TextBox consoleLine in lines)
         {
+          Console.WriteLine(consoleLine.text);
+          Console.WriteLine(lines.IndexOf(consoleLine));
+          Console.WriteLine(consoleLine.position);
           consoleLine.position = new Vector2(topLeftOrigin.X, topLeftOrigin.Y + (lines.IndexOf(consoleLine) * spacing));
+          Console.WriteLine(consoleLine.position);
+          Console.WriteLine("----");
         }
       }
     }
 
     public void Clear()
+    {
+      foreach (TextBox consoleLine in lines)
+      {
+        consoleLine.Destroy();
+      }
+      //lines.Clear();
+    }
+
+    public void Reset()
     {
       foreach (TextBox consoleLine in lines)
       {

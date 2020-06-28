@@ -42,7 +42,7 @@ public class RendererService : IRendererService
     {
       foreach (IRenderable renderable in _renderableAddQueue)
       {
-        _renderableAddQueue.Add(renderable);
+        _renderableRenderQueue.Add(renderable);
       }
       _renderableAddQueue.Clear();
     }
@@ -60,7 +60,7 @@ public class RendererService : IRendererService
 
   public void AddRenderable(IRenderable renderable)
   {
-    _renderableRenderQueue.Add(renderable);
+    _renderableAddQueue.Add(renderable);
   }
 
   public void RemoveRenderable(IRenderable renderable)

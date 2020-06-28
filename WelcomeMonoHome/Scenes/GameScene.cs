@@ -59,7 +59,11 @@ public class GameScene : Scene
 
   public override void LoadContent()
   {
-    _ContentService.Initialize();
+    _ContentService.LoadTexture("BBEG_ok_mini");
+    _ContentService.LoadTexture("boolet");
+    _ContentService.LoadTexture("Hillarious_mini");
+    _ContentService.LoadTexture("pixel");
+    _ContentService.LoadTexture("HealthPill");
   }
 
   public override void Initialize()

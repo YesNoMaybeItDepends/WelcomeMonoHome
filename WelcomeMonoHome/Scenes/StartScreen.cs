@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 public class StartScreen : Scene
 {
-  SpriteBatch _spriteBatch;
 
   // Services
   ICollisionManagerService _collisionService;
@@ -14,8 +13,9 @@ public class StartScreen : Scene
   IInputService _inputService;
   IRendererService _rendererService;
   ISceneManagerService _sceneService;
+  IGraphicsService _graphicsService;
 
-  StartScreen()
+  public StartScreen()
   {
     // Get services
     _collisionService = ServiceLocator.GetService<ICollisionManagerService>();
@@ -26,40 +26,49 @@ public class StartScreen : Scene
     _inputService = ServiceLocator.GetService<IInputService>();
     _rendererService = ServiceLocator.GetService<IRendererService>();
     _sceneService = ServiceLocator.GetService<ISceneManagerService>();
+    _graphicsService = ServiceLocator.GetService<IGraphicsService>();
   }
 
   public override void Draw(GameTime gameTime)
   {
-    throw new System.NotImplementedException();
+    // nothing happens here, should delete
   }
 
   public override void End()
   {
-    throw new System.NotImplementedException();
+    // np
   }
 
   public override void Initialize()
   {
-    throw new System.NotImplementedException();
+    // np
+    Image background = new Image("startScreen_1080", new Vector2(0, 0));
+    background.Instantiate();
+    Vector2 buttonPos;
+    buttonPos.X = _graphicsService.GetScreenWidth() / 2;
+    buttonPos.Y = _graphicsService.GetScreenHeight() / 2 - 200;
+    Button NewGame = new Button(buttonPos, 200, 100, Color.White, Color.Black);
+    NewGame.Instantiate();
   }
 
   public override void LoadContent()
   {
-    throw new System.NotImplementedException();
+    _contentService.LoadTexture("startScreen");
+    _contentService.LoadTexture("startScreen_1080");
   }
 
   public override void Start()
   {
-    throw new System.NotImplementedException();
+    // np 
   }
 
   public override void UnloadContent()
   {
-    throw new System.NotImplementedException();
+    // np
   }
 
   public override void Update(GameTime gameTime)
   {
-    throw new System.NotImplementedException();
+    // np
   }
 }

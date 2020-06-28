@@ -6,6 +6,12 @@ public class InputService : IInputService
   Camera _camera;
   GraphicsDeviceManager graphics;
 
+  MouseState lastMouseState;
+  MouseState mouseState;
+
+  KeyboardState lastKeyboardState;
+  KeyboardState keyboardState;
+
   public InputService(Camera camera)
   {
     _camera = camera;
@@ -13,9 +19,15 @@ public class InputService : IInputService
 
   public void GetMouseClick()
   {
-    MouseState ass = Mouse.GetState();
+    MouseState mouse = Mouse.GetState();
     //_camera.WorldToScreen(ass.)
+    // RAYCAST
+    Rectangle mouserect = new Rectangle(mouse.X, mouse.Y, 1, 1);
   }
+
+  public delegate void OnMouseClick(object sender, MouseState MouseState);
+
+  public event OnMouseClick onmouseclick;
 
   public Vector2 GetWorldClick()
   {
@@ -34,7 +46,27 @@ public class InputService : IInputService
     pos.Y = point.Y;
     return pos;
   }
+
+  public void Update(GameTime gameTime)
+  {
+    // If it's the first frame we don't have any input at all
+    if (mouseState != null)
+    {
+      lastMouseState = mouseState;
+      lastKeyboardState = keyboardState;
+    }
+
+    mouseState = Mouse.GetState();
+    keyboardState = Keyboard.GetState();
+
+    if (mouseState != lastMouseState)
+    {
+      onmouseclick(this, mouseState);
+    }
+  }
 }
+
+
 
 public class MuhMouseState
 {

@@ -16,18 +16,18 @@ namespace WelcomeMonoHome
     bool HELD = false;
 
     // Services
+    InputService _inputService;
     EntityManagerService _entityManagerService;
     RendererService _rendererService;
     DebugService _debugService;
     ContentManagerService _contentManagerService;
     SceneManagerService _sceneManagerService;
     CollisionManagerService _collisionManagerService;
-    InputService _inputService;
     GuiService _guiService;
 
     // random stuff that needs sorting
     Camera _camera;
-    GameScene scene;
+    Scene scene;
 
     public WelcomeMonoHome()
     {
@@ -56,12 +56,12 @@ namespace WelcomeMonoHome
       _camera = new Camera(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
 
       // Initialize services
+      _inputService = new InputService(_camera);
       _collisionManagerService = new CollisionManagerService();
       _contentManagerService = new ContentManagerService(Content);
       _debugService = new DebugService(Content);
       _entityManagerService = new EntityManagerService();
-      _guiService = new GuiService();
-      _inputService = new InputService(_camera);
+      _guiService = new GuiService(_inputService);
       _rendererService = new RendererService(_spriteBatch, _camera);
       _sceneManagerService = new SceneManagerService();
 
@@ -82,13 +82,11 @@ namespace WelcomeMonoHome
 
     protected override void LoadContent()
     {
-      Console.WriteLine("I wuz loaded n shit");
       _contentManagerService.Initialize();
     }
 
     protected override void Update(GameTime gameTime)
     {
-      _guiService.ClearConsole("help");
       if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
         Exit();
 
@@ -96,27 +94,31 @@ namespace WelcomeMonoHome
       {
         if (scene == null)
         {
-          scene = new GameScene();
+
+          scene = new StartScreen();
+          //scene = new GameScene();
           _sceneManagerService.SetOrChangeScene(scene);
           scene.LoadContent();
           scene.Initialize();
           return;
         }
+        else
+        {
+          UpdateServices(gameTime);
+          scene.Update(gameTime);
 
-        scene.Update(gameTime);
-        _entityManagerService.UpdateEntities(gameTime);
-        _collisionManagerService.Update();
-
-        // debug console
-        _guiService.ConsoleWriteLine("help", "GameTime: " + gameTime.TotalGameTime.Seconds);
-        _guiService.ConsoleWriteLine("help", "Entities: " + _entityManagerService.entities.Count.ToString());
-        _guiService.ConsoleWriteLine("help", "Rendered: " + _rendererService._renderableRenderQueue.Count.ToString());
+          // debug console
+          _guiService.ConsoleWriteLine("help", "GameTime: " + gameTime.TotalGameTime.Seconds);
+          _guiService.ConsoleWriteLine("help", "Entities: " + _entityManagerService.entities.Count.ToString());
+          _guiService.ConsoleWriteLine("help", "Rendered: " + _rendererService._renderableRenderQueue.Count.ToString());
+        }
         base.Update(gameTime);
       }
     }
 
     protected override void Draw(GameTime gameTime)
     {
+      //_guiService.ClearConsole("help");
       GraphicsDevice.Clear(Color.CornflowerBlue);
 
       _rendererService.Run();
@@ -143,6 +145,9 @@ namespace WelcomeMonoHome
 
     void UpdateServices(GameTime gameTime)
     {
+      _inputService.Update(gameTime);
+      // TODO implement this
+      //_sceneManagerService.Update(); 
       _entityManagerService.UpdateEntities(gameTime);
       _collisionManagerService.Update();
     }

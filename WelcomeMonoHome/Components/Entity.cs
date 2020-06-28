@@ -72,6 +72,16 @@ public abstract class Entity
         // update collision box
         colRectangle = new Rectangle((int)(sprite.position.X - (sprite._texture.Width) / 2), (int)(sprite.position.Y - (sprite._texture.Height) / 2), (int)(sprite._texture.Width * sprite.scale.X), (int)((sprite._texture.Height * sprite.scale.Y)));
 
+        int width = sprite._texture.Width * (int)sprite.scale.X;
+        int length = sprite._texture.Height * (int)sprite.scale.Y;
+
+        // update collision box new edition
+        colRectangle = new Rectangle(
+          (int)(sprite.position.X - width / 2),
+          (int)(sprite.position.Y - length / 2),
+          (int)width,
+          (int)length);
+
         // check for collisions
         ServiceLocator.GetService<ICollisionManagerService>().CheckCollision(this);
       }

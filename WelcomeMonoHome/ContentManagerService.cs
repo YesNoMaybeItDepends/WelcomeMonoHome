@@ -21,14 +21,8 @@ public class ContentManagerService : IContentManagerService
   {
     // common
     textures["ERROR"] = _content.Load<Texture2D>("ERROR");
-    fonts["MyFont"] = _content.Load<SpriteFont>("MyFont");
-
-    // level normal
-    textures["BBEG_ok_mini"] = _content.Load<Texture2D>("BBEG_ok_mini");
-    textures["boolet"] = _content.Load<Texture2D>("boolet");
-    textures["Hillarious_mini"] = _content.Load<Texture2D>("Hillarious_mini");
     textures["pixel"] = _content.Load<Texture2D>("pixel");
-    textures["HealthPill"] = _content.Load<Texture2D>("HealthPill");
+    fonts["MyFont"] = _content.Load<SpriteFont>("MyFont");
   }
 
   public Texture2D GetTexture(string name)

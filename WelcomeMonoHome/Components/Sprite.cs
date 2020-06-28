@@ -40,11 +40,23 @@ namespace WelcomeMonoHome.Components
 
     public void Draw(SpriteBatch _spriteBatch)
     {
-      // TODO clear this up
-      _spriteBatch.Draw(_texture, position - origin, null, color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+      _spriteBatch.Draw(
+        _texture, // texture
+        position, // position
+        null, // sourceRectangle?
+        color, // color
+        0f, // rotation
+        origin, // origin
+        scale, // scale
+        SpriteEffects.None, // effects
+        0f // layerDepth
+      );
 
       // draw test rectangle
       DrawRectangle(_spriteBatch);
+
+      //ServiceLocator.GetService<IGuiService>().ConsoleWriteLine("help", position.ToString());
+      //ServiceLocator.GetService<IGuiService>().ConsoleWriteLine("help", origin.ToString());
     }
 
     public void Instantiate()
@@ -59,7 +71,13 @@ namespace WelcomeMonoHome.Components
 
     public void DrawRectangle(SpriteBatch _spriteBatch)
     {
-      Rectangle rectangle = new Rectangle((int)(position.X - _texture.Width / 2), (int)(position.Y - _texture.Height / 2), (int)(_texture.Width * scale.X), (int)((_texture.Height * scale.Y)));
+
+      Rectangle rectangle = new Rectangle(
+        (int)(position.X - (_texture.Width * scale.X) / 2),
+        (int)(position.Y - (_texture.Height * scale.Y) / 2),
+        (int)(_texture.Width * scale.X),
+        (int)(_texture.Height * scale.Y));
+
       _spriteBatch.Draw(_pixel, rectangle, Color.White * 0.5f);
     }
   }
