@@ -22,6 +22,7 @@ public class ContentManagerService : IContentManagerService
     // common
     textures["ERROR"] = _content.Load<Texture2D>("ERROR");
     textures["pixel"] = _content.Load<Texture2D>("pixel");
+    // rename MyFont to font
     fonts["MyFont"] = _content.Load<SpriteFont>("MyFont");
   }
 

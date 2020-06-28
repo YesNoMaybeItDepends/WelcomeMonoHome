@@ -1,5 +1,10 @@
 Game: 
   TODO: 
+    - If you move the window the list of renderables increases, why? @high @fixme 
+    - Why does our ServiceLocator use IService instead of Service? @critical
+      it should be like memeservice = servicelocator.getservice<memeservice>();
+    - InputService send events
+      it should send events whenever input changes, and anyone who cares will listen to it and handle it
     - Render GUI on camera frame, not world frame @project(Game.GUI) 
     - add gameover
     - add start menu @today

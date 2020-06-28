@@ -48,6 +48,7 @@ public class StartScreen : Scene
     buttonPos.X = _graphicsService.GetScreenWidth() / 2;
     buttonPos.Y = _graphicsService.GetScreenHeight() / 2 - 200;
     Button NewGame = new Button(buttonPos, 200, 100, Color.White, Color.Black);
+    NewGame.text = "New Game";
     NewGame.Instantiate();
   }
 
