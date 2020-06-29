@@ -1,5 +1,7 @@
 Game: 
   TODO: 
+    - unsubscribe button from inputs when we destroy it @critical 
+    - add scene to update loop
     - If you move the window the list of renderables increases, why? @high @fixme 
     - Why does our ServiceLocator use IService instead of Service? @critical
       it should be like memeservice = servicelocator.getservice<memeservice>();

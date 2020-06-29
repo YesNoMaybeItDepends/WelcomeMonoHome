@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -22,6 +23,8 @@ public class Button : Renderable
 
   public string text;
 
+  float transparency = 0.75f;
+
   public Button(Vector2 CenterPosition, int TotalWidth, int TotalHeight, Color ButtonColor, Color BorderColor)
   {
     _texture = ServiceLocator.GetService<IContentManagerService>().GetTexture("pixel");
@@ -38,28 +41,50 @@ public class Button : Renderable
     buttonColor = ButtonColor;
     borderColor = BorderColor;
 
-    IRendererService renderer = ServiceLocator.GetService<IRendererService>();
-    renderer.AddRenderable(this);
+    // IRendererService renderer = ServiceLocator.GetService<IRendererService>();
+    // renderer.AddRenderable(this);
 
+    // TODO unsubscribe when we destroy
     ServiceLocator.GetService<IInputService>().onmouseclick += HandleMouseInput;
   }
 
   public void HandleMouseInput(object sender, MouseState MouseState)
   {
     Rectangle rect = new Rectangle((int)topLeftPosition.X, (int)topLeftPosition.Y, width, height);
-    if (!isHovered && rect.Contains(MouseState.X, MouseState.Y))
+
+    // Mouse inside button
+    if (rect.Contains(MouseState.X, MouseState.Y))
     {
-      isHovered = true;
-      OnEnterHover();
+      if (!isHovered)
+      {
+        isHovered = true;
+        OnEnterHover();
+      }
+
+      // Mouse click
+      if (MouseState.LeftButton == ButtonState.Pressed)
+      {
+        OnMouseClick();
+      }
     }
-    else if (isHovered && !rect.Contains(MouseState.X, MouseState.Y))
+
+    // Mouse outside button
+    else
     {
-      isHovered = false;
-      OnExitHover();
+      if (isHovered)
+      {
+        isHovered = false;
+        OnExitHover();
+      }
     }
   }
 
-  public virtual void OnMouseClick() { }
+  public Action dothingie { get; set; }
+  public void OnMouseClick()
+  {
+    dothingie();
+  }
+
 
   public void OnEnterHover()
   {
@@ -78,15 +103,18 @@ public class Button : Renderable
   public override void Draw(SpriteBatch spriteBatch)
   {
     // draw black border
-    spriteBatch.Draw(_texture, new Rectangle((int)topLeftPosition.X - borderSize, (int)topLeftPosition.Y - borderSize, width + borderSize * 2, height + borderSize * 2), borderColor);
+    //spriteBatch.Draw(_texture, new Rectangle((int)topLeftPosition.X - borderSize, (int)topLeftPosition.Y - borderSize, width + borderSize * 2, height + borderSize * 2), borderColor * transparency);
 
     // draw button
-    spriteBatch.Draw(_texture, new Rectangle((int)topLeftPosition.X, (int)topLeftPosition.Y, width, height), buttonColor);
+    spriteBatch.Draw(_texture, new Rectangle((int)topLeftPosition.X, (int)topLeftPosition.Y, width, height), buttonColor * transparency);
 
     // draw text
     if (text != null)
     {
-      spriteBatch.DrawString(_font, text, centerPosition, textColor);
+      Vector2 textSize = _font.MeasureString(text);
+      float scale = 2f;
+      Vector2 textPos = new Vector2(centerPosition.X - (textSize.X * scale) / 2, centerPosition.Y - (textSize.Y * scale) / 2);
+      spriteBatch.DrawString(_font, text, textPos, textColor, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
     }
   }
 }

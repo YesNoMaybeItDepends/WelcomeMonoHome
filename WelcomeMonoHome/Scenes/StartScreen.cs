@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 public class StartScreen : Scene
 {
@@ -14,6 +15,9 @@ public class StartScreen : Scene
   IRendererService _rendererService;
   ISceneManagerService _sceneService;
   IGraphicsService _graphicsService;
+
+  Image background;
+  Button NewGame;
 
   public StartScreen()
   {
@@ -36,19 +40,21 @@ public class StartScreen : Scene
 
   public override void End()
   {
-    // np
+    background.Destroy();
+    NewGame.Destroy();
   }
 
   public override void Initialize()
   {
     // np
-    Image background = new Image("startScreen_1080", new Vector2(0, 0));
+    background = new Image("startScreen_1080", new Vector2(0, 0));
     background.Instantiate();
     Vector2 buttonPos;
     buttonPos.X = _graphicsService.GetScreenWidth() / 2;
     buttonPos.Y = _graphicsService.GetScreenHeight() / 2 - 200;
-    Button NewGame = new Button(buttonPos, 200, 100, Color.White, Color.Black);
+    NewGame = new Button(buttonPos, 200, 100, Color.White, Color.Black);
     NewGame.text = "New Game";
+    NewGame.dothingie = OnStartGameClick;
     NewGame.Instantiate();
   }
 
@@ -71,5 +77,14 @@ public class StartScreen : Scene
   public override void Update(GameTime gameTime)
   {
     // np
+  }
+
+  public void OnStartGameClick()
+  {
+    ISceneManagerService _sceneManagerService = ServiceLocator.GetService<ISceneManagerService>();
+    Scene scene = new GameScene();
+    _sceneManagerService.SetOrChangeScene(scene);
+    scene.LoadContent();
+    scene.Initialize();
   }
 }

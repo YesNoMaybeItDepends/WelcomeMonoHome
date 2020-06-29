@@ -28,7 +28,7 @@ public class SceneManagerService : ISceneManagerService
     }
     else
     {
-      //currentScene.End();
+      currentScene.End();
       currentScene = NewScene;
       //currentScene.Start();
     }
