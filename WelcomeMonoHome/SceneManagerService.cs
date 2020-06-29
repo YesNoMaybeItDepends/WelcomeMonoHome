@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 public class SceneManagerService : ISceneManagerService
 {
@@ -38,7 +39,10 @@ public class SceneManagerService : ISceneManagerService
   {
   }
 
-
+  public void UpdateScene(GameTime gameTime)
+  {
+    currentScene.Update(gameTime);
+  }
 
   public void RemoveScene(Scene Scene)
   {

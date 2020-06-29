@@ -11,6 +11,7 @@ public abstract class Entity
   public Texture2D texture;
   private bool? _isVisible;
   private Vector2 _pos;
+  public float scale = 1f;
 
   private bool _hasCollision = false;
   public bool hasCollision
@@ -43,7 +44,7 @@ public abstract class Entity
     }
     set
     {
-      _colRectangle = value;
+      _colRectangle = new Rectangle(value.X, value.Y, (int)(value.Width * scale), (int)(value.Height * scale));
     }
   }
 

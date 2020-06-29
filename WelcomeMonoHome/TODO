@@ -1,16 +1,20 @@
 Game: 
   TODO: 
-    - unsubscribe button from inputs when we destroy it @critical 
-    - add scene to update loop
-    - If you move the window the list of renderables increases, why? @high @fixme 
+    - Entity whenever it is rescaled it should update any values that depend on scale
+    - healthpill collisionboxes ain't right
+      they're way smaller than their sprite and debugcollisionrectangle shows
+      It's probably because collision box doesn't scale with the sprite scale
+    + unsubscribe button from inputs when we destroy it @critical 
+    + add scene to update loop
+    - If you move the window the list of renderables increases, why? 
     - Why does our ServiceLocator use IService instead of Service? @critical
       it should be like memeservice = servicelocator.getservice<memeservice>();
-    - InputService send events
+    + InputService send events
       it should send events whenever input changes, and anyone who cares will listen to it and handle it
     - Render GUI on camera frame, not world frame @project(Game.GUI) 
     - add gameover
     - add start menu @today
-    - add button GUI
+    + add button GUI
     - start menu draw biden
     - GUI should work on its own render engine
     - when you kill a hillarious make her explode and kill nearby boolets 

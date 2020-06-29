@@ -40,12 +40,6 @@ public class Button : Renderable
 
     buttonColor = ButtonColor;
     borderColor = BorderColor;
-
-    // IRendererService renderer = ServiceLocator.GetService<IRendererService>();
-    // renderer.AddRenderable(this);
-
-    // TODO unsubscribe when we destroy
-    ServiceLocator.GetService<IInputService>().onmouseclick += HandleMouseInput;
   }
 
   public void HandleMouseInput(object sender, MouseState MouseState)
@@ -85,6 +79,17 @@ public class Button : Renderable
     dothingie();
   }
 
+  public override void Instantiate()
+  {
+    ServiceLocator.GetService<IRendererService>().AddRenderable(this);
+    ServiceLocator.GetService<IInputService>().onmouseclick += HandleMouseInput;
+  }
+
+  public override void Destroy()
+  {
+    ServiceLocator.GetService<IInputService>().onmouseclick -= HandleMouseInput;
+    ServiceLocator.GetService<IRendererService>().RemoveRenderable(this);
+  }
 
   public void OnEnterHover()
   {

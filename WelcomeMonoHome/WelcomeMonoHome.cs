@@ -105,8 +105,7 @@ namespace WelcomeMonoHome
         else
         {
           UpdateServices(gameTime);
-          // _sceneManagerService.UpdateScene();
-          scene.Update(gameTime); // dlet this
+
 
           // debug console
           _guiService.ConsoleWriteLine("help", "GameTime: " + gameTime.TotalGameTime.Seconds);
@@ -147,8 +146,7 @@ namespace WelcomeMonoHome
     void UpdateServices(GameTime gameTime)
     {
       _inputService.Update(gameTime);
-      // TODO implement this
-      //_sceneManagerService.Update(); 
+      _sceneManagerService.UpdateScene(gameTime);
       _entityManagerService.UpdateEntities(gameTime);
       _collisionManagerService.Update();
     }

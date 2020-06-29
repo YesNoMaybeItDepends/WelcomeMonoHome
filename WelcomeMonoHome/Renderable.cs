@@ -25,12 +25,12 @@ public abstract class Renderable : IRenderable
     }
   }
 
-  public void Instantiate()
+  public virtual void Instantiate()
   {
     ServiceLocator.GetService<IRendererService>().AddRenderable(this);
   }
 
-  public void Destroy()
+  public virtual void Destroy()
   {
     ServiceLocator.GetService<IRendererService>().RemoveRenderable(this);
   }
