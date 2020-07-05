@@ -7,25 +7,24 @@ namespace WelcomeMonoHome.Components
 {
   public class Sprite : IRenderable
   {
-    public Vector2 position { get; set; }
     public Texture2D _texture;
     public Texture2D _pixel;
     public Color color;
     // origin from the middle
     public Vector2 origin;
     // ? Entity _parent;
-    public Vector2 scale;
 
-    public Sprite(Texture2D texture, Vector2 pos)
+    public Transform transform;
+
+    public Sprite(Texture2D texture, Transform Transform)
     {
       _texture = texture;
-      position = pos;
       origin = new Vector2(texture.Width / 2, texture.Height / 2);
-      scale = new Vector2(1, 1);
       color = Color.White;
 
-      // test rectangle
+      // get pixel texture
       _pixel = ServiceLocator.GetService<IContentManagerService>().GetTexture("pixel");
+      transform = Transform;
     }
 
     public void LoadContent()
@@ -42,12 +41,12 @@ namespace WelcomeMonoHome.Components
     {
       _spriteBatch.Draw(
         _texture, // texture
-        position, // position
+        transform.position, // position
         null, // sourceRectangle?
         color, // color
         0f, // rotation
         origin, // origin
-        scale, // scale
+        transform.scale, // scale
         SpriteEffects.None, // effects
         0f // layerDepth
       );
@@ -72,13 +71,18 @@ namespace WelcomeMonoHome.Components
     public void DrawRectangle(SpriteBatch _spriteBatch)
     {
 
-      Rectangle rectangle = new Rectangle(
-        (int)(position.X - (_texture.Width * scale.X) / 2),
-        (int)(position.Y - (_texture.Height * scale.Y) / 2),
-        (int)(_texture.Width * scale.X),
-        (int)(_texture.Height * scale.Y));
+      Rectangle rectangle = GetSpriteRectangle();
 
       _spriteBatch.Draw(_pixel, rectangle, Color.White * 0.5f);
+    }
+
+    public Rectangle GetSpriteRectangle()
+    {
+      return new Rectangle(
+        (int)(transform.position.X - (_texture.Width * transform.scale.X) / 2),
+        (int)(transform.position.Y - (_texture.Height * transform.scale.Y) / 2),
+        (int)(_texture.Width * transform.scale.X),
+        (int)(_texture.Height * transform.scale.Y));
     }
   }
 }

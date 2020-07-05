@@ -59,6 +59,26 @@ public class CollisionManagerService : ICollisionManagerService
       entitiesToAdd.Clear();
     }
 
+    // update collision rectangle
+    // TODO AWFUL, change how this works
+    if (collidableEntities.Count > 1)
+    {
+      foreach (Entity e in collidableEntities)
+      {
+        e.colRectangle = e.sprite.GetSpriteRectangle();
+      }
+    }
+
+    // check collisions
+    if (collidableEntities.Count > 1)
+    {
+      foreach (Entity e in collidableEntities)
+      {
+        CheckCollision(e);
+      }
+
+    }
+
     // reset alreadyCollidedWith 
     if (collidableEntities.Count > 0)
     {

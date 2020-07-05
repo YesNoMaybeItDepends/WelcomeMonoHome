@@ -20,10 +20,12 @@ public class Boolet : Entity
 
   public Boolet(Vector2 Pos, bool IsPlayerBoolet, Vector2 TargetPos)
   {
-    texture = ServiceLocator.GetService<IContentManagerService>().GetTexture("boolet");
-    sprite = new Sprite(texture, Vector2.Zero);
+    transform = new Transform(this, Vector2.Zero);
 
-    pos = Pos;
+    texture = ServiceLocator.GetService<IContentManagerService>().GetTexture("boolet");
+    sprite = new Sprite(texture, transform);
+
+    transform.position = Pos;
     _targetPos = TargetPos;
 
     isPlayerBoolet = IsPlayerBoolet;
@@ -38,18 +40,18 @@ public class Boolet : Entity
     }
 
     // set direction 
-    _direction = Vector2.Normalize(_targetPos - this.pos);
+    _direction = Vector2.Normalize(_targetPos - transform.position);
 
     // enable collision
     hasCollision = true;
 
     // double sprite scale
-    sprite.scale = new Vector2(2, 2);
+    transform.scale = new Vector2(2, 2);
   }
 
   public override void Update(GameTime gameTime)
   {
-    pos += (_direction * _speed) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+    transform.position += (_direction * _speed) * (float)gameTime.ElapsedGameTime.TotalSeconds;
   }
 
   public override void OnBecameInvisible()

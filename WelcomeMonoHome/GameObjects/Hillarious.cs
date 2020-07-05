@@ -27,8 +27,9 @@ public class Hillarious : Entity
 
   public Hillarious(BBEG player)
   {
+    transform = new Transform(this, Vector2.Zero);
     texture = ServiceLocator.GetService<IContentManagerService>().GetTexture(hillariousTextureName);
-    sprite = new Sprite(texture, Vector2.Zero);
+    sprite = new Sprite(texture, transform);
 
     _player = player;
 
@@ -64,7 +65,7 @@ public class Hillarious : Entity
     }
 
     // set spawn position
-    pos = new Vector2(xspawn, yspawn);
+    transform.position = new Vector2(xspawn, yspawn);
 
     // Determine TargetPos as random point on edge opposite from spawn edge 
     switch (side)
@@ -86,19 +87,19 @@ public class Hillarious : Entity
     }
 
     // Set direction vector 
-    Direction = Vector2.Normalize(TargetPos - pos);
+    Direction = Vector2.Normalize(TargetPos - transform.position);
   }
 
   public override void Update(GameTime gameTime)
   {
-    pos += Direction * _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+    transform.position += Direction * _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
     // fire boolet
     if (nextShot < (float)gameTime.TotalGameTime.TotalSeconds)
     {
       nextShot = (float)gameTime.TotalGameTime.TotalSeconds + rateOfFire;
 
-      Boolet boolet = new Boolet(pos, false, _player.pos);
+      Boolet boolet = new Boolet(transform.position, false, _player.transform.position);
 
       boolet.Instantiate();
     }

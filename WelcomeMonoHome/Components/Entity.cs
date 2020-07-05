@@ -7,11 +7,41 @@ using System.Collections.Generic;
 public abstract class Entity
 {
   public abstract void Update(GameTime gameTime);
-  public Sprite sprite;
   public Texture2D texture;
   private bool? _isVisible;
   private Vector2 _pos;
   public float scale = 1f;
+
+  // Components
+  public Sprite sprite;
+  private Transform _transform;
+  public Transform transform
+  {
+    get
+    {
+      return _transform;
+    }
+    set
+    {
+      _transform = value;
+
+      // update sprite position
+      if (sprite != null)
+      {
+        sprite.transform = _transform;
+      }
+      else
+      {
+        Console.WriteLine("@Entity -> WARNING: SPRITE IS NULL");
+      }
+
+      if (hasCollision)
+      {
+        // update collision box
+        colRectangle = sprite.GetSpriteRectangle();
+      }
+    }
+  }
 
   private bool _hasCollision = false;
   public bool hasCollision
@@ -44,51 +74,11 @@ public abstract class Entity
     }
     set
     {
-      _colRectangle = new Rectangle(value.X, value.Y, (int)(value.Width * scale), (int)(value.Height * scale));
+      _colRectangle = value;
     }
   }
 
-  public virtual Vector2 pos
-  {
-    get
-    {
-      return _pos;
-    }
-    set
-    {
-      _pos = value;
-
-      // update sprite position
-      if (sprite != null)
-      {
-        sprite.position = _pos;
-      }
-      else
-      {
-        Console.WriteLine("@Entity -> WARNING: SPRITE IS NULL");
-      }
-
-      if (hasCollision)
-      {
-        // update collision box
-        colRectangle = new Rectangle((int)(sprite.position.X - (sprite._texture.Width) / 2), (int)(sprite.position.Y - (sprite._texture.Height) / 2), (int)(sprite._texture.Width * sprite.scale.X), (int)((sprite._texture.Height * sprite.scale.Y)));
-
-        int width = sprite._texture.Width * (int)sprite.scale.X;
-        int length = sprite._texture.Height * (int)sprite.scale.Y;
-
-        // update collision box new edition
-        colRectangle = new Rectangle(
-          (int)(sprite.position.X - width / 2),
-          (int)(sprite.position.Y - length / 2),
-          (int)width,
-          (int)length);
-
-        // check for collisions
-        ServiceLocator.GetService<ICollisionManagerService>().CheckCollision(this);
-      }
-    }
-  }
-
+  // TODO rename to isInsideScreen
   public bool? isVisible
   {
     get
@@ -150,4 +140,15 @@ public abstract class Entity
     _entityManagerService.AddEntity(this);
     sprite.Instantiate();
   }
+  /*
+    // ! TODO MAYBE WE REALLY DONT NEED TO SET THE POSITION WHEN WE INSTANTIATE
+    public void Instantiate(Vector2 position)
+    {
+      transform = new Transform(this, position);
+      IEntityManagerService _entityManagerService = ServiceLocator.GetService<IEntityManagerService>();
+
+      _entityManagerService.AddEntity(this);
+      sprite.Instantiate();
+    }
+    */
 }

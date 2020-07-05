@@ -54,18 +54,22 @@ namespace WelcomeMonoHome.GameObjects
 
     public BBEG()
     {
+      transform = new Transform(this, Vector2.Zero);
+
       // setup textures and sprite
       texture = ServiceLocator.GetService<IContentManagerService>().GetTexture(_bbegTextureName);
       _booletTexture = ServiceLocator.GetService<IContentManagerService>().GetTexture(_booletTextureName);
-      sprite = new Sprite(texture, Vector2.Zero);
+      sprite = new Sprite(texture, transform);
 
       // Get services
       _entityManagerService = ServiceLocator.GetService<IEntityManagerService>();
       _debugService = ServiceLocator.GetService<IDebugService>();
 
-      // Get absolute gun positions 
-      _leftGunPos = new Vector2((pos.X - texture.Width / 2) + _relativeLeftGunPos.X, (pos.Y - texture.Height / 2) + _relativeLeftGunPos.Y);
-      _rightGunPos = new Vector2((pos.X - texture.Width / 2) + _relativeRightGunPos.X, (pos.Y - texture.Height / 2) + _relativeRightGunPos.Y);
+      // Get RELATIVE gun positions 
+      // ? TODO Why do we do - texture.width/2 ?
+      _leftGunPos = new Vector2(_relativeLeftGunPos.X - texture.Width / 2, _relativeLeftGunPos.Y - texture.Width / 2);
+      _rightGunPos = new Vector2(_relativeRightGunPos.X - texture.Width / 2, _relativeRightGunPos.Y - texture.Width / 2);
+
 
       // set collision
       hasCollision = true;
@@ -81,7 +85,7 @@ namespace WelcomeMonoHome.GameObjects
       int screenHeight = _graphicsService.GetScreenHeight();
 
       // Initialize position at the middle of the screen from the sprite's center
-      pos = new Vector2(screenWidth / 2, screenHeight / 2);
+      transform.position = new Vector2(screenWidth / 2, screenHeight / 2);
 
       // healthBar
       healthBar = new HealthBar(new Vector2(screenWidth / 2, screenHeight * 0.95f), 600, 25);
@@ -112,7 +116,7 @@ namespace WelcomeMonoHome.GameObjects
       if (direction != Vector2.Zero)
       {
         direction = Vector2.Normalize(direction);
-        pos += direction * _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        transform.position += direction * _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
       }
 
       // Fire
@@ -120,8 +124,8 @@ namespace WelcomeMonoHome.GameObjects
       {
         nextShot = (float)gameTime.TotalGameTime.TotalSeconds + rateOfFire;
 
-        Boolet leftBoolet = new Boolet((pos + _leftGunPos), true, Mouse.GetState().Position.ToVector2());
-        Boolet rightBoolet = new Boolet((pos + _rightGunPos), true, Mouse.GetState().Position.ToVector2());
+        Boolet leftBoolet = new Boolet((transform.position + _leftGunPos), true, Mouse.GetState().Position.ToVector2());
+        Boolet rightBoolet = new Boolet((transform.position + _rightGunPos), true, Mouse.GetState().Position.ToVector2());
 
         leftBoolet.Instantiate();
         rightBoolet.Instantiate();

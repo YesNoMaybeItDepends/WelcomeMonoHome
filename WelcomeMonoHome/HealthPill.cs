@@ -19,11 +19,12 @@ public class HealthPill : Entity
 
   public HealthPill(GameTime gameTime)
   {
+    transform = new Transform(this, Vector2.Zero);
     spawnFrameSecond = (float)gameTime.TotalGameTime.TotalSeconds;
     spawnFrameMiliseconds = (float)gameTime.TotalGameTime.TotalMilliseconds;
     texture = ServiceLocator.GetService<IContentManagerService>().GetTexture(textureName);
-    sprite = new Sprite(texture, Vector2.Zero);
-    sprite.scale = _spawnScale;
+    sprite = new Sprite(texture, transform);
+    transform.scale = _spawnScale;
     hasCollision = true;
     gui = ServiceLocator.GetService<IGuiService>();
     gui.NewConsole("HealthPills", new Vector2(400, 400), null, null);
@@ -39,7 +40,7 @@ public class HealthPill : Entity
       // "play" spawning "animation"
       float amount = MathHelper.Clamp(elapsedTime / timeToSpawn, 0, 1);
       float percentToAdd = MathHelper.Lerp(1.0f, 3.0f, amount);
-      sprite.scale = new Vector2(percentToAdd, percentToAdd);
+      transform.scale = new Vector2(percentToAdd, percentToAdd);
     }
     // If expired
     else if (gameTime.TotalGameTime.TotalSeconds > spawnFrameSecond + timeToDespawn + timeToSpawn)

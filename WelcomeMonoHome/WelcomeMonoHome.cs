@@ -128,13 +128,13 @@ namespace WelcomeMonoHome
       foreach (Entity entity in ServiceLocator.GetService<IEntityManagerService>().entities)
       {
         // Is it visible?
-        if (entity.isVisible != true && _camera.GetRenderedWorld().Contains(entity.pos.X, entity.pos.Y))
+        if (entity.isVisible != true && _camera.GetRenderedWorld().Contains(entity.transform.position.X, entity.transform.position.Y))
         {
           entity.isVisible = true;
         }
 
         // Is it not visible?
-        else if (entity.isVisible != false && !_camera.GetRenderedWorld().Contains(entity.pos.X, entity.pos.Y))
+        else if (entity.isVisible != false && !_camera.GetRenderedWorld().Contains(entity.transform.position.X, entity.transform.position.Y))
         {
           entity.isVisible = false;
         }
@@ -146,9 +146,9 @@ namespace WelcomeMonoHome
     void UpdateServices(GameTime gameTime)
     {
       _inputService.Update(gameTime);
+      _collisionManagerService.Update();
       _sceneManagerService.UpdateScene(gameTime);
       _entityManagerService.UpdateEntities(gameTime);
-      _collisionManagerService.Update();
     }
   }
 }

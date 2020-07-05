@@ -38,6 +38,9 @@ public class GameScene : Scene
   int SCREENWIDTH;
   int SCREENHEIGHT;
 
+  // debug
+  bool hillariousSpawning = true;
+
   public GameScene()
   {
     GraphicsDeviceManager graphics = ServiceLocator.GetService<IGraphicsService>().graphics;
@@ -76,7 +79,7 @@ public class GameScene : Scene
   public override void Update(GameTime gameTime)
   {
     // Hillarious spawning
-    if (gameTime.TotalGameTime.TotalSeconds > _nextTimeToSpawnHillarious)
+    if (hillariousSpawning && gameTime.TotalGameTime.TotalSeconds > _nextTimeToSpawnHillarious)
     {
       _nextTimeToSpawnHillarious = (float)gameTime.TotalGameTime.TotalSeconds + _hillariousSpawnRate;
 
@@ -93,7 +96,7 @@ public class GameScene : Scene
       HealthPill pill = new HealthPill(gameTime);
       float pillx = random.Next(0, SCREENWIDTH + 1);
       float pilly = random.Next(0, SCREENHEIGHT + 1);
-      pill.pos = new Vector2(pillx, pilly);
+      pill.transform.position = new Vector2(pillx, pilly);
       pill.Instantiate();
     }
   }

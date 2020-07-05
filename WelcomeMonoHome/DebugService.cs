@@ -34,7 +34,7 @@ public class DebugService : IDebugService
     int increment = 20;
     foreach (TextBox textBox in _textList)
     {
-      textBox.position = new Vector2(0, y);
+      textBox.transform.position = new Vector2(0, y);
       y += increment;
     }
   }

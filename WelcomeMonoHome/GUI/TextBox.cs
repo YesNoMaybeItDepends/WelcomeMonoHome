@@ -8,6 +8,7 @@ namespace WelcomeMonoHome.GUI
     public string text { get; set; }
     SpriteFont font { get; set; }
     public Vector2 position { get; set; }
+    public Transform transform;
 
     public TextBox(string Text, Vector2 Position)
     {
@@ -19,9 +20,10 @@ namespace WelcomeMonoHome.GUI
       ServiceLocator.GetService<IRendererService>().AddRenderable(this);
     }
 
-    // public ScreenText Instantiate(string Text, Vector2 Position)
+    // why was this commented out?
+    // public ScreenText Instantiate(Vector2 Position)
     // {
-    //
+    //   transform = new Transform(this, Position);
     // }
 
     public void Draw(SpriteBatch spriteBatch)
