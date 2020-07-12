@@ -8,11 +8,11 @@ public class InputService : IInputService
   Camera _camera;
   GraphicsDeviceManager _graphics;
 
-  MouseState _lastMouseState;
-  MouseState _mouseState;
+  public MouseState lastMouseState;
+  public MouseState mouseState;
 
-  KeyboardState _lastKeyboardState;
-  KeyboardState _keyboardState;
+  public KeyboardState lastKeyboardState;
+  public KeyboardState keyboardState;
 
   public InputState leftButton;
   public InputState rightButton;
@@ -59,55 +59,19 @@ public class InputService : IInputService
     return pos;
   }
 
-  // EVENT BASED SYSTEM
-  public delegate void OnMouseClick(object sender, MouseState MouseState);
-  public event OnMouseClick OnMouseClickEvent;
-
-  // ACTION BASED SYSTEM
-  public Action OnMouseClickAction;
-
-  // EVENT BASED UPDATE
   public void Update(GameTime gameTime)
   {
     // If it's the first frame we don't have any input at all
-    if (_mouseState != null)
+    if (mouseState != null)
     {
-      _lastMouseState = _mouseState;
-      _lastKeyboardState = _keyboardState;
+      lastMouseState = mouseState;
+      lastKeyboardState = keyboardState;
     }
 
-    _mouseState = Mouse.GetState();
-    _keyboardState = Keyboard.GetState();
+    mouseState = Mouse.GetState();
+    keyboardState = Keyboard.GetState();
 
-    if (_mouseState != _lastMouseState || _keyboardState != _lastKeyboardState)
-    {
-      OnMouseClickEvent(this, _mouseState);
-    }
-  }
-
-  // ACTION BASED UPDATE
-  public void ActionUpdate(GameTime gameTime)
-  {
-    // If it's the first frame we don't have any input at all
-    if (_mouseState != null && _keyboardState != null)
-    {
-      _lastMouseState = _mouseState;
-      _lastKeyboardState = _keyboardState;
-    }
-
-    // update input state
-    _mouseState = Mouse.GetState();
-    _keyboardState = Keyboard.GetState();
-
-    // update buttons state
-    GetButtonsState();
-
-    // update keys state
-
-    if (_mouseState != _lastMouseState)
-    {
-      OnMouseClickAction();
-    }
+    // update mouse buttans here?    
   }
 
   public InputState GetKeyState(Keys key)
@@ -115,8 +79,8 @@ public class InputService : IInputService
     bool isDown;
     bool isRepeat;
 
-    isDown = _keyboardState.IsKeyDown(key) ? true : false;
-    isRepeat = _keyboardState.IsKeyDown(key) == _lastKeyboardState.IsKeyDown(key) ? true : false;
+    isDown = keyboardState.IsKeyDown(key) ? true : false;
+    isRepeat = keyboardState.IsKeyDown(key) == lastKeyboardState.IsKeyDown(key) ? true : false;
 
     InputState inputState = new InputState(isDown, isRepeat);
     return inputState;
@@ -135,20 +99,20 @@ public class InputService : IInputService
     {
       case MouseButtons.Left:
         {
-          button = _mouseState.LeftButton;
-          lastButton = _lastMouseState.LeftButton;
+          button = mouseState.LeftButton;
+          lastButton = lastMouseState.LeftButton;
           break;
         }
       case MouseButtons.Right:
         {
-          button = _mouseState.RightButton;
-          lastButton = _lastMouseState.RightButton;
+          button = mouseState.RightButton;
+          lastButton = lastMouseState.RightButton;
           break;
         }
       case MouseButtons.Middle:
         {
-          button = _mouseState.MiddleButton;
-          lastButton = _lastMouseState.MiddleButton;
+          button = mouseState.MiddleButton;
+          lastButton = lastMouseState.MiddleButton;
           break;
         }
     }

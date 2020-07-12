@@ -85,6 +85,7 @@ public class StartScreen : Scene
   {
     // np
     meme.Update();
+    NewGame.Update();
   }
 
   public void OnStartGameClick()

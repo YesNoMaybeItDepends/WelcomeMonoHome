@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework.Input;
 
+[Obsolete("we pollin' now")]
 public class Input
 {
   IInputService inputService;
@@ -27,12 +28,12 @@ public class Input
 
   public void Subscribe()
   {
-    inputService.OnMouseClickEvent += OnMouseClickHandler;
+
   }
 
   public void Unsubscribe()
   {
-    inputService.OnMouseClickEvent -= OnMouseClickHandler;
+
   }
 
 

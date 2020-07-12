@@ -78,10 +78,6 @@ namespace WelcomeMonoHome.GameObjects
 
       // hp
       _currentHP = maximumHP;
-
-      // Input
-      input = new Input();
-      input.OnMouseClickAction = OnRightClick;
     }
 
     public void Initialize()
@@ -99,13 +95,10 @@ namespace WelcomeMonoHome.GameObjects
 
     public override void Update(GameTime gameTime)
     {
-      System.Console.WriteLine(_direction);
+      UpdateDirection();
+
       // Move
-      //if (_direction != Vector2.Zero)
-      {
-        transform.position += (_direction * _speed) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-      }
-      _direction = Vector2.Zero;
+      transform.position += (_direction * _speed) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
       // Fire
       if (Mouse.GetState().LeftButton == ButtonState.Pressed && nextShot < (float)gameTime.TotalGameTime.TotalSeconds)
@@ -132,9 +125,10 @@ namespace WelcomeMonoHome.GameObjects
       }
     }
 
-    public void OnRightClick()
+    public void UpdateDirection()
     {
-      System.Console.WriteLine("shiet");
+      _direction = Vector2.Zero;
+
       if (Keyboard.GetState().IsKeyDown(Keys.W))
       {
         _direction.Y -= 1;

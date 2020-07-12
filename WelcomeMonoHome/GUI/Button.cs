@@ -82,12 +82,10 @@ public class Button : Renderable
   public override void Instantiate()
   {
     ServiceLocator.GetService<IRendererService>().AddRenderable(this);
-    ServiceLocator.GetService<IInputService>().OnMouseClickEvent += HandleMouseInput;
   }
 
   public override void Destroy()
   {
-    ServiceLocator.GetService<IInputService>().OnMouseClickEvent -= HandleMouseInput;
     ServiceLocator.GetService<IRendererService>().RemoveRenderable(this);
   }
 
@@ -103,6 +101,39 @@ public class Button : Renderable
     buttonColor = Color.White;
     borderColor = Color.White;
     textColor = Color.DarkSlateGray;
+  }
+
+  public void Update()
+  {
+    InputService input = (InputService)ServiceLocator.GetService<IInputService>();
+
+    Rectangle rect = new Rectangle((int)topLeftPosition.X, (int)topLeftPosition.Y, width, height);
+
+    // Mouse inside button
+    if (rect.Contains(input.mouseState.X, input.mouseState.Y))
+    {
+      if (!isHovered)
+      {
+        isHovered = true;
+        OnEnterHover();
+      }
+
+      // Mouse click
+      if (input.mouseState.LeftButton == ButtonState.Pressed)
+      {
+        OnMouseClick();
+      }
+    }
+
+    // Mouse outside button
+    else
+    {
+      if (isHovered)
+      {
+        isHovered = false;
+        OnExitHover();
+      }
+    }
   }
 
   public override void Draw(SpriteBatch spriteBatch)
