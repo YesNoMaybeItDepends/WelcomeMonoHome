@@ -4,6 +4,7 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+    
     {
       "name": ".NET Core Launch (console)",
       "type": "coreclr",
@@ -12,7 +13,8 @@
       "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/WelcomeMonoHome.dll",
       "args": [],
       "cwd": "${workspaceFolder}",
-      "console": "internalConsole",
+      "console": "externalTerminal",
+      //"externalConsole": true,
       "stopAtEntry": false
     },
     {

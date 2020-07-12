@@ -82,12 +82,12 @@ public class Button : Renderable
   public override void Instantiate()
   {
     ServiceLocator.GetService<IRendererService>().AddRenderable(this);
-    ServiceLocator.GetService<IInputService>().onmouseclick += HandleMouseInput;
+    ServiceLocator.GetService<IInputService>().OnMouseClickEvent += HandleMouseInput;
   }
 
   public override void Destroy()
   {
-    ServiceLocator.GetService<IInputService>().onmouseclick -= HandleMouseInput;
+    ServiceLocator.GetService<IInputService>().OnMouseClickEvent -= HandleMouseInput;
     ServiceLocator.GetService<IRendererService>().RemoveRenderable(this);
   }
 

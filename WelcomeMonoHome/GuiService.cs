@@ -13,7 +13,7 @@ public class GuiService : IGuiService
     input = Input;
     consoles = new Dictionary<string, GuiConsole>();
 
-    Input.onmouseclick += MouseClickHandler;
+    Input.OnMouseClickEvent += MouseClickHandler;
   }
 
   public void MouseClickHandler(object sender, MouseState Mouse)

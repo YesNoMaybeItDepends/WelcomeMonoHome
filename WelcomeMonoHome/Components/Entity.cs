@@ -13,6 +13,7 @@ public abstract class Entity
   public float scale = 1f;
 
   // Components
+  public Input input;
   public Sprite sprite;
   private Transform _transform;
   public Transform transform
@@ -24,16 +25,6 @@ public abstract class Entity
     set
     {
       _transform = value;
-
-      // update sprite position
-      if (sprite != null)
-      {
-        sprite.transform = _transform;
-      }
-      else
-      {
-        Console.WriteLine("@Entity -> WARNING: SPRITE IS NULL");
-      }
 
       if (hasCollision)
       {
@@ -130,6 +121,11 @@ public abstract class Entity
     {
       ICollisionManagerService _collisionManager = ServiceLocator.GetService<ICollisionManagerService>();
       _collisionManager.RemoveCollidable(this);
+    }
+
+    if (input != null)
+    {
+      input.Unsubscribe();
     }
   }
 

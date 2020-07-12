@@ -19,11 +19,13 @@ namespace WelcomeMonoHome.GameObjects
     IEntityManagerService _entityManagerService;
     IDebugService _debugService;
 
-    // absolute
+    Vector2 _direction = Vector2.Zero;
+
+    // absolute gun positions
     Vector2 _leftGunPos;
     Vector2 _rightGunPos;
 
-    // relative to texture origin
+    // relative to texture origin gun positions
     readonly Vector2 _relativeLeftGunPos = new Vector2(8, 94);
     readonly Vector2 _relativeRightGunPos = new Vector2(119, 94);
 
@@ -76,6 +78,10 @@ namespace WelcomeMonoHome.GameObjects
 
       // hp
       _currentHP = maximumHP;
+
+      // Input
+      input = new Input();
+      input.OnMouseClickAction = OnRightClick;
     }
 
     public void Initialize()
@@ -93,31 +99,13 @@ namespace WelcomeMonoHome.GameObjects
 
     public override void Update(GameTime gameTime)
     {
-      // Update position from WASD
-      Vector2 direction = Vector2.Zero;
-
-      if (Keyboard.GetState().IsKeyDown(Keys.W))
+      System.Console.WriteLine(_direction);
+      // Move
+      //if (_direction != Vector2.Zero)
       {
-        direction.Y -= 1;
+        transform.position += (_direction * _speed) * (float)gameTime.ElapsedGameTime.TotalSeconds;
       }
-      if (Keyboard.GetState().IsKeyDown(Keys.S))
-      {
-        direction.Y += 1;
-      }
-      if (Keyboard.GetState().IsKeyDown(Keys.A))
-      {
-        direction.X -= 1;
-      }
-      if (Keyboard.GetState().IsKeyDown(Keys.D))
-      {
-        direction.X += 1;
-      }
-
-      if (direction != Vector2.Zero)
-      {
-        direction = Vector2.Normalize(direction);
-        transform.position += direction * _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-      }
+      _direction = Vector2.Zero;
 
       // Fire
       if (Mouse.GetState().LeftButton == ButtonState.Pressed && nextShot < (float)gameTime.TotalGameTime.TotalSeconds)
@@ -142,6 +130,37 @@ namespace WelcomeMonoHome.GameObjects
       {
         currentHP++;
       }
+    }
+
+    public void OnRightClick()
+    {
+      System.Console.WriteLine("shiet");
+      if (Keyboard.GetState().IsKeyDown(Keys.W))
+      {
+        _direction.Y -= 1;
+      }
+      if (Keyboard.GetState().IsKeyDown(Keys.S))
+      {
+        _direction.Y += 1;
+      }
+      if (Keyboard.GetState().IsKeyDown(Keys.A))
+      {
+        _direction.X -= 1;
+      }
+      if (Keyboard.GetState().IsKeyDown(Keys.D))
+      {
+        _direction.X += 1;
+      }
+
+      if (_direction != Vector2.Zero)
+      {
+        _direction = Vector2.Normalize(_direction);
+      }
+    }
+
+    public void OnKeyPress()
+    {
+
     }
   }
 }

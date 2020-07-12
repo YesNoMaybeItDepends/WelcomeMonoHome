@@ -19,6 +19,7 @@ public class GameScene : Scene
   IInputService _inputService;
   IRendererService _rendererService;
   ISceneManagerService _sceneService;
+  ISoundService _soundService;
 
   // TODO turn into service
   Random random;
@@ -56,6 +57,7 @@ public class GameScene : Scene
     _collisionService = ServiceLocator.GetService<ICollisionManagerService>();
     _inputService = ServiceLocator.GetService<IInputService>();
     _guiService = ServiceLocator.GetService<IGuiService>();
+    _soundService = ServiceLocator.GetService<ISoundService>();
 
     random = new Random();
   }
@@ -67,6 +69,7 @@ public class GameScene : Scene
     _ContentService.LoadTexture("Hillarious_mini");
     _ContentService.LoadTexture("pixel");
     _ContentService.LoadTexture("HealthPill");
+    _ContentService.LoadSong("song");
   }
 
   public override void Initialize()
@@ -74,6 +77,7 @@ public class GameScene : Scene
     _player = new BBEG();
     _player.Initialize();
     _player.Instantiate();
+    _soundService.PlaySong("song");
   }
 
   public override void Update(GameTime gameTime)

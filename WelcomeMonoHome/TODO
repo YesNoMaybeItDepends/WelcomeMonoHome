@@ -1,28 +1,19 @@
 Game: 
-  TODO: 
-    [] Transform @critical @today
-      - !!!!! Transform must always be initialized to 0,0,0 !!!!! 
-      - transform needs to merely hold pos, scale, float, and entity should have all the getters and setters
-      [x] Added Transform class
-      - Entity uses Transform
-      - Sprite uses Transform
-        - It uses both position and transform, migrate to transform entirely
-      - Find out what else uses [Position] and move over to [Transform]
-    - Entity whenever it is rescaled it should update any values that depend on scale
-      - test this
-    - healthpill collisionboxes ain't right
-      - should be fixed, test this, same as above
-      !! it's because we only rescale when positon gets updated !!
-      they're way smaller than their sprite and debugcollisionrectangle shows
-      It's probably because collision box doesn't scale with the sprite scale
-    - If you move the window the list of rençderables increases, why? 
+  TODO:
+    - Sound Service
+      + plays music
+      - plays sound
+    - If you move the window the list of renderables increases, why? 
     - Why does our ServiceLocator use IService instead of Service? @low 
       it should be like memeservice = servicelocator.getservice<memeservice>();
-    - Render GUI on camera frame, not world frame @project(Game.GUI) 
     - add gameover
     - add start menu @today
     + start menu draw biden
-    - GUI should work on its own render engine
+    - moar buttons?
+    - bettar buttons?
+    - GUI
+      - GUI should work on its own render engine
+      - Render GUI on camera frame, not world frame @project(Game.GUI) 
     - when you kill a hillarious make her explode and kill nearby boolets 
     - Draw rectangles with float values @low 
       SpriteBatch.Draw() normally takes a Vector2 parameter
@@ -30,41 +21,41 @@ Game:
       SpriteBatch.Draw() can take a Rectangle parameter
       Rectangle takes Int parameters
       Therefore, there is a discrepancy between drawing textures and drawing rectangles
-  Scene Manager: 
-    - Manages @Scenes 
-  State Manager: 
-    - Manages game state?
-    - Why can't it be the same as scene manager?
-  GUI:
-    GUIObject: 
-      - needed?
-      - container for all gui stuff
+      Scene Manager: 
+      + Manages @Scenes
+      State Manager: 
+        - Manages game state?
+        AKA state machine
+        GUI:
+        GUIObject: 
+        - needed?
+        - container for all gui stuff
+        
+        Boolet: 
+        - make faster
+        Hillarious: 
+          - make it smaller tbqh
+          DEBUG: 
+            - DEBUG is turning into a GUI panel which just displays a list of text vertically
+            Sprite: 
+              - change origin from middle to topleft (real origin)
 
-  Boolet: 
-    - make faster
-  Hillarious: 
-    - make it smaller tbqh
-  DEBUG: 
-    - DEBUG is turning into a GUI panel which just displays a list of text vertically
-  Sprite: 
-    - change origin from middle to topleft (real origin)
-
-Archive:
-  + unsubscribe button from inputs when we destroy it @critical  @project(Game.TODO)
-  + add scene to update loop @project(Game.TODO)
-  + InputService send events @project(Game.TODO)
-    it should send events whenever input changes, and anyone who cares will listen to it and handle it
-  + add button GUI @project(Game.TODO)
-  + add randomly spawning health pickups @project(Game.TODO)
-  + make healthpills despawn  @project(Game.TODO)
-  + give healthpills some visual indicator that they're going to despawn @project(Game.TODO)
-  + also that they're going to spawn? @project(Game.TODO)
-  + When you pick up a pill make it go slightly bigger then quickly small until it disappears @project(Game.HealthPill) @project(Game.TODO)
-  x Nez IMGUI stuff @project(Game.TODO)
-    Too complicated for now
-  + make it so all entities get added to rendererservice and entitiesservice: @project(Game.TODO)
-  + they can instantiate and destroy for now @project(Game.TODO)
-  + make better hitboxes that can resize to the actual sprite scale @project(Game.TODO)
+              Archive:
+                + unsubscribe button from inputs when we destroy it @critical  @project(Game.TODO)
+                + add scene to update loop @project(Game.TODO)
+                + InputService send events @project(Game.TODO)
+                it should send events whenever input changes, and anyone who cares will listen to it and handle it
+                + add button GUI @project(Game.TODO)
+                + add randomly spawning health pickups @project(Game.TODO)
+                + make healthpills despawn  @project(Game.TODO)
+                + give healthpills some visual indicator that they're going to despawn @project(Game.TODO)
+                + also that they're going to spawn? @project(Game.TODO)
+                + When you pick up a pill make it go slightly bigger then quickly small until it disappears @project(Game.HealthPill) @project(Game.TODO)
+                x Nez IMGUI stuff @project(Game.TODO)
+                Too complicated for now
+                + make it so all entities get added to rendererservice and entitiesservice: @project(Game.TODO)
+                + they can instantiate and destroy for now @project(Game.TODO)
+                + make better hitboxes that can resize to the actual sprite scale @project(Game.TODO)
   + zoom in and out @today @high  @project(Game.TODO)
   + make this @project(Game.CollisionManagerService)
   + noice @project(Game.CollisionManagerService)
@@ -88,3 +79,18 @@ Archive:
   + shoot bullets at player @project(Game.Hillarious)
   + print text on screen @project(Game.DEBUG)
   + print text on screen for real @project(Game.DEBUG)
+  [+] Transform @critical @today
+  + !!!!! Transform must always be initialized to 0,0,0 !!!!! 
+  + transform needs to merely hold pos, scale, float, and entity should have all the getters and setters
+  [x] Added Transform class
+  + Entity uses Transform
+  + Sprite uses Transform
+    + It uses both position and transform, migrate to transform entirely
+  + Find out what else uses [Position] and move over to [Transform]
++ Entity whenever it is rescaled it should update any values that depend on scale
+  + test this
++ healthpill collisionboxes ain't right
+  + should be fixed, test this, same as above
+  !! it's because we only rescale when positon gets updated !!
+  they're way smaller than their sprite and debugcollisionrectangle shows
+  It's probably because collision box doesn't scale with the sprite scale

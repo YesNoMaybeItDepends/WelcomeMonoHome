@@ -19,6 +19,8 @@ public class StartScreen : Scene
   Image background;
   Button NewGame;
 
+  AnimatedSprite meme;
+
   public StartScreen()
   {
     // Get services
@@ -46,7 +48,6 @@ public class StartScreen : Scene
 
   public override void Initialize()
   {
-    // np
     background = new Image("startScreen_1080", new Vector2(0, 0));
     background.Instantiate();
     Vector2 buttonPos;
@@ -56,12 +57,18 @@ public class StartScreen : Scene
     NewGame.text = "New Game";
     NewGame.dothingie = OnStartGameClick;
     NewGame.Instantiate();
+
+    // meme
+    Texture2D memetexture = _contentService.GetTexture("SmileyWalk");
+    meme = new AnimatedSprite(memetexture, 4, 4);
+    ServiceLocator.GetService<IRendererService>().AddRenderable(meme);
   }
 
   public override void LoadContent()
   {
     _contentService.LoadTexture("startScreen");
     _contentService.LoadTexture("startScreen_1080");
+    _contentService.LoadTexture("SmileyWalk");
   }
 
   public override void Start()
@@ -77,6 +84,7 @@ public class StartScreen : Scene
   public override void Update(GameTime gameTime)
   {
     // np
+    meme.Update();
   }
 
   public void OnStartGameClick()

@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
 
 public class ContentManagerService : IContentManagerService
 {
@@ -9,12 +11,16 @@ public class ContentManagerService : IContentManagerService
 
   public Dictionary<string, Texture2D> textures { get; set; }
   public Dictionary<string, SpriteFont> fonts { get; set; }
+  public Dictionary<string, Song> songs { get; set; }
+  public Dictionary<string, SoundEffect> soundEffects { get; set; }
 
   public ContentManagerService(ContentManager content)
   {
     _content = content;
     textures = new Dictionary<string, Texture2D>();
     fonts = new Dictionary<string, SpriteFont>();
+    songs = new Dictionary<string, Song>();
+    soundEffects = new Dictionary<string, SoundEffect>();
   }
 
   public void Initialize()
@@ -35,20 +41,41 @@ public class ContentManagerService : IContentManagerService
     return textures["ERROR"];
   }
 
-  public void LoadTexture(string name)
-  {
-    textures[name] = _content.Load<Texture2D>(name);
-  }
-
   public SpriteFont GetFont(string name)
   {
     return fonts[name];
     // TODO add error handling
   }
 
+  public Song GetSong(string name)
+  {
+    return songs[name];
+  }
+
+  public SoundEffect GetSoundEffect(string name)
+  {
+    return soundEffects[name];
+  }
+
+  public void LoadTexture(string name)
+  {
+    textures[name] = _content.Load<Texture2D>(name);
+  }
+
+
   public void LoadFont(string name)
   {
     fonts[name] = _content.Load<SpriteFont>(name);
+  }
+
+  public void LoadSong(string name)
+  {
+    songs[name] = _content.Load<Song>(name);
+  }
+
+  public void LoadSoundEffect(string name)
+  {
+    soundEffects[name] = _content.Load<SoundEffect>(name);
   }
 
   public void UnloadContent()

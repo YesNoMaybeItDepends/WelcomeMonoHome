@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 public interface IContentManagerService
 {
@@ -20,5 +22,8 @@ public interface IContentManagerService
 
   void LoadTexture(string name);
   void LoadFont(string name);
-
+  void LoadSoundEffect(string name);
+  void LoadSong(string name);
+  SoundEffect GetSoundEffect(string name);
+  Song GetSong(string name);
 }

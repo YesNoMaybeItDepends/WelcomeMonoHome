@@ -24,6 +24,7 @@ namespace WelcomeMonoHome
     SceneManagerService _sceneManagerService;
     CollisionManagerService _collisionManagerService;
     GuiService _guiService;
+    SoundService _soundService;
 
     // random stuff that needs sorting
     Camera _camera;
@@ -64,6 +65,7 @@ namespace WelcomeMonoHome
       _guiService = new GuiService(_inputService);
       _rendererService = new RendererService(_spriteBatch, _camera);
       _sceneManagerService = new SceneManagerService();
+      _soundService = new SoundService();
 
       // Set services
       ServiceLocator.SetService<ICollisionManagerService>(_collisionManagerService);
@@ -74,6 +76,7 @@ namespace WelcomeMonoHome
       ServiceLocator.SetService<IInputService>(_inputService);
       ServiceLocator.SetService<IRendererService>(_rendererService);
       ServiceLocator.SetService<ISceneManagerService>(_sceneManagerService);
+      ServiceLocator.SetService<ISoundService>(_soundService);
 
       _guiService.NewConsole("help", new Vector2(0, 0), null, null);
 
