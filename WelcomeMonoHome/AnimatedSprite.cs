@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -29,6 +30,8 @@ public class AnimatedSprite : Component, IRenderable
     color = Color.White;
     centerPos = new Vector2(0, 0);
     //_transform = new Transform(new Vector2(600, 600));
+
+    _pixel = ServiceLocator.GetService<IContentManagerService>().GetTexture("pixel");
   }
 
   public void LoadContent()
@@ -66,19 +69,18 @@ public class AnimatedSprite : Component, IRenderable
     Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
     Rectangle destinationRectangle = new Rectangle((int)_transform.position.X, (int)_transform.position.Y, width, height);
 
-    _spriteBatch.Draw(_texture, destinationRectangle, sourceRectangle, Color.White);
+    centerPos = new Vector2(width / 2f, height / 2f);
 
-
-    // _spriteBatch.Draw(
-    //   texture, // texture
-    //   destinationRectangle, // position
-    //   sourceRectangle, // sourceRectangle?
-    //   color, // color
-    //   0f, // rotation
-    //   centerPos, // origin
-    //   SpriteEffects.None, // effects
-    //   0f // layerDepth
-    // );
+    _spriteBatch.Draw(
+      _texture, // texture
+      destinationRectangle, // position
+      sourceRectangle, // sourceRectangle
+      color, // color
+      _transform.rotation, // rotation
+      centerPos, // origin
+      SpriteEffects.None, // effects
+      0f // layerDepth
+    );
   }
 
   public override void Instantiate()

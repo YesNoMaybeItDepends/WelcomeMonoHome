@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using WelcomeMonoHome.Components;
@@ -30,6 +31,9 @@ public class Shooter : Entity
 
   public override void Update(GameTime gameTime)
   {
-
+    IInputService input = ServiceLocator.GetService<IInputService>();
+    Vector2 mouse = input.GetMouseWorldPos();
+    double angle = Math.Atan2(mouse.Y - transform.position.Y, mouse.X - transform.position.X);
+    transform.rotation = (float)angle;
   }
 }
