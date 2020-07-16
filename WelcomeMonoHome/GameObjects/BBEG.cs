@@ -16,9 +16,6 @@ namespace WelcomeMonoHome.GameObjects
     string _booletTextureName = "boolet";
     string _bbegTextureName = "BBEG_ok_mini";
 
-    IEntityManagerService _entityManagerService;
-    IDebugService _debugService;
-
     Vector2 _direction = Vector2.Zero;
 
     // absolute gun positions
@@ -56,22 +53,17 @@ namespace WelcomeMonoHome.GameObjects
 
     public BBEG()
     {
-      transform = new Transform(this, Vector2.Zero);
+      transform = new Transform(Vector2.Zero);
 
       // setup textures and sprite
       texture = ServiceLocator.GetService<IContentManagerService>().GetTexture(_bbegTextureName);
       _booletTexture = ServiceLocator.GetService<IContentManagerService>().GetTexture(_booletTextureName);
-      sprite = new Sprite(texture, transform);
-
-      // Get services
-      _entityManagerService = ServiceLocator.GetService<IEntityManagerService>();
-      _debugService = ServiceLocator.GetService<IDebugService>();
+      AddComponent(new Sprite(texture, transform));
 
       // Get RELATIVE gun positions 
       // ? TODO Why do we do - texture.width/2 ?
       _leftGunPos = new Vector2(_relativeLeftGunPos.X - texture.Width / 2, _relativeLeftGunPos.Y - texture.Width / 2);
       _rightGunPos = new Vector2(_relativeRightGunPos.X - texture.Width / 2, _relativeRightGunPos.Y - texture.Width / 2);
-
 
       // set collision
       hasCollision = true;

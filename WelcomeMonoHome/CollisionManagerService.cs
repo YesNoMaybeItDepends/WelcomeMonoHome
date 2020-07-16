@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using WelcomeMonoHome.Components;
 
 public class CollisionManagerService : ICollisionManagerService
 {
@@ -65,7 +66,7 @@ public class CollisionManagerService : ICollisionManagerService
     {
       foreach (Entity e in collidableEntities)
       {
-        e.colRectangle = e.sprite.GetSpriteRectangle();
+        e.colRectangle = e.GetComponent<Sprite>().GetSpriteRectangle();
       }
     }
 

@@ -7,12 +7,12 @@ Game:
     - Why does our ServiceLocator use IService instead of Service? @low 
       it should be like memeservice = servicelocator.getservice<memeservice>();
     - add gameover
-    - add start menu @today
-    + start menu draw biden
-    - moar buttons?
-    - bettar buttons?
+    - add start menu
+      - make it fancier?
+      - moar buttons?
+      + start menu draw biden
     - GUI
-      - GUI should work on its own render engine
+      - GUI should work on its own render meme
       - Render GUI on camera frame, not world frame @project(Game.GUI) 
     - when you kill a hillarious make her explode and kill nearby boolets 
     - Draw rectangles with float values @low 

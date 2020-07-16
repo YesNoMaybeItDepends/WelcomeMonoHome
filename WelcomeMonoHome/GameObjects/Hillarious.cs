@@ -27,9 +27,9 @@ public class Hillarious : Entity
 
   public Hillarious(BBEG player)
   {
-    transform = new Transform(this, Vector2.Zero);
+    transform = new Transform(Vector2.Zero);
     texture = ServiceLocator.GetService<IContentManagerService>().GetTexture(hillariousTextureName);
-    sprite = new Sprite(texture, transform);
+    AddComponent(new Sprite(texture, transform));
 
     _player = player;
 

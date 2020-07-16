@@ -5,26 +5,26 @@ using System;
 
 namespace WelcomeMonoHome.Components
 {
-  public class Sprite : IRenderable
+  public class Sprite : Component, IRenderable
   {
-    public Texture2D _texture;
-    public Texture2D _pixel;
-    public Color color;
+    Texture2D _texture;
+    Texture2D _pixel;
+    public Color color { get; set; }
     // origin from the middle
-    public Vector2 origin;
+    Vector2 _origin;
     // ? Entity _parent;
 
-    public Transform transform;
+    Transform _transform;
 
     public Sprite(Texture2D texture, Transform Transform)
     {
       _texture = texture;
-      origin = new Vector2(texture.Width / 2, texture.Height / 2);
+      _origin = new Vector2(texture.Width / 2, texture.Height / 2);
       color = Color.White;
 
       // get pixel texture
       _pixel = ServiceLocator.GetService<IContentManagerService>().GetTexture("pixel");
-      transform = Transform;
+      _transform = Transform;
     }
 
     public void LoadContent()
@@ -32,7 +32,7 @@ namespace WelcomeMonoHome.Components
 
     }
 
-    public void Update()
+    public override void Update()
     {
 
     }
@@ -41,12 +41,12 @@ namespace WelcomeMonoHome.Components
     {
       _spriteBatch.Draw(
         _texture, // texture
-        transform.position, // position
+        _transform.position, // position
         null, // sourceRectangle?
         color, // color
         0f, // rotation
-        origin, // origin
-        transform.scale, // scale
+        _origin, // origin
+        _transform.scale, // scale
         SpriteEffects.None, // effects
         0f // layerDepth
       );
@@ -58,12 +58,12 @@ namespace WelcomeMonoHome.Components
       //ServiceLocator.GetService<IGuiService>().ConsoleWriteLine("help", origin.ToString());
     }
 
-    public void Instantiate()
+    public override void Instantiate()
     {
       ServiceLocator.GetService<IRendererService>().AddRenderable(this);
     }
 
-    public void Destroy()
+    public override void Destroy()
     {
       ServiceLocator.GetService<IRendererService>().RemoveRenderable(this);
     }
@@ -79,10 +79,10 @@ namespace WelcomeMonoHome.Components
     public Rectangle GetSpriteRectangle()
     {
       return new Rectangle(
-        (int)(transform.position.X - (_texture.Width * transform.scale.X) / 2),
-        (int)(transform.position.Y - (_texture.Height * transform.scale.Y) / 2),
-        (int)(_texture.Width * transform.scale.X),
-        (int)(_texture.Height * transform.scale.Y));
+        (int)(_transform.position.X - (_texture.Width * _transform.scale.X) / 2),
+        (int)(_transform.position.Y - (_texture.Height * _transform.scale.Y) / 2),
+        (int)(_texture.Width * _transform.scale.X),
+        (int)(_texture.Height * _transform.scale.Y));
     }
   }
 }

@@ -42,6 +42,8 @@ public class GameScene : Scene
   // debug
   bool hillariousSpawning = true;
 
+  Shooter shooter;
+
   public GameScene()
   {
     GraphicsDeviceManager graphics = ServiceLocator.GetService<IGraphicsService>().graphics;
@@ -69,6 +71,7 @@ public class GameScene : Scene
     _ContentService.LoadTexture("Hillarious_mini");
     _ContentService.LoadTexture("pixel");
     _ContentService.LoadTexture("HealthPill");
+    _ContentService.LoadTexture("player_machinegun");
     _ContentService.LoadSong("song");
   }
 
@@ -78,6 +81,10 @@ public class GameScene : Scene
     _player.Initialize();
     _player.Instantiate();
     _soundService.PlaySong("song");
+
+    shooter = new Shooter();
+    shooter.Initialize();
+    shooter.Instantiate();
   }
 
   public override void Update(GameTime gameTime)

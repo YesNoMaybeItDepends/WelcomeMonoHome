@@ -20,10 +20,10 @@ public class Boolet : Entity
 
   public Boolet(Vector2 Pos, bool IsPlayerBoolet, Vector2 TargetPos)
   {
-    transform = new Transform(this, Vector2.Zero);
+    transform = new Transform(Vector2.Zero);
 
     texture = ServiceLocator.GetService<IContentManagerService>().GetTexture("boolet");
-    sprite = new Sprite(texture, transform);
+    Sprite sprite = new Sprite(texture, transform);
 
     transform.position = Pos;
     _targetPos = TargetPos;
@@ -47,6 +47,8 @@ public class Boolet : Entity
 
     // double sprite scale
     transform.scale = new Vector2(2, 2);
+
+    AddComponent(sprite);
   }
 
   public override void Update(GameTime gameTime)

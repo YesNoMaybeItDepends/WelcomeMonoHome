@@ -14,6 +14,8 @@ namespace WelcomeMonoHome.GUI
     int _borderSize = 5;
     public int _fullnessPercent = 100;
 
+    public Color Color;
+
     public HealthBar(Vector2 centerPosition, int totalWidth, int totalHeight)
     {
       IContentManagerService resources = ServiceLocator.GetService<IContentManagerService>();

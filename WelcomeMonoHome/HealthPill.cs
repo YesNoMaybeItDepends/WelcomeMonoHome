@@ -16,14 +16,16 @@ public class HealthPill : Entity
   Vector2 _spawnScale = new Vector2(1, 1);
   Vector2 _normalScale = new Vector2(3, 3);
   IGuiService gui;
+  Sprite sprite;
 
   public HealthPill(GameTime gameTime)
   {
-    transform = new Transform(this, Vector2.Zero);
+    transform = new Transform(Vector2.Zero);
     spawnFrameSecond = (float)gameTime.TotalGameTime.TotalSeconds;
     spawnFrameMiliseconds = (float)gameTime.TotalGameTime.TotalMilliseconds;
     texture = ServiceLocator.GetService<IContentManagerService>().GetTexture(textureName);
     sprite = new Sprite(texture, transform);
+    AddComponent(sprite);
     transform.scale = _spawnScale;
     hasCollision = true;
     gui = ServiceLocator.GetService<IGuiService>();

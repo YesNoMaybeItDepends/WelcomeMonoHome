@@ -1,10 +1,8 @@
 using Microsoft.Xna.Framework;
 using WelcomeMonoHome.Components;
 
-public class Transform
+public class Transform : Component
 {
-  public Entity parent;
-
   private Vector2 _position = new Vector2(0, 0);
   private Vector2 _scale = new Vector2(1, 1);
 
@@ -16,17 +14,6 @@ public class Transform
 
   public Transform(Vector2 Position)
   {
-    position = Position;
-  }
-
-  public void SetParent(Entity Parent)
-  {
-    parent = Parent;
-  }
-
-  public Transform(Entity Parent, Vector2 Position)
-  {
-    parent = Parent;
     position = Position;
   }
 

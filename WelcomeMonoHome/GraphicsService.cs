@@ -7,7 +7,7 @@ public class GraphicsService : IGraphicsService
   public GraphicsService(GraphicsDeviceManager Graphics)
   {
     graphics = Graphics;
-    graphics.ToggleFullScreen();
+    //graphics.ToggleFullScreen();
   }
 
   public int GetScreenWidth()
