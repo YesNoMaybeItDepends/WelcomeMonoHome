@@ -8,7 +8,7 @@ public class Shooter : Entity
   float _speed;
 
   Texture2D _shooterTexture;
-  string _shooterTextureName = "player_machinegun";
+  string _shooterTextureName = "cyclops_troll_idle_sheet";
 
   Vector2 _direction;
 
@@ -18,7 +18,9 @@ public class Shooter : Entity
 
     _shooterTexture = ServiceLocator.GetService<IContentManagerService>().GetTexture(_shooterTextureName);
 
-    AddComponent(new AnimatedSprite(_shooterTexture, 1, 4));
+    AnimatedSprite animatedSprite = new AnimatedSprite(_shooterTexture, 1, 4);
+    animatedSprite.originOffsetPercent = new Vector2(0.25f, 0.5f);
+    AddComponent(animatedSprite);
   }
 
   public void Initialize()

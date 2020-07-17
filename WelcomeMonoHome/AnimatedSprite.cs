@@ -15,7 +15,8 @@ public class AnimatedSprite : Component, IRenderable
 
   public Color color { get; set; }
   Transform _transform;
-  Vector2 centerPos;
+  Vector2 origin;
+  public Vector2 originOffsetPercent = Vector2.One;
 
   public AnimatedSprite(Texture2D Texture, int Rows, int Columns)
   {
@@ -28,7 +29,7 @@ public class AnimatedSprite : Component, IRenderable
     // empty memes
 
     color = Color.White;
-    centerPos = new Vector2(0, 0);
+    origin = new Vector2(0, 0);
     //_transform = new Transform(new Vector2(600, 600));
 
     _pixel = ServiceLocator.GetService<IContentManagerService>().GetTexture("pixel");
@@ -69,7 +70,7 @@ public class AnimatedSprite : Component, IRenderable
     Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
     Rectangle destinationRectangle = new Rectangle((int)_transform.position.X, (int)_transform.position.Y, width, height);
 
-    centerPos = new Vector2(width / 2f, height / 2f);
+    origin = new Vector2((width * originOffsetPercent.X), (height * originOffsetPercent.Y));
 
     _spriteBatch.Draw(
       _texture, // texture
@@ -77,7 +78,7 @@ public class AnimatedSprite : Component, IRenderable
       sourceRectangle, // sourceRectangle
       color, // color
       _transform.rotation, // rotation
-      centerPos, // origin
+      origin, // origin
       SpriteEffects.None, // effects
       0f // layerDepth
     );

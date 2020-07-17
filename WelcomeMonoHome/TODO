@@ -1,7 +1,6 @@
 Game: 
   TODO:
     - Sound Service
-      + plays music
       - plays sound
     - If you move the window the list of renderables increases, why? 
     - Why does our ServiceLocator use IService instead of Service? @low 
@@ -10,7 +9,6 @@ Game:
     - add start menu
       - make it fancier?
       - moar buttons?
-      + start menu draw biden
     - GUI
       - GUI should work on its own render meme
       - Render GUI on camera frame, not world frame @project(Game.GUI) 
@@ -21,17 +19,12 @@ Game:
       SpriteBatch.Draw() can take a Rectangle parameter
       Rectangle takes Int parameters
       Therefore, there is a discrepancy between drawing textures and drawing rectangles
-      Scene Manager: 
-      + Manages @Scenes
       State Manager: 
         - Manages game state?
         AKA state machine
-        GUI:
-        GUIObject: 
         - needed?
         - container for all gui stuff
         
-        Boolet: 
         - make faster
         Hillarious: 
           - make it smaller tbqh
@@ -41,6 +34,9 @@ Game:
               - change origin from middle to topleft (real origin)
 
               Archive:
+  + plays music @project(Game.TODO)
+  + start menu draw biden @project(Game.TODO)
+  + Manages @Scenes @project(Game.TODO)
                 + unsubscribe button from inputs when we destroy it @critical  @project(Game.TODO)
                 + add scene to update loop @project(Game.TODO)
                 + InputService send events @project(Game.TODO)

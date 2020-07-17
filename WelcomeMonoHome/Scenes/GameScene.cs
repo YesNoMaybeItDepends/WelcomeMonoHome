@@ -71,7 +71,7 @@ public class GameScene : Scene
     _ContentService.LoadTexture("Hillarious_mini");
     _ContentService.LoadTexture("pixel");
     _ContentService.LoadTexture("HealthPill");
-    _ContentService.LoadTexture("player_machinegun");
+    _ContentService.LoadTexture("cyclops_troll_idle_sheet");
     _ContentService.LoadSong("song");
   }
 
