@@ -42,7 +42,7 @@ public class GameScene : Scene
   // debug
   bool hillariousSpawning = true;
 
-  Shooter shooter;
+  CyclopsTroll player;
 
   public GameScene()
   {
@@ -72,6 +72,8 @@ public class GameScene : Scene
     _ContentService.LoadTexture("pixel");
     _ContentService.LoadTexture("HealthPill");
     _ContentService.LoadTexture("cyclops_troll_idle_sheet");
+    _ContentService.LoadTexture("cyclops_troll_walk_sheet");
+    _ContentService.LoadTexture("cyclops_troll_attack_sheet");
     _ContentService.LoadSong("song");
   }
 
@@ -82,9 +84,9 @@ public class GameScene : Scene
     _player.Instantiate();
     _soundService.PlaySong("song");
 
-    shooter = new Shooter();
-    shooter.Initialize();
-    shooter.Instantiate();
+    player = new CyclopsTroll();
+    player.Initialize();
+    player.Instantiate();
   }
 
   public override void Update(GameTime gameTime)

@@ -18,6 +18,9 @@ public class AnimatedSprite : Component, IRenderable
   Vector2 origin;
   public Vector2 originOffsetPercent = Vector2.One;
 
+  public Animation currentAnimation;
+  public Spritesheet spritesheet;
+
   public AnimatedSprite(Texture2D Texture, int Rows, int Columns)
   {
     _texture = Texture;
@@ -44,7 +47,7 @@ public class AnimatedSprite : Component, IRenderable
   {
   }
 
-  public void Draw(SpriteBatch _spriteBatch)
+  public void DrawOG(SpriteBatch _spriteBatch)
   {
     if (parent != null && _transform == null)
     {
@@ -82,6 +85,60 @@ public class AnimatedSprite : Component, IRenderable
       SpriteEffects.None, // effects
       0f // layerDepth
     );
+  }
+
+  public void Draw(SpriteBatch _spriteBatch)
+  {
+    if (parent != null && _transform == null)
+    {
+      _transform = parent.transform;
+    }
+
+    // wtf was this
+    _frameCount++;
+    if (_frameCount == _frameDelay)
+    {
+      _frameCount = 0;
+      _currentFrame++;
+      if (_currentFrame == currentAnimation.rectangles.Count)
+      {
+        _currentFrame = 0;
+      }
+    }
+
+    /*Rectangle sourceRectangle = new Rectangle(
+      spritesheet.cellWidth * _currentFrame % currentAnimation.columns,
+      spritesheet.cellHeight * _currentFrame % currentAnimation.rows,
+      spritesheet.cellWidth,
+      spritesheet.cellHeight
+    );
+    */
+
+    Console.WriteLine("Animation count: " + currentAnimation.rectangles.Count);
+    Console.WriteLine("Current frame: " + _currentFrame);
+    Console.WriteLine("Frame Count: " + _frameCount);
+
+    int width = spritesheet.cellWidth;
+    int height = spritesheet.cellHeight;
+    int row = (int)((float)_currentFrame / (float)currentAnimation.columns);
+    int column = _currentFrame % currentAnimation.columns;
+
+    Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
+    Rectangle destinationRectangle = new Rectangle((int)_transform.position.X, (int)_transform.position.Y, width, height);
+
+    origin = new Vector2((width * originOffsetPercent.X), (height * originOffsetPercent.Y));
+
+    _spriteBatch.Draw(
+      _texture, // texture
+      destinationRectangle, // position
+      currentAnimation.rectangles[_currentFrame], // sourceRectangle
+      color, // color
+      _transform.rotation, // rotation
+      origin, // origin
+      SpriteEffects.None, // effects
+      0f // layerDepth
+    );
+
   }
 
   public override void Instantiate()
