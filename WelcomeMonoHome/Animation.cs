@@ -29,13 +29,13 @@ public class Animation
     columns = Columns;
     length = rows * columns;
 
-    for (int r = 0; r <= rows; r++)
+    for (int r = 0; r != rows; r++)
     {
-      for (int c = 0; c <= columns; c++)
+      for (int c = 0; c != columns; c++)
       {
         rectangles.Add(new Rectangle(
-          spritesheet.cellWidth * (c + column),
-          spritesheet.cellHeight * (r + row),
+          spritesheet.cellWidth * ((c + column) - 1),
+          spritesheet.cellHeight * ((r + row) - 1),
           spritesheet.cellWidth,
           spritesheet.cellHeight
         ));

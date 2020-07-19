@@ -40,7 +40,7 @@ public class CyclopsTroll : Entity
     AnimatedSprite animatedSprite = new AnimatedSprite(textureIdle, 4, 4);
     animatedSprite.originOffsetPercent = new Vector2(0.5f, 0.5f);
     animatedSprite.spritesheet = sheetIdle;
-    animatedSprite.currentAnimation = sheetIdle.animations["idle_north"];
+    animatedSprite.currentAnimation = sheetIdle.animations["idle_west"];
     AddComponent(animatedSprite);
   }
 
