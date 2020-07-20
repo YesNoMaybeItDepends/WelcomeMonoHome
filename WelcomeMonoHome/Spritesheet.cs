@@ -20,8 +20,8 @@ public class Spritesheet
     rows = Rows;
     columns = Columns;
 
-    cellWidth = texture.Width / rows;
-    cellHeight = texture.Height / columns;
+    cellWidth = texture.Width / columns;
+    cellHeight = texture.Height / rows;
 
     animations = new Dictionary<string, Animation>();
   }

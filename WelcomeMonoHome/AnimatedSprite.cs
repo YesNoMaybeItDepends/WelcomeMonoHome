@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 public class AnimatedSprite : Component, IRenderable
 {
-  Texture2D _texture;
   Texture2D _pixel;
   public int rows;
   public int columns;
@@ -15,25 +14,25 @@ public class AnimatedSprite : Component, IRenderable
 
   public Color color { get; set; }
   Transform _transform;
-  Vector2 origin;
   public Vector2 originOffsetPercent = Vector2.One;
+  public Vector2 origin;
 
-  public Animation currentAnimation;
+  Animation currentAnimation;
   public Spritesheet spritesheet;
 
-  public AnimatedSprite(Texture2D Texture, int Rows, int Columns)
+  public void SetAnimation(string name)
   {
-    _texture = Texture;
-    rows = Rows;
-    columns = Columns;
+    currentAnimation = spritesheet.animations[name];
     _currentFrame = 0;
-    _totalFrames = rows * columns;
+  }
 
-    // empty memes
+  public AnimatedSprite(Spritesheet Spritesheet)
+  {
+    spritesheet = Spritesheet;
+
+    _currentFrame = 0;
 
     color = Color.White;
-    origin = new Vector2(0, 0);
-    //_transform = new Transform(new Vector2(600, 600));
 
     _pixel = ServiceLocator.GetService<IContentManagerService>().GetTexture("pixel");
   }
@@ -47,46 +46,6 @@ public class AnimatedSprite : Component, IRenderable
   {
   }
 
-  public void DrawOG(SpriteBatch _spriteBatch)
-  {
-    if (parent != null && _transform == null)
-    {
-      _transform = parent.transform;
-    }
-
-    _frameCount++;
-    if (_frameCount == _frameDelay)
-    {
-      _frameCount = 0;
-      _currentFrame++;
-      if (_currentFrame == _totalFrames)
-      {
-        _currentFrame = 0;
-      }
-    }
-
-    int width = _texture.Width / columns;
-    int height = _texture.Height / rows;
-    int row = (int)((float)_currentFrame / (float)columns);
-    int column = _currentFrame % columns;
-
-    Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
-    Rectangle destinationRectangle = new Rectangle((int)_transform.position.X, (int)_transform.position.Y, width, height);
-
-    origin = new Vector2((width * originOffsetPercent.X), (height * originOffsetPercent.Y));
-
-    _spriteBatch.Draw(
-      _texture, // texture
-      destinationRectangle, // position
-      sourceRectangle, // sourceRectangle
-      color, // color
-      _transform.rotation, // rotation
-      origin, // origin
-      SpriteEffects.None, // effects
-      0f // layerDepth
-    );
-  }
-
   public void Draw(SpriteBatch _spriteBatch)
   {
     if (parent != null && _transform == null)
@@ -94,42 +53,26 @@ public class AnimatedSprite : Component, IRenderable
       _transform = parent.transform;
     }
 
-    // wtf was this
+    // animation speed and step counter
     _frameCount++;
     if (_frameCount == _frameDelay)
     {
       _frameCount = 0;
       _currentFrame++;
-      if (_currentFrame == currentAnimation.rectangles.Count)
+      if (_currentFrame >= currentAnimation.rectangles.Count)
       {
         _currentFrame = 0;
       }
     }
 
-    /*Rectangle sourceRectangle = new Rectangle(
-      spritesheet.cellWidth * _currentFrame % currentAnimation.columns,
-      spritesheet.cellHeight * _currentFrame % currentAnimation.rows,
-      spritesheet.cellWidth,
-      spritesheet.cellHeight
-    );
-    */
+    Rectangle destinationRectangle = new Rectangle((int)_transform.position.X, (int)_transform.position.Y, spritesheet.cellWidth, spritesheet.cellHeight);
 
-    Console.WriteLine("Animation count: " + currentAnimation.rectangles.Count);
-    Console.WriteLine("Current frame: " + _currentFrame);
-    Console.WriteLine("Frame Count: " + _frameCount);
+    //destinationRectangle = new Rectangle((int)_transform.position.X, (int)_transform.position.Y, (int)(spritesheet.cellWidth + _transform.position.X), (int)(spritesheet.cellHeight + _transform.position.Y));
 
-    int width = spritesheet.cellWidth;
-    int height = spritesheet.cellHeight;
-    int row = (int)((float)_currentFrame / (float)currentAnimation.columns);
-    int column = _currentFrame % currentAnimation.columns;
-
-    Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
-    Rectangle destinationRectangle = new Rectangle((int)_transform.position.X, (int)_transform.position.Y, width, height);
-
-    origin = new Vector2((width * originOffsetPercent.X), (height * originOffsetPercent.Y));
+    origin = new Vector2((spritesheet.cellWidth * originOffsetPercent.X), (spritesheet.cellHeight * originOffsetPercent.Y));
 
     _spriteBatch.Draw(
-      _texture, // texture
+      spritesheet.texture, // texture
       destinationRectangle, // position
       currentAnimation.rectangles[_currentFrame], // sourceRectangle
       color, // color
@@ -138,6 +81,19 @@ public class AnimatedSprite : Component, IRenderable
       SpriteEffects.None, // effects
       0f // layerDepth
     );
+
+    _spriteBatch.Draw(
+      spritesheet.texture, // texture
+      destinationRectangle, // position
+      currentAnimation.rectangles[_currentFrame], // sourceRectangle
+      color, // color
+      _transform.rotation, // rotation
+      origin, // origin
+      SpriteEffects.None, // effects
+      0f // layerDepth
+    );
+
+    //DrawRectangle(destinationRectangle, currentAnimation.rectangles[_currentFrame], origin, _spriteBatch);
 
   }
 
@@ -151,16 +107,24 @@ public class AnimatedSprite : Component, IRenderable
     ServiceLocator.GetService<IRendererService>().RemoveRenderable(this);
   }
 
-  public void DrawRectangle(SpriteBatch _spriteBatch)
+  public void DrawRectangle(Rectangle destination, Rectangle source, Vector2 origin, SpriteBatch _spriteBatch)
   {
-
-    Rectangle rectangle = GetSpriteRectangle();
-
-    _spriteBatch.Draw(_pixel, rectangle, Color.White * 0.5f);
+    //_spriteBatch.Draw(_pixel, rectangle, Color.White * 0.5f);
+    _spriteBatch.Draw(
+      _pixel, // texture
+      destination, // position
+      source, // sourceRectangle
+      color * 0.5f, // color
+      _transform.rotation, // rotation
+      origin, // origin
+      SpriteEffects.None, // effects
+      0f); // layerDepth
   }
 
   public Rectangle GetSpriteRectangle()
   {
+    Texture2D _texture = spritesheet.texture;
+
     return new Rectangle(
       (int)(_transform.position.X - (_texture.Width * _transform.scale.X) / 2),
       (int)(_transform.position.Y - (_texture.Height * _transform.scale.Y) / 2),

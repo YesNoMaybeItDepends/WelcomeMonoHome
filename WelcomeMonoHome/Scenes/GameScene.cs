@@ -40,7 +40,8 @@ public class GameScene : Scene
   int SCREENHEIGHT;
 
   // debug
-  bool hillariousSpawning = true;
+  bool hillariousSpawning = false;
+  bool BBEGspawning = false;
 
   CyclopsTroll player;
 
@@ -74,19 +75,26 @@ public class GameScene : Scene
     _ContentService.LoadTexture("cyclops_troll_idle_sheet");
     _ContentService.LoadTexture("cyclops_troll_walk_sheet");
     _ContentService.LoadTexture("cyclops_troll_attack_sheet");
+    _ContentService.LoadTexture("cyclops_scimitar_sheet");
     _ContentService.LoadSong("song");
   }
 
   public override void Initialize()
   {
-    _player = new BBEG();
-    _player.Initialize();
-    _player.Instantiate();
-    _soundService.PlaySong("song");
+    if (BBEGspawning)
+    {
+      _player = new BBEG();
+      _player.Initialize();
+      _player.Instantiate();
+      _soundService.PlaySong("song");
+    }
 
     player = new CyclopsTroll();
     player.Initialize();
     player.Instantiate();
+
+    CyclopsScimitar memer = new CyclopsScimitar();
+    memer.Instantiate();
   }
 
   public override void Update(GameTime gameTime)

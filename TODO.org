@@ -36,6 +36,8 @@ Big hammer. Big Guy.
 ***** GUIService
 **** Components
 ***** AnimatedSprite
+****** Spritesheet
+****** Animation
 ***** Sprite
 ***** Camera
 ***** Input
@@ -46,14 +48,21 @@ Big hammer. Big Guy.
 ***** ScimitarCyclops
 ***** SuicideCyclops
 * TASKS
-** Planned
+** In Progress 
+*** Add BigCyclops
+**** Add attack animation
+**** Add attack system
+***** Make it hurt things
+** TODOs
+*** texture / animation editor so you can adjust the box/rectangle
+*** CyclopsTroll diagonal movement animation change fix this :Bug::CyclopsTroll:
 *** Add ScimitarCyclops
 *** Add SuicideCyclops
 *** Figure out game design :Design:
 *** Play Sounds :SoundService:
 *** List of renederables increases on window resize :Bug: 
 why?
-*** Add Gameover Scene :GameOverScene:Scenes:
+*** Add Gameover Scene :GameOverScene:Scenes:		
 *** Work on StartMenu :StartMenu:Scenes:
 *** Segregate GUI Rendering from RenderingService :RenderingService:GUI:
 *** Render GUI on camera pane, not world pane :GUI:
@@ -69,10 +78,9 @@ How generic should it be?
 *** Ray.cs nani the fuck?
 *** Find better name for RectanglePrimitive
 *** Coroutines? 
-Unity Coroutines, methods that run every frame with yield
-** In Progress 
-*** Add BigCyclops
-** Testing 
+Unity Coroutines, methods that run every frame with yield 
 ** Completed 
+*** Change BigCyclops walking/idle animation depending on keyboard input
 *** Why does ServiceLocator use IService instead of Service? 
 Because we want to make mock Services
+*** Added spritesheet animation support with animatedsprite class

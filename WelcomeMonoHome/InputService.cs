@@ -8,37 +8,35 @@ public class InputService : IInputService
   Camera _camera;
   GraphicsDeviceManager _graphics;
 
+  // Mouse States
   public MouseState lastMouseState;
   public MouseState mouseState;
 
+  // Keyboard States
   public KeyboardState lastKeyboardState;
   public KeyboardState keyboardState;
 
-  public InputState leftButton;
-  public InputState rightButton;
-  public InputState middleButton;
+  // Current Mouse info
+  public ButtonStateIS leftButton;
+  public ButtonStateIS rightButton;
+  public ButtonStateIS middleButton;
   public ScrollWheelState scrollWheel;
 
-  public Dictionary<Keys, InputState> keys;
+  // Current Keyboard info
+  public Dictionary<Keys, KeyStateIS> keys;
 
+  // Mouse World coordinates
   public int mouseWorldX;
   public int mouseWorldY;
 
+  // Mouse Camera coordinates
   public int mouseCameraX;
   public int mouseCameraY;
 
   public InputService(Camera camera)
   {
     _camera = camera;
-    keys = new Dictionary<Keys, InputState>();
-  }
-
-  public void GetMouseClick()
-  {
-    MouseState mouse = Mouse.GetState();
-    //_camera.WorldToScreen(ass.)
-    // RAYCAST
-    Rectangle mouserect = new Rectangle(mouse.X, mouse.Y, 1, 1);
+    keys = new Dictionary<Keys, KeyStateIS>();
   }
 
   public Vector2 GetMouseWorldPos()
@@ -71,10 +69,11 @@ public class InputService : IInputService
     mouseState = Mouse.GetState();
     keyboardState = Keyboard.GetState();
 
-    // update mouse buttans here?    
+    // TODO update mouse and keyboard info?
+
   }
 
-  public InputState GetKeyState(Keys key)
+  public KeyStateIS GetKeyStateIS(Keys key)
   {
     bool isDown;
     bool isRepeat;
@@ -82,11 +81,11 @@ public class InputService : IInputService
     isDown = keyboardState.IsKeyDown(key) ? true : false;
     isRepeat = keyboardState.IsKeyDown(key) == lastKeyboardState.IsKeyDown(key) ? true : false;
 
-    InputState inputState = new InputState(isDown, isRepeat);
-    return inputState;
+    KeyStateIS keyStateIS = new KeyStateIS(key, isDown, isRepeat);
+    return keyStateIS;
   }
 
-  public InputState GetButtonState(MouseButtons mouseButton)
+  public ButtonStateIS GetButtonStateIS(MouseButtons mouseButton)
   {
 
     // ButtonState is a struct and it can't be null
@@ -123,8 +122,8 @@ public class InputService : IInputService
     isDown = (button == ButtonState.Pressed) ? true : false;
     isRepeat = (button == lastButton) ? true : false;
 
-    InputState buttonState = new InputState(isDown, isRepeat);
-    return buttonState;
+    ButtonStateIS buttonStateIS = new ButtonStateIS(mouseButton, isDown, isRepeat);
+    return buttonStateIS;
   }
 }
 
@@ -135,15 +134,31 @@ public enum MouseButtons
   Middle
 }
 
-public struct InputState
+public struct ButtonStateIS
 {
+  public MouseButtons button;
   public bool isDown;
   public bool isRepeat;
 
-  public InputState(bool isdown, bool isrepeat)
+  public ButtonStateIS(MouseButtons Button, bool IsDown, bool IsRepeat)
   {
-    isDown = isdown;
-    isRepeat = isrepeat;
+    button = Button;
+    isDown = IsDown;
+    isRepeat = IsRepeat;
+  }
+}
+
+public struct KeyStateIS
+{
+  public Keys key;
+  public bool isDown;
+  public bool isRepeat;
+
+  public KeyStateIS(Keys Key, bool IsDown, bool IsRepeat)
+  {
+    key = Key;
+    isDown = IsDown;
+    isRepeat = IsRepeat;
   }
 }
 
