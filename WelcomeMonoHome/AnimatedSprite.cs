@@ -9,7 +9,7 @@ public class AnimatedSprite : Component, IRenderable
   public int columns;
   private int _currentFrame;
   private int _totalFrames;
-  private int _frameDelay = 5;
+  private int _frameDelay = 7;
   private int _frameCount = 0;
 
   public Color color { get; set; }
@@ -20,10 +20,18 @@ public class AnimatedSprite : Component, IRenderable
   Animation currentAnimation;
   public Spritesheet spritesheet;
 
+  public bool animationFinished = false;
+
   public void SetAnimation(string name)
   {
     currentAnimation = spritesheet.animations[name];
     _currentFrame = 0;
+    animationFinished = false;
+  }
+
+  public Animation GetAnimation()
+  {
+    return currentAnimation;
   }
 
   public AnimatedSprite(Spritesheet Spritesheet)
@@ -62,6 +70,7 @@ public class AnimatedSprite : Component, IRenderable
       if (_currentFrame >= currentAnimation.rectangles.Count)
       {
         _currentFrame = 0;
+        animationFinished = true;
       }
     }
 

@@ -8,7 +8,9 @@ public class CyclopsTroll : Entity
 {
   float speed = 200f;
   Vector2 direction;
+
   Keys firstDirection = default;
+  Keys facingDirection = Keys.S;
 
   Texture2D textureIdle;
   Texture2D textureWalk;
@@ -24,7 +26,7 @@ public class CyclopsTroll : Entity
 
   AnimatedSprite animatedSprite;
 
-  bool attacking = true;
+  string state = "idle";
 
   public CyclopsTroll()
   {
@@ -62,6 +64,8 @@ public class CyclopsTroll : Entity
     animatedSprite.spritesheet = sheetAttack;
     animatedSprite.SetAnimation("attack_south");
 
+    facingDirection = Keys.S;
+
     AddComponent(animatedSprite);
   }
 
@@ -82,71 +86,115 @@ public class CyclopsTroll : Entity
     bool s = input.GetKeyStateIS(Microsoft.Xna.Framework.Input.Keys.S).isDown;
     bool d = input.GetKeyStateIS(Microsoft.Xna.Framework.Input.Keys.D).isDown;
 
-    if (!attacking && !input.GetKeyStateIS(firstDirection).isDown)
-    {
-      animatedSprite.spritesheet = sheetWalk;
+    ButtonStateIS left = input.GetButtonStateIS(MouseButtons.Left);
 
-      if (w)
+    direction = Vector2.Zero;
+
+    // attack state
+    if (state == "attack" || (left.isDown && !left.isRepeat))
+    {
+      // start attack
+      if (state != "attack" && (left.isDown && !left.isRepeat))
       {
-        firstDirection = Keys.W;
-        animatedSprite.SetAnimation("walk_north");
+        state = "attack";
+        changeAnimationOnDirection(facingDirection, sheetAttack, "attack");
       }
-      else if (a)
+
+      // continue attack
+      else if (state == "attack")
       {
-        firstDirection = Keys.A;
-        animatedSprite.SetAnimation("walk_west");
+        // if animation finished
+        if (animatedSprite.animationFinished)
+        {
+          // transition to move, remembering direction
+          if ((w || a || s || d))
+          {
+            state = "walk";
+            changeAnimationOnDirection(facingDirection, sheetWalk, "walk");
+          }
+          else
+          {
+            // transition to idle
+            state = "idle";
+            changeAnimationOnDirection(facingDirection, sheetIdle, "idle");
+            firstDirection = default;
+          }
+        }
       }
-      else if (s)
+    }
+    else if (state == "walk" || (w || a || s || d))
+    {
+      // stop walking
+      if (state == "walk" && (!w && !a && !s && !d))
       {
-        firstDirection = Keys.S;
-        animatedSprite.SetAnimation("walk_south");
-      }
-      else if (d)
-      {
-        firstDirection = Keys.D;
-        animatedSprite.SetAnimation("walk_east");
+        state = "idle";
+        changeAnimationOnDirection(firstDirection, sheetIdle, "idle");
+        firstDirection = default;
       }
       else
       {
-        animatedSprite.spritesheet = sheetIdle;
-
-        if (firstDirection == Keys.W)
+        if (!input.GetKeyStateIS(firstDirection).isDown)
         {
-          animatedSprite.SetAnimation("idle_north");
-        }
-        else if (firstDirection == Keys.A)
-        {
-          animatedSprite.SetAnimation("idle_west");
-        }
-        else if (firstDirection == Keys.S)
-        {
-          animatedSprite.SetAnimation("idle_south");
-          animatedSprite.spritesheet = sheetAttack;
-          animatedSprite.SetAnimation("attack_south");
-        }
-        else if (firstDirection == Keys.D)
-        {
-          animatedSprite.SetAnimation("idle_east");
+          firstDirection = default;
         }
 
-        firstDirection = default;
+        // start walking or change direction
+        if (w && firstDirection == default)
+        {
+          if (animatedSprite.GetAnimation() != sheetWalk.animations["walk_north"])
+          {
+            firstDirection = Keys.W;
+            facingDirection = Keys.W;
+            changeAnimationOnDirection(firstDirection, sheetWalk, "walk");
+            state = "walk";
+          }
+        }
+        else if (a && firstDirection == default)
+        {
+          if (animatedSprite.GetAnimation() != sheetWalk.animations["walk_west"])
+          {
+            firstDirection = Keys.A;
+            facingDirection = Keys.A;
+            changeAnimationOnDirection(firstDirection, sheetWalk, "walk");
+            state = "walk";
+          }
+        }
+        else if (s && firstDirection == default)
+        {
+          if (animatedSprite.GetAnimation() != sheetWalk.animations["walk_south"])
+          {
+            firstDirection = Keys.S;
+            facingDirection = Keys.S;
+            changeAnimationOnDirection(firstDirection, sheetWalk, "walk");
+            state = "walk";
+          }
+        }
+        else if (d && firstDirection == default)
+        {
+          if (animatedSprite.GetAnimation() != sheetWalk.animations["walk_east"])
+          {
+            firstDirection = Keys.D;
+            facingDirection = Keys.D;
+            changeAnimationOnDirection(firstDirection, sheetWalk, "walk");
+            state = "walk";
+          }
+        }
+
+        // actually move
+        UpdateDirection();
+        transform.position += (direction * speed) * (float)gameTime.ElapsedGameTime.TotalSeconds;
       }
     }
-
-    UpdateDirection();
-    transform.position += (direction * speed) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-    ButtonStateIS left = input.GetButtonStateIS(MouseButtons.Left);
-    if (left.isDown && !left.isRepeat)
+    else
     {
-      // animatedSprite.spritesheet = sheetAttack;
-      // animatedSprite.SetAnimation("attack_south");
+      // idle update
+
     }
   }
 
   public void UpdateDirection()
   {
-    direction = Vector2.Zero;
+
 
     if (Keyboard.GetState().IsKeyDown(Keys.W))
     {
@@ -170,4 +218,92 @@ public class CyclopsTroll : Entity
       direction = Vector2.Normalize(direction);
     }
   }
+
+  public void changeAnimationOnDirection(Keys direction, Spritesheet spritesheet, string sheetname)
+  {
+    if (direction == Keys.W)
+    {
+      animatedSprite.spritesheet = spritesheet;
+      animatedSprite.SetAnimation(sheetname + "_north");
+    }
+    else if (direction == Keys.A)
+    {
+      animatedSprite.spritesheet = spritesheet;
+      animatedSprite.SetAnimation(sheetname + "_west");
+    }
+    else if (direction == Keys.S)
+    {
+      animatedSprite.spritesheet = spritesheet;
+      animatedSprite.SetAnimation(sheetname + "_south");
+    }
+    else if (direction == Keys.D)
+    {
+      animatedSprite.spritesheet = spritesheet;
+      animatedSprite.SetAnimation(sheetname + "_east");
+    }
+  }
+
+  public void inputIdle()
+  {
+    IInputService input = ServiceLocator.GetService<IInputService>();
+
+    ButtonStateIS left = input.GetButtonStateIS(MouseButtons.Left);
+
+    if (left.isDown && !left.isRepeat)
+    {
+      state = "attack";
+      return;
+    }
+
+    bool w = input.GetKeyStateIS(Microsoft.Xna.Framework.Input.Keys.W).isDown;
+    bool a = input.GetKeyStateIS(Microsoft.Xna.Framework.Input.Keys.A).isDown;
+    bool s = input.GetKeyStateIS(Microsoft.Xna.Framework.Input.Keys.S).isDown;
+    bool d = input.GetKeyStateIS(Microsoft.Xna.Framework.Input.Keys.D).isDown;
+
+    if (w)
+    {
+      firstDirection = Keys.W;
+      facingDirection = Keys.W;
+      animatedSprite.spritesheet = sheetIdle;
+      animatedSprite.SetAnimation("walk_north");
+    }
+    else if (a)
+    {
+      firstDirection = Keys.A;
+      facingDirection = Keys.A;
+      animatedSprite.SetAnimation("walk_west");
+    }
+    else if (s)
+    {
+      firstDirection = Keys.S;
+      facingDirection = Keys.S;
+      animatedSprite.SetAnimation("walk_south");
+    }
+    else if (d)
+    {
+      firstDirection = Keys.D;
+      facingDirection = Keys.D;
+      animatedSprite.SetAnimation("walk_east");
+    }
+    else
+    {
+    }
+  }
+
+  public void inputWalk()
+  {
+
+  }
+
+  public void inputAttack()
+  {
+
+  }
+
+}
+
+public abstract class State
+{
+  public abstract void OnEnter();
+  public abstract void OnExit();
 }

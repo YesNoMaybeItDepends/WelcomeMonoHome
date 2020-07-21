@@ -62,7 +62,7 @@ public class CyclopsScimitar : Entity
       if (acounter != animations.Count)
       {
         animatedSprite.SetAnimation(animations[acounter]);
-        acounter++;
+        //acounter++;
       }
       else
       {
