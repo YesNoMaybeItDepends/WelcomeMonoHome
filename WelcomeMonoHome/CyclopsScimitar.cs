@@ -15,6 +15,12 @@ public class CyclopsScimitar : Entity
   List<string> animations;
   int acounter = 0;
 
+  CyclopsTroll player;
+
+  float speed = 100f;
+
+  string state = "idle";
+
   public CyclopsScimitar()
   {
     transform = new Transform(new Vector2(400, 400));
@@ -41,7 +47,7 @@ public class CyclopsScimitar : Entity
     animatedSprite = new AnimatedSprite(sheetScimitar);
     animatedSprite.originOffsetPercent = new Vector2(0.5f, 0.5f);
     animatedSprite.spritesheet = sheetScimitar;
-    animatedSprite.SetAnimation("attack_south");
+    animatedSprite.SetAnimation("idle_south");
     AddComponent(animatedSprite);
 
     animations = new List<String>();
@@ -51,24 +57,127 @@ public class CyclopsScimitar : Entity
     }
   }
 
+  public void SetPlayer(CyclopsTroll Player)
+  {
+    player = Player;
+  }
+
   public override void Update(GameTime gameTime)
   {
-    IInputService input = ServiceLocator.GetService<IInputService>();
-    ButtonStateIS left = input.GetButtonStateIS(MouseButtons.Left);
-    if (left.isDown && !left.isRepeat)
+    if (state == "attack" && !animatedSprite.animationFinished)
     {
-      Console.WriteLine(animations.Count);
-      Console.WriteLine("Counter; " + acounter);
-      if (acounter != animations.Count)
+      return;
+    }
+    else
+    {
+      state = "idle";
+    }
+
+    Vector2 direction = player.transform.position - transform.position;
+    float x = Math.Abs(direction.X);
+    float y = Math.Abs(direction.Y);
+    float largest = Math.Max(x, y);
+
+    Console.WriteLine("Direction: " + direction);
+    Console.WriteLine("Largest: " + largest);
+
+    if (direction.X != direction.Y)
+    {
+      if (largest == x)
       {
-        animatedSprite.SetAnimation(animations[acounter]);
-        //acounter++;
+        if (direction.X > 0)
+        {
+          if (largest <= 40)
+          {
+            state = "attack";
+            animatedSprite.SetAnimation("attack_east");
+          }
+          else
+          {
+            animatedSprite.SetAnimation("walk_east");
+          }
+        }
+        else if (direction.X < 0)
+        {
+          if (largest <= 40)
+          {
+            state = "attack";
+            animatedSprite.SetAnimation("attack_west");
+          }
+          else
+          {
+            animatedSprite.SetAnimation("walk_west");
+          }
+        }
       }
-      else
+      else if (largest == y)
       {
-        acounter = 0;
-        animatedSprite.SetAnimation(animations[acounter]);
+        if (direction.Y > 0)
+        {
+          if (largest <= 40)
+          {
+            state = "attack";
+            animatedSprite.SetAnimation("attack_south");
+          }
+          else
+          {
+            animatedSprite.SetAnimation("walk_south");
+          }
+        }
+        else if (direction.Y < 0)
+        {
+          if (largest <= 40)
+          {
+            state = "attack";
+            animatedSprite.SetAnimation("attack_north");
+          }
+          else
+          {
+            animatedSprite.SetAnimation("walk_north");
+          }
+        }
       }
+    }
+
+    if (largest >= 40)
+    {
+      direction = Vector2.Normalize(direction);
+      transform.position += direction * speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
     }
   }
 }
+
+
+
+
+// if (direction.X != direction.Y)
+// {
+//   if (largest == x)
+//   {
+//     Console.WriteLine("Largest: X");
+//     if (direction.X > 0 && animatedSprite.GetAnimation() != sheetScimitar.animations["walk_east"])
+//     {
+//       if (largest <= 40 && animatedSprite.GetAnimation() != sheetScimitar.animations["attack_east"])
+//       {
+//         animatedSprite.SetAnimation("attack_east");
+//       }
+//       animatedSprite.SetAnimation("walk_east");
+//     }
+//     else if (direction.X < 0 && animatedSprite.GetAnimation() != sheetScimitar.animations["walk_west"])
+//     {
+//       animatedSprite.SetAnimation("walk_west");
+//     }
+//   }
+//   else if (largest == y)
+//   {
+//     Console.WriteLine("Largest: Y");
+//     if (direction.Y > 0 && animatedSprite.GetAnimation() != sheetScimitar.animations["walk_south"])
+//     {
+//       animatedSprite.SetAnimation("walk_south");
+//     }
+//     else if (direction.Y < 0 && animatedSprite.GetAnimation() != sheetScimitar.animations["walk_north"])
+//     {
+//       animatedSprite.SetAnimation("walk_north");
+//     }
+//   }
+// }

@@ -50,12 +50,11 @@ Big hammer. Big Guy.
 * TASKS
 ** In Progress 
 *** Add BigCyclops
-**** Add attack animation
+**** DONE Add attack animation
 **** Add attack system
 ***** Make it hurt things
 ** TODOs
 *** texture / animation editor so you can adjust the box/rectangle
-*** CyclopsTroll diagonal movement animation change fix this :Bug::CyclopsTroll:
 *** Add ScimitarCyclops
 *** Add SuicideCyclops
 *** Figure out game design :Design:
@@ -84,3 +83,4 @@ Unity Coroutines, methods that run every frame with yield
 *** Why does ServiceLocator use IService instead of Service? 
 Because we want to make mock Services
 *** Added spritesheet animation support with animatedsprite class
+*** CyclopsTroll diagonal movement animation change fix this :Bug::CyclopsTroll:

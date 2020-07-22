@@ -24,9 +24,12 @@ public class AnimatedSprite : Component, IRenderable
 
   public void SetAnimation(string name)
   {
-    currentAnimation = spritesheet.animations[name];
-    _currentFrame = 0;
-    animationFinished = false;
+    if (currentAnimation != spritesheet.animations[name])
+    {
+      currentAnimation = spritesheet.animations[name];
+      _currentFrame = 0;
+      animationFinished = false;
+    }
   }
 
   public Animation GetAnimation()

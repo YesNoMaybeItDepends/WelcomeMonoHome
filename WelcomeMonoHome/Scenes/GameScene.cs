@@ -95,6 +95,7 @@ public class GameScene : Scene
 
     CyclopsScimitar memer = new CyclopsScimitar();
     memer.Instantiate();
+    memer.SetPlayer(player);
   }
 
   public override void Update(GameTime gameTime)

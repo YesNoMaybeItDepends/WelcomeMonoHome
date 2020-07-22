@@ -7,6 +7,8 @@ using WelcomeMonoHome.Components;
 public class CyclopsTroll : Entity
 {
   float speed = 200f;
+  //float speed = 500f;
+
   Vector2 direction;
 
   Keys firstDirection = default;
@@ -122,6 +124,7 @@ public class CyclopsTroll : Entity
         }
       }
     }
+    // walk state
     else if (state == "walk" || (w || a || s || d))
     {
       // stop walking
@@ -133,6 +136,7 @@ public class CyclopsTroll : Entity
       }
       else
       {
+        // changed first direction
         if (!input.GetKeyStateIS(firstDirection).isDown)
         {
           firstDirection = default;
